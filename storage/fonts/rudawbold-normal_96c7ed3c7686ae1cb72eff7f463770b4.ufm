@@ -1,0 +1,284 @@
+StartFontMetrics 4.1
+Notice Converted by PHP-font-lib
+Comment https://github.com/PhenX/php-font-lib
+EncodingScheme FontSpecific
+Copyright Copyright (c) 2012 by M&C Saatchi MENA. All rights reserved.
+FontName Rudaw
+FontSubfamily Bold
+UniqueID RAM: Rudaw Bold: 2012
+FullName Rudaw-Bold
+Version Version 2.000
+PostScriptName Rudaw-Bold
+Trademark Please refer to the Copyright section for the font trademark attribution notices.
+Manufacturer Brand Central, a division of M&C Saatchi MENA
+Designer Brand Central
+Description Copyright (c) 2012 by Brand Central, a division of M&C Saatchi MENA. All rights reserved.
+FontDesignerURL www.brandcentral.me
+LicenseDescription Rudaw TV
+LicenseURL rudaw.net
+Weight Bold
+ItalicAngle 0
+IsFixedPitch false
+UnderlineThickness 29
+UnderlinePosition 13
+FontHeightOffset 100
+Ascender 900
+Descender -500
+FontBBox -62 -525 1193 992
+StartCharMetrics 222
+U 32 ; WX 200 ; N uni0020 ; G 3
+U 33 ; WX 235 ; N uni0021 ; G 4
+U 34 ; WX 378 ; N uni0022 ; G 5
+U 35 ; WX 707 ; N uni0023 ; G 6
+U 37 ; WX 751 ; N uni0025 ; G 7
+U 39 ; WX 214 ; N uni0027 ; G 8
+U 40 ; WX 307 ; N uni0028 ; G 9
+U 41 ; WX 312 ; N uni0029 ; G 10
+U 42 ; WX 353 ; N uni002A ; G 11
+U 43 ; WX 521 ; N uni002B ; G 12
+U 44 ; WX 210 ; N uni002C ; G 13
+U 45 ; WX 521 ; N uni002D ; G 14
+U 46 ; WX 210 ; N uni002E ; G 15
+U 47 ; WX 414 ; N uni002F ; G 16
+U 48 ; WX 548 ; N uni0030 ; G 17
+U 49 ; WX 477 ; N uni0031 ; G 18
+U 50 ; WX 508 ; N uni0032 ; G 19
+U 51 ; WX 500 ; N uni0033 ; G 20
+U 52 ; WX 544 ; N uni0034 ; G 21
+U 53 ; WX 527 ; N uni0035 ; G 22
+U 54 ; WX 516 ; N uni0036 ; G 23
+U 55 ; WX 523 ; N uni0037 ; G 24
+U 56 ; WX 528 ; N uni0038 ; G 25
+U 57 ; WX 512 ; N uni0039 ; G 26
+U 58 ; WX 210 ; N uni003A ; G 27
+U 59 ; WX 210 ; N uni003B ; G 28
+U 60 ; WX 441 ; N uni003C ; G 29
+U 61 ; WX 643 ; N uni003D ; G 30
+U 62 ; WX 441 ; N uni003E ; G 31
+U 91 ; WX 341 ; N uni005B ; G 32
+U 92 ; WX 415 ; N uni005C ; G 33
+U 93 ; WX 344 ; N uni005D ; G 34
+U 95 ; WX 500 ; N uni005F ; G 35
+U 123 ; WX 320 ; N uni007B ; G 36
+U 124 ; WX 234 ; N uni007C ; G 37
+U 125 ; WX 343 ; N uni007D ; G 38
+U 160 ; WX 200 ; N uni0020 ; G 3
+U 171 ; WX 551 ; N uni00AB ; G 39
+U 187 ; WX 551 ; N uni00BB ; G 40
+U 215 ; WX 521 ; N uni00D7 ; G 41
+U 247 ; WX 521 ; N uni00F7 ; G 42
+U 1548 ; WX 210 ; N uni060C ; G 43
+U 1563 ; WX 210 ; N uni061B ; G 44
+U 1567 ; WX 412 ; N uni061F ; G 45
+U 1569 ; WX 335 ; N hamza.iso ; G 46
+U 1571 ; WX 214 ; N alefhamzaabove.iso ; G 47
+U 1573 ; WX 214 ; N alefhamzabelow.iso ; G 48
+U 1574 ; WX 669 ; N yehhamza.iso ; G 49
+U 1575 ; WX 214 ; N alef.iso ; G 50
+U 1576 ; WX 874 ; N beh.iso ; G 51
+U 1577 ; WX 496 ; N tehmarbuta.iso ; G 52
+U 1578 ; WX 874 ; N teh.iso ; G 53
+U 1579 ; WX 874 ; N theh.iso ; G 54
+U 1580 ; WX 579 ; N jeem.iso ; G 55
+U 1581 ; WX 579 ; N hah.iso ; G 56
+U 1582 ; WX 579 ; N khah.iso ; G 57
+U 1583 ; WX 539 ; N dal.iso ; G 58
+U 1584 ; WX 539 ; N thal.iso ; G 59
+U 1585 ; WX 406 ; N reh.iso ; G 60
+U 1586 ; WX 406 ; N zain.iso ; G 61
+U 1587 ; WX 1109 ; N seen.iso ; G 62
+U 1588 ; WX 1109 ; N sheen.iso ; G 63
+U 1589 ; WX 1046 ; N sad.iso ; G 64
+U 1590 ; WX 1046 ; N dad.iso ; G 65
+U 1591 ; WX 712 ; N tah.iso ; G 66
+U 1592 ; WX 712 ; N zah.iso ; G 67
+U 1593 ; WX 514 ; N ain.iso ; G 68
+U 1594 ; WX 514 ; N ghain.iso ; G 69
+U 1600 ; WX 300 ; N uni0640 ; G 70
+U 1601 ; WX 852 ; N feh.iso ; G 71
+U 1602 ; WX 650 ; N qaf.iso ; G 72
+U 1603 ; WX 726 ; N keheh.iso ; G 73
+U 1604 ; WX 633 ; N lam.iso ; G 74
+U 1605 ; WX 547 ; N meem.iso ; G 75
+U 1606 ; WX 635 ; N noon.iso ; G 76
+U 1607 ; WX 571 ; N heh.ini ; G 77
+U 1608 ; WX 449 ; N waw.iso ; G 78
+U 1609 ; WX 669 ; N alefmaksura.iso ; G 79
+U 1610 ; WX 669 ; N yeh.iso ; G 80
+U 1632 ; WX 302 ; N uni0660 ; G 81
+U 1633 ; WX 262 ; N uni0661 ; G 82
+U 1634 ; WX 430 ; N uni0662 ; G 83
+U 1635 ; WX 539 ; N uni0663 ; G 84
+U 1636 ; WX 414 ; N uni0664 ; G 85
+U 1637 ; WX 494 ; N uni0665 ; G 86
+U 1638 ; WX 407 ; N uni0666 ; G 87
+U 1639 ; WX 581 ; N uni0667 ; G 88
+U 1640 ; WX 573 ; N uni0668 ; G 89
+U 1641 ; WX 432 ; N uni0669 ; G 90
+U 1642 ; WX 566 ; N uni066A ; G 91
+U 1662 ; WX 874 ; N peh.iso ; G 92
+U 1670 ; WX 579 ; N tcheh.iso ; G 93
+U 1685 ; WX 406 ; N rehv.iso ; G 94
+U 1688 ; WX 428 ; N jeh.iso ; G 95
+U 1700 ; WX 852 ; N veh.iso ; G 96
+U 1705 ; WX 726 ; N keheh.iso ; G 73
+U 1711 ; WX 736 ; N gaf.iso ; G 97
+U 1717 ; WX 633 ; N lamv.iso ; G 98
+U 1726 ; WX 753 ; N hehdoachashmee.iso ; G 99
+U 1734 ; WX 449 ; N oe.iso ; G 100
+U 1736 ; WX 449 ; N yu.iso ; G 101
+U 1740 ; WX 672 ; N yehfarsi.iso ; G 102
+U 1742 ; WX 672 ; N yehv.iso ; G 103
+U 1749 ; WX 529 ; N ae.iso ; G 104
+U 64342 ; WX 874 ; N peh.iso ; G 92
+U 64343 ; WX 930 ; N peh.fin ; G 105
+U 64344 ; WX 395 ; N peh.ini ; G 106
+U 64345 ; WX 389 ; N peh.med ; G 107
+U 64362 ; WX 852 ; N veh.iso ; G 96
+U 64363 ; WX 859 ; N veh.fin ; G 108
+U 64364 ; WX 451 ; N veh.ini ; G 109
+U 64365 ; WX 535 ; N veh.med ; G 110
+U 64378 ; WX 579 ; N tcheh.iso ; G 93
+U 64379 ; WX 663 ; N tcheh.fin ; G 111
+U 64380 ; WX 509 ; N tcheh.ini ; G 112
+U 64381 ; WX 601 ; N tcheh.med ; G 113
+U 64394 ; WX 428 ; N jeh.iso ; G 95
+U 64395 ; WX 422 ; N jeh.fin ; G 114
+U 64398 ; WX 726 ; N keheh.iso ; G 73
+U 64399 ; WX 764 ; N keheh.fin ; G 115
+U 64400 ; WX 552 ; N keheh.ini ; G 116
+U 64401 ; WX 614 ; N keheh.med ; G 117
+U 64402 ; WX 736 ; N gaf.iso ; G 97
+U 64403 ; WX 774 ; N gaf.fin ; G 118
+U 64404 ; WX 552 ; N gaf.ini ; G 119
+U 64405 ; WX 614 ; N gaf.med ; G 120
+U 64428 ; WX 571 ; N hehdoachashmee.ini ; G 121
+U 64473 ; WX 449 ; N oe.iso ; G 100
+U 64474 ; WX 465 ; N oe.fin ; G 122
+U 64475 ; WX 449 ; N yu.iso ; G 101
+U 64476 ; WX 460 ; N yu.fin ; G 123
+U 64488 ; WX 390 ; N alefmaksura.ini ; G 124
+U 64489 ; WX 386 ; N alefmaksura.med ; G 125
+U 64508 ; WX 672 ; N yehfarsi.iso ; G 102
+U 64509 ; WX 869 ; N yehfarsi.fin ; G 126
+U 64510 ; WX 395 ; N yehfarsi.ini ; G 127
+U 64511 ; WX 394 ; N yehfarsi.med ; G 128
+U 65152 ; WX 335 ; N hamza.iso ; G 46
+U 65155 ; WX 214 ; N alefhamzaabove.iso ; G 47
+U 65156 ; WX 248 ; N alefhamzaabove.fin ; G 129
+U 65159 ; WX 214 ; N alefhamzabelow.iso ; G 48
+U 65160 ; WX 248 ; N alefhamzabelow.fin ; G 130
+U 65161 ; WX 669 ; N yehhamza.iso ; G 49
+U 65162 ; WX 869 ; N yehhamza.fin ; G 131
+U 65163 ; WX 339 ; N yehhamza.ini ; G 132
+U 65164 ; WX 394 ; N yehhamza.med ; G 133
+U 65165 ; WX 214 ; N alef.iso ; G 50
+U 65166 ; WX 248 ; N alef.fin ; G 134
+U 65167 ; WX 874 ; N beh.iso ; G 51
+U 65168 ; WX 930 ; N beh.fin ; G 135
+U 65169 ; WX 358 ; N beh.ini ; G 136
+U 65170 ; WX 394 ; N beh.med ; G 137
+U 65171 ; WX 496 ; N tehmarbuta.iso ; G 52
+U 65172 ; WX 542 ; N tehmarbuta.fin ; G 138
+U 65173 ; WX 874 ; N teh.iso ; G 53
+U 65174 ; WX 930 ; N teh.fin ; G 139
+U 65175 ; WX 341 ; N teh.ini ; G 140
+U 65176 ; WX 394 ; N teh.med ; G 141
+U 65177 ; WX 874 ; N theh.iso ; G 54
+U 65178 ; WX 930 ; N theh.fin ; G 142
+U 65179 ; WX 345 ; N theh.ini ; G 143
+U 65180 ; WX 394 ; N theh.med ; G 144
+U 65181 ; WX 579 ; N jeem.iso ; G 55
+U 65182 ; WX 663 ; N jeem.fin ; G 145
+U 65183 ; WX 509 ; N jeem.ini ; G 146
+U 65184 ; WX 601 ; N jeem.med ; G 147
+U 65185 ; WX 579 ; N hah.iso.001 ; G 148
+U 65186 ; WX 663 ; N hah.fin ; G 149
+U 65187 ; WX 509 ; N hah.ini ; G 150
+U 65188 ; WX 601 ; N hah.med ; G 151
+U 65189 ; WX 579 ; N khah.iso ; G 57
+U 65190 ; WX 663 ; N khah.fin ; G 152
+U 65191 ; WX 509 ; N khah.ini ; G 153
+U 65192 ; WX 601 ; N khah.med ; G 154
+U 65193 ; WX 539 ; N dal.iso ; G 58
+U 65194 ; WX 587 ; N dal.fin ; G 155
+U 65195 ; WX 539 ; N thal.iso ; G 59
+U 65196 ; WX 587 ; N thal.fin ; G 156
+U 65197 ; WX 406 ; N reh.iso ; G 60
+U 65198 ; WX 400 ; N reh.fin ; G 157
+U 65199 ; WX 406 ; N zain.iso ; G 61
+U 65200 ; WX 462 ; N zain.fin ; G 158
+U 65201 ; WX 1109 ; N seen.iso ; G 62
+U 65202 ; WX 1186 ; N seen.fin ; G 159
+U 65203 ; WX 943 ; N seen.ini ; G 160
+U 65204 ; WX 1020 ; N seen.med ; G 161
+U 65205 ; WX 1109 ; N sheen.iso ; G 63
+U 65206 ; WX 1186 ; N sheen.fin ; G 162
+U 65207 ; WX 943 ; N sheen.ini ; G 163
+U 65208 ; WX 1020 ; N sheen.med ; G 164
+U 65209 ; WX 1046 ; N sad.iso ; G 64
+U 65210 ; WX 1073 ; N sad.fin ; G 165
+U 65211 ; WX 730 ; N sad.ini ; G 166
+U 65212 ; WX 751 ; N sad.med ; G 167
+U 65213 ; WX 1046 ; N dad.iso ; G 65
+U 65214 ; WX 1073 ; N dad.fin ; G 168
+U 65215 ; WX 730 ; N dad.ini ; G 169
+U 65216 ; WX 751 ; N dad.med ; G 170
+U 65217 ; WX 712 ; N tah.iso ; G 66
+U 65218 ; WX 798 ; N tah.fin ; G 171
+U 65219 ; WX 712 ; N tah.ini ; G 172
+U 65220 ; WX 798 ; N tah.med ; G 173
+U 65221 ; WX 712 ; N zah.iso ; G 67
+U 65222 ; WX 798 ; N zah.fin ; G 174
+U 65223 ; WX 712 ; N zah.ini ; G 175
+U 65224 ; WX 798 ; N zah.med ; G 176
+U 65225 ; WX 514 ; N ain.iso ; G 68
+U 65226 ; WX 494 ; N ain.fin ; G 177
+U 65227 ; WX 431 ; N ain.ini ; G 178
+U 65228 ; WX 500 ; N ain.med ; G 179
+U 65229 ; WX 514 ; N ghain.iso ; G 69
+U 65230 ; WX 494 ; N ghain.fin ; G 180
+U 65231 ; WX 428 ; N ghain.ini ; G 181
+U 65232 ; WX 500 ; N ghain.med ; G 182
+U 65233 ; WX 852 ; N feh.iso ; G 71
+U 65234 ; WX 859 ; N feh.fin ; G 183
+U 65235 ; WX 451 ; N feh.ini ; G 184
+U 65236 ; WX 535 ; N feh.med ; G 185
+U 65237 ; WX 650 ; N qaf.iso ; G 72
+U 65238 ; WX 689 ; N qaf.fin ; G 186
+U 65239 ; WX 451 ; N qaf.ini ; G 187
+U 65240 ; WX 535 ; N qaf.med ; G 188
+U 65241 ; WX 726 ; N keheh.iso ; G 73
+U 65242 ; WX 764 ; N keheh.fin ; G 115
+U 65243 ; WX 552 ; N keheh.ini ; G 116
+U 65244 ; WX 614 ; N keheh.med ; G 117
+U 65245 ; WX 633 ; N lam.iso ; G 74
+U 65246 ; WX 628 ; N lam.fin ; G 189
+U 65247 ; WX 317 ; N lam.ini ; G 190
+U 65248 ; WX 361 ; N lam.med ; G 191
+U 65249 ; WX 547 ; N meem.iso ; G 75
+U 65250 ; WX 663 ; N meem.fin ; G 192
+U 65251 ; WX 492 ; N meem.ini ; G 193
+U 65252 ; WX 684 ; N meem.med ; G 194
+U 65253 ; WX 635 ; N noon.iso ; G 76
+U 65254 ; WX 630 ; N noon.fin ; G 195
+U 65255 ; WX 339 ; N noon.ini ; G 196
+U 65256 ; WX 394 ; N noon.med ; G 197
+U 65257 ; WX 496 ; N heh.iso ; G 198
+U 65258 ; WX 542 ; N heh.fin ; G 199
+U 65259 ; WX 571 ; N heh.ini ; G 77
+U 65260 ; WX 650 ; N heh.med ; G 200
+U 65261 ; WX 449 ; N waw.iso ; G 78
+U 65262 ; WX 464 ; N waw.fin ; G 201
+U 65263 ; WX 669 ; N alefmaksura.iso ; G 79
+U 65264 ; WX 869 ; N alefmaksura.fin ; G 202
+U 65265 ; WX 669 ; N yeh.iso ; G 80
+U 65266 ; WX 868 ; N yeh.fin ; G 203
+U 65267 ; WX 395 ; N yeh.ini ; G 204
+U 65268 ; WX 394 ; N yeh.med ; G 205
+U 65271 ; WX 620 ; N lamalefhamzaabove.iso ; G 206
+U 65272 ; WX 672 ; N lamalefhamzaabove.fin ; G 207
+U 65275 ; WX 620 ; N lamalef.iso ; G 208
+U 65276 ; WX 672 ; N lamalef.fin ; G 209
+EndCharMetrics
+EndFontMetrics

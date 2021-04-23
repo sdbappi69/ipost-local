@@ -1,0 +1,902 @@
+<?php
+
+namespace App\Http\Controllers\Report;
+
+use Illuminate\Http\Request;
+
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
+
+use App\OrderLog;
+use App\Merchant;
+use App\User;
+use App\Store;
+use App\Hub;
+
+use DB;
+use Excel;
+
+class AgingController extends Controller
+{
+    public function pickup(Request $request){
+
+    	$query = OrderLog::where('order_logs.text', 'Picked')
+    						->where('order_logs.type', '!=', 'reference')
+                            ->where('picking_task.reconcile', 1)
+                            ->where('picking_task.type', 'Picking')
+    						->leftJoin('sub_orders','sub_orders.id','=','order_logs.sub_order_id')
+    						->leftJoin('orders','orders.id','=','sub_orders.order_id')
+                            ->leftJoin('stores','stores.id','=','orders.store_id')
+                            ->leftJoin('order_product','order_product.sub_order_id','=','sub_orders.id')
+                            ->leftJoin('picking_task','picking_task.product_unique_id','=','order_product.product_unique_id');
+
+    	if($request->has('start_date')){
+            $start_date = $request->start_date;
+        }else{
+            $start_date = '2017-03-21';
+        }
+
+        if($request->has('end_date')){
+            $end_date = $request->end_date;
+        }else{
+            $end_date = date('Y-m-d');
+        }
+
+        if($request->has('order_id')){
+            $query->where('orders.unique_order_id', $request->order_id);
+        }
+
+        if($request->has('merchant_order_id')){
+            $query->where('orders.merchant_order_id', $request->merchant_order_id);
+        }
+
+        if($request->has('sub_order_id')){
+            $query->where('sub_orders.unique_suborder_id', $request->sub_order_id);
+        }
+
+        if($request->has('customer_mobile_no')){
+            $query->where('orders.delivery_msisdn', $request->customer_mobile_no)->orWhere('orders.delivery_alt_msisdn', $request->customer_mobile_no);
+        }
+
+        if($request->has('store_id')){
+            $query->whereIn('orders.store_id', $request->store_id);
+        }
+
+        if($request->has('merchant_id')){
+            $query->whereIn('stores.merchant_id', $request->merchant_id);
+        }
+
+        if($request->has('pickup_man_id')){
+            $query->whereIn('order_product.picker_id', $request->pickup_man_id);
+        }
+
+        if($request->has('delivary_man_id')){
+            $query->whereIn('sub_orders.deliveryman_id', $request->delivary_man_id);
+        }
+
+        if($request->has('pickup_hub_id')){
+            $query->whereIn('sub_orders.source_hub_id', $request->pickup_hub_id);
+        }
+
+        if($request->has('delivery_hub_id')){
+            $query->whereIn('sub_orders.destination_hub_id', $request->delivery_hub_id);
+        }
+
+        $query->WhereBetween('order_logs.created_at', array($start_date.' 00:00:01',$end_date.' 23:59:59'));
+
+		$order_logs = $query->groupBy('sub_orders.id')->orderBy('orders.id', 'desc')->paginate(10);		
+
+		// Resource
+		$stores = Store::whereStatus(true)->lists('store_id', 'id')->toArray();
+        $merchants = Merchant::whereStatus(true)->lists('name', 'id')->toArray();
+        $pickupman = User::select(DB::raw('CONCAT(users.name, " - ",hubs.title) AS name'),'users.id')
+			        ->leftJoin('hubs','hubs.id','=','users.reference_id')
+			        ->where('users.status',true)
+			        ->where('users.user_type_id', '=', '8')
+			        ->lists('name','users.id')
+			        ->toArray();
+
+        $hubs = Hub::select('title','id')
+			        ->where('hubs.status',true)
+			        ->lists('title','id')
+			        ->toArray();
+
+    	return view('reports.aging.pickup', compact('order_logs', 'stores', 'merchants', 'pickupman', 'hubs'));
+
+    }
+
+    public function pickupexport(Request $request, $type){
+
+        $query = OrderLog::where('order_logs.text', 'Picked')
+                            ->where('order_logs.type', '!=', 'reference')
+                            ->where('picking_task.reconcile', 1)
+                            ->where('picking_task.type', 'Picking')
+                            ->leftJoin('sub_orders','sub_orders.id','=','order_logs.sub_order_id')
+                            ->leftJoin('orders','orders.id','=','sub_orders.order_id')
+                            ->leftJoin('stores','stores.id','=','orders.store_id')
+                            ->leftJoin('order_product','order_product.sub_order_id','=','sub_orders.id')
+                            ->leftJoin('picking_task','picking_task.product_unique_id','=','order_product.product_unique_id');
+
+        if($request->has('start_date')){
+            $start_date = $request->start_date;
+        }else{
+            $start_date = '2017-03-21';
+        }
+
+        if($request->has('end_date')){
+            $end_date = $request->end_date;
+        }else{
+            $end_date = date('Y-m-d');
+        }
+
+        if($request->has('order_id')){
+            $query->where('orders.unique_order_id', $request->order_id);
+        }
+
+        if($request->has('merchant_order_id')){
+            $query->where('orders.merchant_order_id', $request->merchant_order_id);
+        }
+
+        if($request->has('sub_order_id')){
+            $query->where('sub_orders.unique_suborder_id', $request->sub_order_id);
+        }
+
+        if($request->has('customer_mobile_no')){
+            $query->where('orders.delivery_msisdn', $request->customer_mobile_no)->orWhere('orders.delivery_alt_msisdn', $request->customer_mobile_no);
+        }
+
+        if($request->has('store_id')){
+            $query->whereIn('orders.store_id', $request->store_id);
+        }
+
+        if($request->has('merchant_id')){
+            $query->whereIn('stores.merchant_id', $request->merchant_id);
+        }
+
+        if($request->has('pickup_man_id')){
+            $query->whereIn('order_product.picker_id', $request->pickup_man_id);
+        }
+
+        if($request->has('delivary_man_id')){
+            $query->whereIn('sub_orders.deliveryman_id', $request->delivary_man_id);
+        }
+
+        if($request->has('pickup_hub_id')){
+            $query->whereIn('sub_orders.source_hub_id', $request->pickup_hub_id);
+        }
+
+        if($request->has('delivery_hub_id')){
+            $query->whereIn('sub_orders.destination_hub_id', $request->delivery_hub_id);
+        }
+
+        $query->WhereBetween('order_logs.created_at', array($start_date.' 00:00:01',$end_date.' 23:59:59'));
+
+        $order_logs = $query->groupBy('sub_orders.id')->orderBy('orders.id', 'desc')->get();
+
+        return Excel::create('aging_pickup_'.time(), function($excel) use ($order_logs) {
+            $excel->sheet('orders', function($sheet) use ($order_logs)
+            {
+
+                $datasheet = array();
+                $datasheet[0]  =   array('S/N', 'Order Id', 'Sub-Order Id', 'Merchant Order Id', 'Merchant', 'Store', 'Pickup Requested', 'Picking Attempt', 'Pickup Hub', 'Picked date', 'Delivery Hub', 'Aging', 'Current Status');
+                $i=1;
+                foreach($order_logs as $order_log){
+
+                    if($order_log->sub_order->parent_sub_order_id != 0){
+                        $sub_order = $order_log->sub_order->parent_sub_order;
+                    }else{
+                        $sub_order = $order_log->sub_order;
+                    }
+
+                    if(isset($sub_order)){
+
+                        $agingDetail = pickupAging($sub_order->id);
+
+                        if($sub_order->sub_order_last_status === NULL){
+                            $sub_order_status = hubGetStatus($sub_order->sub_order_status);
+                        }else{
+                            $sub_order_status = hubGetStatus($sub_order->sub_order_last_status);
+                        }
+
+                        if(isset($sub_order->destination_hub->title)){
+                            $destination_hub_title = $sub_order->destination_hub->title;
+                        }else{
+                            $destination_hub_title = '';
+                        }
+
+                        $datasheet[$i] = array(
+                            $i,
+                            $sub_order->order->unique_order_id,
+                            $sub_order->unique_suborder_id,
+                            $sub_order->order->merchant_order_id,
+                            $sub_order->order->store->merchant->name,
+                            $sub_order->order->store->store_id,
+
+                            $agingDetail['start_at'],
+                            $agingDetail['picking_attempt'],
+                            $sub_order->product->pickup_location->zone->hub->title,
+                            $agingDetail['end_at'],
+                            $destination_hub_title,
+                            $agingDetail['aging'],
+                            $sub_order_status
+                        );
+
+                    }
+
+                    $i++;
+                }
+
+                $sheet->setOrientation('landscape');
+
+                // Freeze first row
+                $sheet->freezeFirstRow();
+                
+                $sheet->fromArray($datasheet);
+            });
+        })->download($type);
+
+    }
+
+
+    public function delivery(Request $request){
+
+        $query = OrderLog::whereIn('text', ['Product delivered to customer', 'Products Partial Delivered to Customer'])
+                            ->where('order_logs.type', '!=', 'reference')
+                            // ->where('delivery_task.reconcile', 1)
+                            ->leftJoin('sub_orders','sub_orders.id','=','order_logs.sub_order_id')
+                            ->leftJoin('orders','orders.id','=','sub_orders.order_id')
+                            ->leftJoin('stores','stores.id','=','orders.store_id')
+                            ->leftJoin('order_product','order_product.sub_order_id','=','sub_orders.id');
+                            // ->leftJoin('delivery_task','delivery_task.unique_suborder_id','=','sub_orders.unique_suborder_id');
+
+        if($request->has('start_date')){
+            $start_date = $request->start_date;
+        }else{
+            $start_date = '2017-03-21';
+        }
+
+        if($request->has('end_date')){
+            $end_date = $request->end_date;
+        }else{
+            $end_date = date('Y-m-d');
+        }
+
+        if($request->has('order_id')){
+            $query->where('orders.unique_order_id', $request->order_id);
+        }
+
+        if($request->has('merchant_order_id')){
+            $query->where('orders.merchant_order_id', $request->merchant_order_id);
+        }
+
+        if($request->has('sub_order_id')){
+            $query->where('sub_orders.unique_suborder_id', $request->sub_order_id);
+        }
+
+        if($request->has('customer_mobile_no')){
+            $query->where('orders.delivery_msisdn', $request->customer_mobile_no)->orWhere('orders.delivery_alt_msisdn', $request->customer_mobile_no);
+        }
+
+        if($request->has('store_id')){
+            $query->whereIn('orders.store_id', $request->store_id);
+        }
+
+        if($request->has('merchant_id')){
+            $query->whereIn('stores.merchant_id', $request->merchant_id);
+        }
+
+        if($request->has('pickup_man_id')){
+            $query->whereIn('order_product.picker_id', $request->pickup_man_id);
+        }
+
+        if($request->has('delivary_man_id')){
+            $query->whereIn('sub_orders.deliveryman_id', $request->delivary_man_id);
+        }
+
+        if($request->has('pickup_hub_id')){
+            $query->whereIn('sub_orders.source_hub_id', $request->pickup_hub_id);
+        }
+
+        if($request->has('delivery_hub_id')){
+            $query->whereIn('sub_orders.destination_hub_id', $request->delivery_hub_id);
+        }
+
+        $query->WhereBetween('order_logs.created_at', array($start_date.' 00:00:01',$end_date.' 23:59:59'));
+
+        // $order_logs = $query->groupBy('sub_orders.id')->orderBy('orders.id', 'desc')->paginate(10);     
+        $order_logs = $query->groupBy('sub_orders.id')->orderBy('orders.id', 'desc')->paginate(10); 
+
+        // Resource
+        $stores = Store::whereStatus(true)->lists('store_id', 'id')->toArray();
+        $merchants = Merchant::whereStatus(true)->lists('name', 'id')->toArray();
+        $pickupman = User::select(DB::raw('CONCAT(users.name, " - ",hubs.title) AS name'),'users.id')
+                    ->leftJoin('hubs','hubs.id','=','users.reference_id')
+                    ->where('users.status',true)
+                    ->where('users.user_type_id', '=', '8')
+                    ->lists('name','users.id')
+                    ->toArray();
+
+        $hubs = Hub::select('title','id')
+                    ->where('hubs.status',true)
+                    ->lists('title','id')
+                    ->toArray();
+
+        return view('reports.aging.delivery', compact('order_logs', 'stores', 'merchants', 'pickupman', 'hubs'));
+
+    }
+
+
+    public function deliveryexport(Request $request, $type){
+
+        $query = OrderLog::whereIn('text', ['Product delivered to customer', 'Products Partial Delivered to Customer'])
+                            ->where('order_logs.type', '!=', 'reference')
+                            // ->where('delivery_task.reconcile', 1)
+                            ->leftJoin('sub_orders','sub_orders.id','=','order_logs.sub_order_id')
+                            ->leftJoin('orders','orders.id','=','sub_orders.order_id')
+                            ->leftJoin('stores','stores.id','=','orders.store_id')
+                            ->leftJoin('order_product','order_product.sub_order_id','=','sub_orders.id');
+                            // ->leftJoin('delivery_task','delivery_task.unique_suborder_id','=','sub_orders.unique_suborder_id');
+
+        if($request->has('start_date')){
+            $start_date = $request->start_date;
+        }else{
+            $start_date = '2017-03-21';
+        }
+
+        if($request->has('end_date')){
+            $end_date = $request->end_date;
+        }else{
+            $end_date = date('Y-m-d');
+        }
+
+        if($request->has('order_id')){
+            $query->where('orders.unique_order_id', $request->order_id);
+        }
+
+        if($request->has('merchant_order_id')){
+            $query->where('orders.merchant_order_id', $request->merchant_order_id);
+        }
+
+        if($request->has('sub_order_id')){
+            $query->where('sub_orders.unique_suborder_id', $request->sub_order_id);
+        }
+
+        if($request->has('customer_mobile_no')){
+            $query->where('orders.delivery_msisdn', $request->customer_mobile_no)->orWhere('orders.delivery_alt_msisdn', $request->customer_mobile_no);
+        }
+
+        if($request->has('store_id')){
+            $query->whereIn('orders.store_id', $request->store_id);
+        }
+
+        if($request->has('merchant_id')){
+            $query->whereIn('stores.merchant_id', $request->merchant_id);
+        }
+
+        if($request->has('pickup_man_id')){
+            $query->whereIn('order_product.picker_id', $request->pickup_man_id);
+        }
+
+        if($request->has('delivary_man_id')){
+            $query->whereIn('sub_orders.deliveryman_id', $request->delivary_man_id);
+        }
+
+        if($request->has('pickup_hub_id')){
+            $query->whereIn('sub_orders.source_hub_id', $request->pickup_hub_id);
+        }
+
+        if($request->has('delivery_hub_id')){
+            $query->whereIn('sub_orders.destination_hub_id', $request->delivery_hub_id);
+        }
+
+        $query->WhereBetween('order_logs.created_at', array($start_date.' 00:00:01',$end_date.' 23:59:59'));
+
+        $order_logs = $query->groupBy('sub_orders.id')->orderBy('orders.id', 'desc')->get();
+
+        return Excel::create('aging_delivery_'.time(), function($excel) use ($order_logs) {
+            $excel->sheet('orders', function($sheet) use ($order_logs)
+            {
+
+                $datasheet = array();
+                $datasheet[0]  =   array('S/N', 'Order Id', 'Sub-Order Id', 'Merchant Order Id', 'Merchant', 'Store', 'Pickup Hub', 'Racked at destination hub', 'Delivery Attempt', 'Delivery date', 'Delivery Hub', 'Aging', 'Current Status');
+                $i=1;
+                foreach($order_logs as $order_log){
+
+                    if($order_log->sub_order->parent_sub_order_id != 0){
+                        $sub_order = $order_log->sub_order->parent_sub_order;
+                    }else{
+                        $sub_order = $order_log->sub_order;
+                    }
+
+                    if(isset($sub_order)){
+
+                        $agingDetail = deliveryAging($sub_order->id);
+
+                        if($sub_order->sub_order_last_status === NULL){
+                            $sub_order_status = hubGetStatus($sub_order->sub_order_status);
+                        }else{
+                            $sub_order_status = hubGetStatus($sub_order->sub_order_last_status);
+                        }
+
+                        if(isset($sub_order->destination_hub->title)){
+                            $destination_hub_title = $sub_order->destination_hub->title;
+                        }else{
+                            $destination_hub_title = '';
+                        }
+
+                        $datasheet[$i] = array(
+                            $i,
+                            $sub_order->order->unique_order_id,
+                            $sub_order->unique_suborder_id,
+                            $sub_order->order->merchant_order_id,
+                            $sub_order->order->store->merchant->name,
+                            $sub_order->order->store->store_id,
+
+                            $sub_order->product->pickup_location->zone->hub->title,
+
+                            $agingDetail['start_at'],
+                            $agingDetail['delivery_attempt'],
+                            
+                            $agingDetail['end_at'],
+                            $destination_hub_title,
+                            $agingDetail['aging'],
+                            $sub_order_status
+                        );
+
+                    }
+
+                    $i++;
+                }
+
+                $sheet->setOrientation('landscape');
+
+                // Freeze first row
+                $sheet->freezeFirstRow();
+                
+                $sheet->fromArray($datasheet);
+            });
+        })->download($type);
+
+    }
+
+
+    public function returnaging(Request $request){
+
+        $query = OrderLog::where('order_logs.text', 'Return Completed')
+                            ->where('order_logs.type', '!=', 'reference')
+                            ->where('picking_task.reconcile', 1)
+                            ->where('picking_task.type', 'Return')
+                            ->leftJoin('sub_orders','sub_orders.id','=','order_logs.sub_order_id')
+                            ->leftJoin('orders','orders.id','=','sub_orders.order_id')
+                            ->leftJoin('stores','stores.id','=','orders.store_id')
+                            ->leftJoin('order_product','order_product.sub_order_id','=','sub_orders.id')
+                            ->leftJoin('picking_task','picking_task.product_unique_id','=','order_product.product_unique_id');
+
+        if($request->has('start_date')){
+            $start_date = $request->start_date;
+        }else{
+            $start_date = '2017-03-21';
+        }
+
+        if($request->has('end_date')){
+            $end_date = $request->end_date;
+        }else{
+            $end_date = date('Y-m-d');
+        }
+
+        if($request->has('order_id')){
+            $query->where('orders.unique_order_id', $request->order_id);
+        }
+
+        if($request->has('merchant_order_id')){
+            $query->where('orders.merchant_order_id', $request->merchant_order_id);
+        }
+
+        if($request->has('sub_order_id')){
+            $query->where('sub_orders.unique_suborder_id', $request->sub_order_id);
+        }
+
+        if($request->has('customer_mobile_no')){
+            $query->where('orders.delivery_msisdn', $request->customer_mobile_no)->orWhere('orders.delivery_alt_msisdn', $request->customer_mobile_no);
+        }
+
+        if($request->has('store_id')){
+            $query->whereIn('orders.store_id', $request->store_id);
+        }
+
+        if($request->has('merchant_id')){
+            $query->whereIn('stores.merchant_id', $request->merchant_id);
+        }
+
+        if($request->has('pickup_man_id')){
+            $query->whereIn('order_product.picker_id', $request->pickup_man_id);
+        }
+
+        if($request->has('delivary_man_id')){
+            $query->whereIn('sub_orders.deliveryman_id', $request->delivary_man_id);
+        }
+
+        if($request->has('pickup_hub_id')){
+            $query->whereIn('sub_orders.source_hub_id', $request->pickup_hub_id);
+        }
+
+        if($request->has('delivery_hub_id')){
+            $query->whereIn('sub_orders.destination_hub_id', $request->delivery_hub_id);
+        }
+
+        $query->WhereBetween('order_logs.created_at', array($start_date.' 00:00:01',$end_date.' 23:59:59'));
+
+        $order_logs = $query->groupBy('sub_orders.id')->orderBy('orders.id', 'desc')->paginate(10);     
+
+        // Resource
+        $stores = Store::whereStatus(true)->lists('store_id', 'id')->toArray();
+        $merchants = Merchant::whereStatus(true)->lists('name', 'id')->toArray();
+        $pickupman = User::select(DB::raw('CONCAT(users.name, " - ",hubs.title) AS name'),'users.id')
+                    ->leftJoin('hubs','hubs.id','=','users.reference_id')
+                    ->where('users.status',true)
+                    ->where('users.user_type_id', '=', '8')
+                    ->lists('name','users.id')
+                    ->toArray();
+
+        $hubs = Hub::select('title','id')
+                    ->where('hubs.status',true)
+                    ->lists('title','id')
+                    ->toArray();
+
+        return view('reports.aging.return', compact('order_logs', 'stores', 'merchants', 'pickupman', 'hubs'));
+
+    }
+
+    public function returnexport(Request $request, $type){
+
+        $query = OrderLog::where('order_logs.text', 'Return Completed')
+                            ->where('order_logs.type', '!=', 'reference')
+                            ->where('picking_task.reconcile', 1)
+                            ->where('picking_task.type', 'Return')
+                            ->leftJoin('sub_orders','sub_orders.id','=','order_logs.sub_order_id')
+                            ->leftJoin('orders','orders.id','=','sub_orders.order_id')
+                            ->leftJoin('stores','stores.id','=','orders.store_id')
+                            ->leftJoin('order_product','order_product.sub_order_id','=','sub_orders.id')
+                            ->leftJoin('picking_task','picking_task.product_unique_id','=','order_product.product_unique_id');
+
+        if($request->has('start_date')){
+            $start_date = $request->start_date;
+        }else{
+            $start_date = '2017-03-21';
+        }
+
+        if($request->has('end_date')){
+            $end_date = $request->end_date;
+        }else{
+            $end_date = date('Y-m-d');
+        }
+
+        if($request->has('order_id')){
+            $query->where('orders.unique_order_id', $request->order_id);
+        }
+
+        if($request->has('merchant_order_id')){
+            $query->where('orders.merchant_order_id', $request->merchant_order_id);
+        }
+
+        if($request->has('sub_order_id')){
+            $query->where('sub_orders.unique_suborder_id', $request->sub_order_id);
+        }
+
+        if($request->has('customer_mobile_no')){
+            $query->where('orders.delivery_msisdn', $request->customer_mobile_no)->orWhere('orders.delivery_alt_msisdn', $request->customer_mobile_no);
+        }
+
+        if($request->has('store_id')){
+            $query->whereIn('orders.store_id', $request->store_id);
+        }
+
+        if($request->has('merchant_id')){
+            $query->whereIn('stores.merchant_id', $request->merchant_id);
+        }
+
+        if($request->has('pickup_man_id')){
+            $query->whereIn('order_product.picker_id', $request->pickup_man_id);
+        }
+
+        if($request->has('delivary_man_id')){
+            $query->whereIn('sub_orders.deliveryman_id', $request->delivary_man_id);
+        }
+
+        if($request->has('pickup_hub_id')){
+            $query->whereIn('sub_orders.source_hub_id', $request->pickup_hub_id);
+        }
+
+        if($request->has('delivery_hub_id')){
+            $query->whereIn('sub_orders.destination_hub_id', $request->delivery_hub_id);
+        }
+
+        $query->WhereBetween('order_logs.created_at', array($start_date.' 00:00:01',$end_date.' 23:59:59'));
+
+        $order_logs = $query->groupBy('sub_orders.id')->orderBy('orders.id', 'desc')->get();
+
+        return Excel::create('aging_return_'.time(), function($excel) use ($order_logs) {
+            $excel->sheet('orders', function($sheet) use ($order_logs)
+            {
+
+                $datasheet = array();
+                $datasheet[0]  =   array('S/N', 'Order Id', 'Sub-Order Id', 'Merchant Order Id', 'Merchant', 'Store', 'Pickup Hub', 'Racked at destination hub', 'Delivery Attempt', 'Return date', 'Delivery Hub', 'Aging', 'Current Status');
+                $i=1;
+                foreach($order_logs as $order_log){
+
+                    if($order_log->sub_order->parent_sub_order_id != 0){
+                        $sub_order = $order_log->sub_order->parent_sub_order;
+                    }else{
+                        $sub_order = $order_log->sub_order;
+                    }
+
+                    if(isset($sub_order)){
+
+                        $agingDetail = returnAging($sub_order->id);
+
+                        if($sub_order->sub_order_last_status === NULL){
+                            $sub_order_status = hubGetStatus($sub_order->sub_order_status);
+                        }else{
+                            $sub_order_status = hubGetStatus($sub_order->sub_order_last_status);
+                        }
+
+                        if(isset($sub_order->destination_hub->title)){
+                            $destination_hub_title = $sub_order->destination_hub->title;
+                        }else{
+                            $destination_hub_title = '';
+                        }
+
+                        $datasheet[$i] = array(
+                            $i,
+                            $sub_order->order->unique_order_id,
+                            $sub_order->unique_suborder_id,
+                            $sub_order->order->merchant_order_id,
+                            $sub_order->order->store->merchant->name,
+                            $sub_order->order->store->store_id,
+
+                            $sub_order->product->pickup_location->zone->hub->title,
+
+                            $agingDetail['start_at'],
+                            $agingDetail['delivery_attempt'],
+                            
+                            $agingDetail['end_at'],
+                            $destination_hub_title,
+                            $agingDetail['aging'],
+                            $sub_order_status
+                        );
+
+                    }
+
+                    $i++;
+                }
+
+                $sheet->setOrientation('landscape');
+
+                // Freeze first row
+                $sheet->freezeFirstRow();
+                
+                $sheet->fromArray($datasheet);
+            });
+        })->download($type);
+
+    }
+
+
+    public function trip(Request $request){
+
+        $query = OrderLog::leftJoin('sub_orders','sub_orders.id','=','order_logs.sub_order_id')
+                            ->leftJoin('orders','orders.id','=','sub_orders.order_id')
+                            ->leftJoin('stores','stores.id','=','orders.store_id')
+                            ->leftJoin('order_product','order_product.sub_order_id','=','sub_orders.id')                            
+                            ->where('sub_orders.source_hub_id', '!=', null)
+                            ->where('text', 'Full Order Racked at Destination Hub')
+                            ->where('order_logs.type', '!=', 'reference')
+                            ->whereRaw('sub_orders.source_hub_id != sub_orders.destination_hub_id');
+
+        if($request->has('start_date')){
+            $start_date = $request->start_date;
+        }else{
+            $start_date = '2017-03-21';
+        }
+
+        if($request->has('end_date')){
+            $end_date = $request->end_date;
+        }else{
+            $end_date = date('Y-m-d');
+        }
+
+        if($request->has('order_id')){
+            $query->where('orders.unique_order_id', $request->order_id);
+        }
+
+        if($request->has('merchant_order_id')){
+            $query->where('orders.merchant_order_id', $request->merchant_order_id);
+        }
+
+        if($request->has('sub_order_id')){
+            $query->where('sub_orders.unique_suborder_id', $request->sub_order_id);
+        }
+
+        if($request->has('customer_mobile_no')){
+            $query->where('orders.delivery_msisdn', $request->customer_mobile_no)->orWhere('orders.delivery_alt_msisdn', $request->customer_mobile_no);
+        }
+
+        if($request->has('store_id')){
+            $query->whereIn('orders.store_id', $request->store_id);
+        }
+
+        if($request->has('merchant_id')){
+            $query->whereIn('stores.merchant_id', $request->merchant_id);
+        }
+
+        if($request->has('pickup_man_id')){
+            $query->whereIn('order_product.picker_id', $request->pickup_man_id);
+        }
+
+        if($request->has('delivary_man_id')){
+            $query->whereIn('sub_orders.deliveryman_id', $request->delivary_man_id);
+        }
+
+        if($request->has('pickup_hub_id')){
+            $query->whereIn('sub_orders.source_hub_id', $request->pickup_hub_id);
+        }
+
+        if($request->has('delivery_hub_id')){
+            $query->whereIn('sub_orders.destination_hub_id', $request->delivery_hub_id);
+        }
+
+        $query->WhereBetween('order_logs.created_at', array($start_date.' 00:00:01',$end_date.' 23:59:59'));
+   
+        $order_logs = $query->groupBy('sub_orders.id')->orderBy('orders.id', 'desc')->paginate(10);
+
+        // Resource
+        $stores = Store::whereStatus(true)->lists('store_id', 'id')->toArray();
+        $merchants = Merchant::whereStatus(true)->lists('name', 'id')->toArray();
+        $pickupman = User::select(DB::raw('CONCAT(users.name, " - ",hubs.title) AS name'),'users.id')
+                    ->leftJoin('hubs','hubs.id','=','users.reference_id')
+                    ->where('users.status',true)
+                    ->where('users.user_type_id', '=', '8')
+                    ->lists('name','users.id')
+                    ->toArray();
+
+        $hubs = Hub::select('title','id')
+                    ->where('hubs.status',true)
+                    ->lists('title','id')
+                    ->toArray();
+
+        return view('reports.aging.trip', compact('order_logs', 'stores', 'merchants', 'pickupman', 'hubs'));
+
+    }
+
+
+    public function tripexport(Request $request, $type){
+
+        $query = OrderLog::leftJoin('sub_orders','sub_orders.id','=','order_logs.sub_order_id')
+                            ->leftJoin('orders','orders.id','=','sub_orders.order_id')
+                            ->leftJoin('stores','stores.id','=','orders.store_id')
+                            ->leftJoin('order_product','order_product.sub_order_id','=','sub_orders.id')                            
+                            ->where('sub_orders.source_hub_id', '!=', null)
+                            ->where('text', 'Full Order Racked at Destination Hub')
+                            ->where('order_logs.type', '!=', 'reference')
+                            ->whereRaw('sub_orders.source_hub_id != sub_orders.destination_hub_id');
+
+        if($request->has('start_date')){
+            $start_date = $request->start_date;
+        }else{
+            $start_date = '2017-03-21';
+        }
+
+        if($request->has('end_date')){
+            $end_date = $request->end_date;
+        }else{
+            $end_date = date('Y-m-d');
+        }
+
+        if($request->has('order_id')){
+            $query->where('orders.unique_order_id', $request->order_id);
+        }
+
+        if($request->has('merchant_order_id')){
+            $query->where('orders.merchant_order_id', $request->merchant_order_id);
+        }
+
+        if($request->has('sub_order_id')){
+            $query->where('sub_orders.unique_suborder_id', $request->sub_order_id);
+        }
+
+        if($request->has('customer_mobile_no')){
+            $query->where('orders.delivery_msisdn', $request->customer_mobile_no)->orWhere('orders.delivery_alt_msisdn', $request->customer_mobile_no);
+        }
+
+        if($request->has('store_id')){
+            $query->whereIn('orders.store_id', $request->store_id);
+        }
+
+        if($request->has('merchant_id')){
+            $query->whereIn('stores.merchant_id', $request->merchant_id);
+        }
+
+        if($request->has('pickup_man_id')){
+            $query->whereIn('order_product.picker_id', $request->pickup_man_id);
+        }
+
+        if($request->has('delivary_man_id')){
+            $query->whereIn('sub_orders.deliveryman_id', $request->delivary_man_id);
+        }
+
+        if($request->has('pickup_hub_id')){
+            $query->whereIn('sub_orders.source_hub_id', $request->pickup_hub_id);
+        }
+
+        if($request->has('delivery_hub_id')){
+            $query->whereIn('sub_orders.destination_hub_id', $request->delivery_hub_id);
+        }
+
+        $query->WhereBetween('order_logs.created_at', array($start_date.' 00:00:01',$end_date.' 23:59:59'));
+   
+        $order_logs = $query->groupBy('sub_orders.id')->orderBy('orders.id', 'desc')->get();
+
+        return Excel::create('aging_trip_'.time(), function($excel) use ($order_logs) {
+            $excel->sheet('orders', function($sheet) use ($order_logs)
+            {
+
+                $datasheet = array();
+                $datasheet[0]  =   array('S/N', 'Order Id', 'Sub-Order Id', 'Merchant Order Id', 'Merchant', 'Store', 'Pickup Hub', 'Product racked at Pickup hub', 'Product racked at Delivery hub', 'Delivery Hub', 'Aging', 'Current Status');
+                $i=1;
+                foreach($order_logs as $order_log){
+
+                    if($order_log->sub_order->parent_sub_order_id != 0){
+                        $sub_order = $order_log->sub_order->parent_sub_order;
+                    }else{
+                        $sub_order = $order_log->sub_order;
+                    }
+
+                    if(isset($sub_order)){
+
+                        $agingDetail = tripAging($sub_order->id);
+
+                        if($sub_order->sub_order_last_status === NULL){
+                            $sub_order_status = hubGetStatus($sub_order->sub_order_status);
+                        }else{
+                            $sub_order_status = hubGetStatus($sub_order->sub_order_last_status);
+                        }
+
+                        if(isset($sub_order->destination_hub->title)){
+                            $destination_hub_title = $sub_order->destination_hub->title;
+                        }else{
+                            $destination_hub_title = '';
+                        }
+
+                        $datasheet[$i] = array(
+                            $i,
+                            $sub_order->order->unique_order_id,
+                            $sub_order->unique_suborder_id,
+                            $sub_order->order->merchant_order_id,
+                            $sub_order->order->store->merchant->name,
+                            $sub_order->order->store->store_id,
+
+                            $sub_order->product->pickup_location->zone->hub->title,
+
+                            $agingDetail['start_at'],                            
+                            $agingDetail['end_at'],
+
+                            $destination_hub_title,
+                            $agingDetail['aging'],
+                            $sub_order_status
+                        );
+
+                    }
+
+                    $i++;
+                }
+
+                $sheet->setOrientation('landscape');
+
+                // Freeze first row
+                $sheet->freezeFirstRow();
+                
+                $sheet->fromArray($datasheet);
+            });
+        })->download($type);
+    }
+}

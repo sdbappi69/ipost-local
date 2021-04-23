@@ -1,0 +1,16 @@
+.user-login-5 .login-container > .login-content > h1{
+	color: #DC1C25;
+}
+
+.user-login-5 .login-container > .login-content p, .user-login-5 .login-container > .login-content > .login-form .forgot-password > a, .user-login-5 .login-container > .login-content > .login-form{
+	color: #EF5B44;
+}
+
+.btn.blue:not(.btn-outline){
+	background-color: #DC1C25;
+	border-color: #DC1C25;
+}
+
+.mt-checkbox.mt-checkbox-outline:hover > input:checked:not([disabled]) ~ span, .mt-checkbox.mt-checkbox-outline:hover > input:not([disabled]) ~ span, .mt-checkbox.mt-checkbox-outline > input:checked ~ span, .mt-checkbox.mt-checkbox-outline > input:focus ~ span, .mt-checkbox.mt-checkbox-outline > span, .mt-checkbox.mt-radio-outline:hover > input:checked:not([disabled]) ~ span, .mt-checkbox.mt-radio-outline:hover > input:not([disabled]) ~ span, .mt-checkbox.mt-radio-outline > input:checked ~ span, .mt-checkbox.mt-radio-outline > input:focus ~ span, .mt-checkbox.mt-radio-outline > span, .mt-radio.mt-checkbox-outline:hover > input:checked:not([disabled]) ~ span, .mt-radio.mt-checkbox-outline:hover > input:not([disabled]) ~ span, .mt-radio.mt-checkbox-outline > input:checked ~ span, .mt-radio.mt-checkbox-outline > input:focus ~ span, .mt-radio.mt-checkbox-outline > span, .mt-radio.mt-radio-outline:hover > input:checked:not([disabled]) ~ span, .mt-radio.mt-radio-outline:hover > input:not([disabled]) ~ span, .mt-radio.mt-radio-outline > input:checked ~ span, .mt-radio.mt-radio-outline > input:focus ~ span, .mt-radio.mt-radio-outline > span{
+	border-color: #EF5B44;
+}
