@@ -125,7 +125,7 @@
     </div>
 
 {{--     <script src="
-https://maps.google.com/maps/api/js?key=AIzaSyCBWhNYtf2cofZBppq9lfBqzGpJDjLBc4g&callback=initMap&sensor=false" type="text/javascript"></script>
+https://maps.google.com/maps/api/js?key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM&callback=initMap&sensor=false" type="text/javascript"></script>
     <script src="{{ URL::asset('assets/global/plugins/gmaps/gmaps.min.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('custom/js/maps-google-geo.js') }}" type="text/javascript"></script>
  --}}
@@ -185,7 +185,7 @@ https://maps.google.com/maps/api/js?key=AIzaSyCBWhNYtf2cofZBppq9lfBqzGpJDjLBc4g&
         //     $("#gmap_geocoding_btn").trigger("click");
         // });
     </script>
-    <script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyCBWhNYtf2cofZBppq9lfBqzGpJDjLBc4g"></script>
+    <script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
     <script>
         $(function () {
           var image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',

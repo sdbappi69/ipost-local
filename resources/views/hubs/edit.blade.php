@@ -193,7 +193,7 @@
 */
     </script>
 
-    <script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyCBWhNYtf2cofZBppq9lfBqzGpJDjLBc4g"></script>
+    <script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
     <script>
         $(function () {
           var image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',

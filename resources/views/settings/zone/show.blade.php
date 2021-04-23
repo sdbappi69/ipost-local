@@ -80,7 +80,7 @@
         });
     </script>
 
-{{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCHru2B6homPejeeKGb-6O_GKI9RwgUsE&libraries=drawing&callback=initMap&language=en&sensor=true" --}}
+{{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM&libraries=drawing&callback=initMap&language=en&sensor=true" --}}
 
 
     <script>
@@ -135,6 +135,6 @@
             });
     </script>
 
-    <script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyCBWhNYtf2cofZBppq9lfBqzGpJDjLBc4g"></script>
+    <script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
 
 @endsection

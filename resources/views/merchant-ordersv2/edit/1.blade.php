@@ -83,7 +83,7 @@
 <script src="{{ URL::asset('assets/pages/scripts/components-date-time-pickers.min.js') }}" type="text/javascript"></script>
 
 <script src="{{ URL::asset('custom/js/date-time.js') }}" type="text/javascript"></script>
-<script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&key=AIzaSyCBWhNYtf2cofZBppq9lfBqzGpJDjLBc4g"></script>
+<script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
 <script>
     $(function () {
         var image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
