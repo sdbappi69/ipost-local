@@ -189,11 +189,11 @@
                                                     <br>
                                                     <h4><u>Payment:</u></h4>
                                                     Unit Price: {{ $row2->unit_price }}<br>
-                                                    Total Product Charge: {{ $row2->sub_total }}<br>
-                                                    Unit Delivery Charge: {{ $row2->unit_deivery_charge }}<br>
-                                                    Total Delivery Charge: {{ $row2->total_delivery_charge }}<br>
-                                                    Payable Amount: <b>{{ $row2->total_payable_amount }}</b><br>
-                                                    Paid Amount: <b>{{ $row2->delivery_paid_amount }}</b><br>
+                                                    Total Product Charge: {{ $row2->sub_total or '' }}<br>
+                                                    Unit Delivery Charge: {{ $row2->unit_deivery_charge or '' }}<br>
+                                                    Total Delivery Charge: {{ $row2->total_delivery_charge or '' }}<br>
+                                                    Payable Amount: <b>{{ $row2->total_payable_amount or '' }}</b><br>
+                                                    Paid Amount: <b>{{ $row2->delivery_paid_amount or '' }}</b><br>
                                                     @endforeach
                                                 </td>
                                                 <td>

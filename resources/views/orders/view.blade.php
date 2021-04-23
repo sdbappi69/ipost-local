@@ -209,19 +209,19 @@
                                                     <br>
                                                     <h4><u>Payment:</u></h4>
                                                     Unit Price: {{ $row2->unit_price }}<br>
-                                                    Total Product Charge: {{ $row2->sub_total }}<br>
-                                                    Unit Delivery Charge: {{ $row2->unit_deivery_charge }}<br>
-                                                    Total Delivery Charge: {{ $row2->total_delivery_charge }}<br>
-                                                    Payable Amount: <b>{{ $row2->total_payable_amount }}</b><br>
-                                                    Paid Amount: <b>{{ $row2->delivery_paid_amount }}</b>
+                                                    Total Product Charge: {{ $row2->sub_total or '' }}<br>
+                                                    Unit Delivery Charge: {{ $row2->unit_deivery_charge or '' }}<br>
+                                                    Total Delivery Charge: {{ $row2->total_delivery_charge or '' }}<br>
+                                                    Payable Amount: <b>{{ $row2->total_payable_amount or '' }}</b><br>
+                                                    Paid Amount: <b>{{ $row2->delivery_paid_amount or '' }}</b>
                                                     <br>
                                                     <h4><u>Payment:</u></h4>
                                                     Unit Price: {{ $row2->unit_price }}<br>
-                                                    Total Product Charge: {{ $row2->sub_total }}<br>
-                                                    Unit Delivery Charge: {{ $row2->unit_deivery_charge }}<br>
-                                                    Total Delivery Charge: {{ $row2->total_delivery_charge }}<br>
-                                                    Payable Amount: <b>{{ $row2->total_payable_amount }}</b><br>
-                                                    Paid Amount: <b>{{ $row2->delivery_paid_amount }}</b>
+                                                    Total Product Charge: {{ $row2->sub_total or '' }}<br>
+                                                    Unit Delivery Charge: {{ $row2->unit_deivery_charge or '' }}<br>
+                                                    Total Delivery Charge: {{ $row2->total_delivery_charge or '' }}<br>
+                                                    Payable Amount: <b>{{ $row2->total_payable_amount or '' }}</b><br>
+                                                    Paid Amount: <b>{{ $row2->delivery_paid_amount or '' }}</b>
                                                     <br>
                                                     @if($row2->charge_details)
                                                     <h4><u>Delivery Charge Details:</u></h4>
@@ -229,23 +229,25 @@
                                                     $charge = json_decode($row2->charge_details);
 //                                                    dd($charge->trip_map);
                                                     ?>
-                                                    Store: {{ $charge->store_id }}<br>
-                                                    Charge Type: {{ $charge->charge_type }}<br>
-                                                    Initial Charge: {{ $charge->initial_charge }}<br>
-                                                    Hub Transfer Fee: {{ $charge->hub_transfer_charge }}<br>
-                                                    Hub Transit No: {{ $charge->hub_transit }}<br>
+                                                    Store: {{ $charge->store_id or '' }}<br>
+                                                    Charge Type: {{ $charge->charge_type or '' }}<br>
+                                                    Initial Charge: {{ $charge->initial_charge or '' }}<br>
+                                                    Hub Transfer Fee: {{ $charge->hub_transfer_charge or '' }}<br>
+                                                    Hub Transit No: {{ $charge->hub_transit or '' }}<br>
                                                     Transit Hubs: <br>
-                                                    @foreach($charge->trip_map as $map)
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    {{ $map->start_hub or '' }} - {{ $map->end_hub or '' }}<br>
-                                                    @endforeach
+                                                    @if($charge->trip_map)
+                                                        @foreach($charge->trip_map as $map)
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        {{ $map->start_hub or '' }} - {{ $map->end_hub or '' }}<br>
+                                                        @endforeach
+                                                    @enfif
                                                     @if($charge->discount_id)
-                                                    Discount Type: {{ $charge->discount_title }}<br>
-                                                    Discount: {{ $charge->discount }}<br>
+                                                        Discount Type: {{ $charge->discount_title or '' }}<br>
+                                                        Discount: {{ $charge->discount or '' }}<br>
                                                     @endif
-                                                    Total Quantity: {{ $charge->total_quantity }}<br>
-                                                    Delivery Charge: {{ $charge->delivery_charge }}<br>
-                                                    Total Delivery Charge: {{ $charge->final_delivery_charge }}<br>
+                                                    Total Quantity: {{ $charge->total_quantity or '' }}<br>
+                                                    Delivery Charge: {{ $charge->delivery_charge or '' }}<br>
+                                                    Total Delivery Charge: {{ $charge->final_delivery_charge or '' }}<br>
                                                     @endif
                                                 @endforeach
                                             </td>
