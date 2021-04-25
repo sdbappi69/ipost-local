@@ -4,7 +4,14 @@ if (!function_exists("getZoneBound")) {
 
     function getZoneBound($lat, $lng) {
         // $zone = DB::table('zone_maps')->where(DB::raw("ST_CONTAINS(ST_PolygonFromText(CONCAT('POLYGON((', zone_maps.coordinates, '))')), Point($lat, $lng))"), true)->join('zones', 'zone_maps.zone_id', '=', 'zones.id')->select('zone_maps.*', 'zones.*')->first();
-        $zoneMap = App\ZoneMap::where(DB::raw("ST_CONTAINS(ST_PolygonFromText(CONCAT('POLYGON((', zone_maps.coordinates, '))')), Point($lat, $lng))"), true)->select('zone_maps.*')->first();
+        $zoneMap = App\ZoneMap::with('zone')
+            ->where(DB::raw("ST_CONTAINS(ST_PolygonFromText(CONCAT('POLYGON((', zone_maps.coordinates, '))')), Point($lat, $lng))"), true)
+            ->whereNotNull('coordinates')
+            ->where('coordinates','!=','')
+            ->whereHas('zone',function ($q){
+                $q->whereStatus(1);
+            })
+            ->first();
         return $zoneMap != null ? $zoneMap->zone : null;
     }
 

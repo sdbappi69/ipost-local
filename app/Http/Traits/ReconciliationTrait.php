@@ -3,6 +3,7 @@
 namespace App\Http\Traits;
 
 use App\ConsignmentTask;
+use App\Http\Traits\MerchantSubOrder;
 use App\PickingTask;
 use App\DeliveryTask;
 use App\OrderProduct;
@@ -10,13 +11,14 @@ use App\SubOrder;
 use App\PickingLocations;
 use App\Consignment;
 use App\Order;
-
 use Auth;
+use Log;
 
-trait ReconciliationTrait
-{
-    public function reconcileCommon($task_id, $request)
-    {
+trait ReconciliationTrait {
+
+    use MerchantSubOrder;
+
+    public function reconcileCommon($task_id, $request) {
 
         $task = ConsignmentTask::findOrFail($task_id);
 
@@ -43,41 +45,39 @@ trait ReconciliationTrait
                 // Update Sub-Order Status
                 $this->suborderStatus($product->sub_order_id, 38); // Delivery Completed
             }
-
         } else if ($request->due_quantity == $product->quantity) {
 
             $task->status = 4; // Fail
 
-            if ($task->task_type_id == 1) {
+            if ($task->task_type_id == 1 || $task->task_type_id == 5) {
                 if ($request->sub_order_status == 13) {
 
                     $this->suborderStatus($product->sub_order_id, 13); // Pickup order Cancelled
-
                 } else {
-
-                    $this->suborderStatus($product->sub_order_id, 6); // Pick up failed
-
-                    // Send SMS
-                    $this->smsPickupFailed($task->suborder->unique_suborder_id);
-
-                    // Create Due Sub-Order
-                    $new_sub_order = $this->CreateNewSubOrder($product->sub_order_id, $request->sub_order_status);
-
-                    // Create Due Product
-                    $new_product = $this->CreateNewProduct($new_sub_order, $product);
+                    // no new order will be created, as seller can not re-package the product
+                    $this->suborderStatus($product->sub_order_id, 2); // Failed task again placed
+//                    $this->suborderStatus($product->sub_order_id, 6); // Pick up failed
+//
+//                    // Send SMS
+//                    $this->smsPickupFailed($task->suborder->unique_suborder_id);
+//
+//                    // Create Due Sub-Order
+//                    $new_sub_order = $this->CreateNewSubOrder($product->sub_order_id, $request->sub_order_status);
+//
+//                    // Create Due Product
+//                    $new_product = $this->CreateNewProduct($new_sub_order, $product);
                 }
 
-            } elseif ($task->task_type_id == 4) {
+                //} elseif ($task->task_type_id == 4) {
                 // Update Sub-Order Status
-                $this->suborderStatus($product->sub_order_id, 26); // Full order racked at Destination Hub
+                //$this->suborderStatus($product->sub_order_id, 26); // Full order racked at Destination Hub
             } else {
                 $order_product = OrderProduct::where('id', $product->id)->first();
                 $order_product->delivery_paid_amount = $request->paid_amount;
                 $order_product->save();
 
                 // Update Sub-Order Status
-//                $this->suborderStatus($product->sub_order_id, 33); // Products Delivery Failed
-
+                // $this->suborderStatus($product->sub_order_id, 33); // Products Delivery Failed
                 // Send SMS
                 $this->smsDeliveryFailed($task->suborder->unique_suborder_id);
 
@@ -91,7 +91,6 @@ trait ReconciliationTrait
                 // Create Due Product
                 $new_product = $this->CreateNewProductDelivery($new_sub_order, $product);
             }
-
         } else {
 
             $task->status = 3; // Pertial
@@ -108,7 +107,6 @@ trait ReconciliationTrait
 
                 // Update Sub-Order Status
                 $this->suborderStatus($task->sub_order_id, 9); // Product received from rider
-
             } else {//delivery
                 // Update Require Product
                 $required_quantity = $product->quantity - $request->due_quantity;
@@ -143,7 +141,6 @@ trait ReconciliationTrait
 
             // Create Due Product
             $new_product = $this->CreatePertialProduct($new_sub_order, $product, $request->due_quantity);
-
         }
 
         if ($request->has('reason_id')) {
@@ -156,12 +153,10 @@ trait ReconciliationTrait
         $task->save();
 
         return $task->consignment_id;
-
     }
 
     // picking Reconcile
-    public function pickingReconcile($task_id, $request)
-    {
+    public function pickingReconcile($task_id, $request) {
 
         $task = PickingTask::findOrFail($task_id);
 
@@ -179,7 +174,6 @@ trait ReconciliationTrait
                 // Update Sub-Order Status
                 $this->suborderStatus($product->sub_order_id, 37); // Return Completed
             }
-
         } else if ($request->due_quantity == $product->quantity) {
 
             $task->status = 4; // Fail
@@ -193,7 +187,6 @@ trait ReconciliationTrait
                 if ($request->sub_order_status == 13) {
 
                     $this->suborderStatus($product->sub_order_id, 13); // Pickup order Cancelled
-
                 } else {
 
                     $this->suborderStatus($product->sub_order_id, 6); // Pick up failed
@@ -210,20 +203,15 @@ trait ReconciliationTrait
 
                     // Create Due Product
                     $new_product = $this->CreateNewProduct($new_sub_order, $product);
-
                 }
-
             } else {
 
                 // Update Sub-Order Status
                 $this->suborderStatus($product->sub_order_id, 26); // Full order racked at Destination Hub
-
             }
-
         } else {
 
             $task->status = 3; // Pertial
-
             // Update Require Product
             $required_quantity = $product->quantity - $request->due_quantity;
             $required_sub_total = $product->unit_price * $required_quantity;
@@ -247,13 +235,11 @@ trait ReconciliationTrait
 
             // Update Sub-Order Status
             $this->suborderStatus($order_product->sub_order_id, 9); // Product received from rider
-
             // Create Due Sub-Order
             $new_sub_order = $this->CreatePertialSubOrder($product->sub_order_id, $request->sub_order_status);
 
             // Create Due Product
             $new_product = $this->CreatePertialProduct($new_sub_order, $product, $request->due_quantity);
-
         }
 
         if ($request->has('reason_id')) {
@@ -266,12 +252,10 @@ trait ReconciliationTrait
         $task->save();
 
         return $task->consignment_id;
-
     }
 
     // delivery Reconcile
-    public function deliveryReconcile($task_id, $request)
-    {
+    public function deliveryReconcile($task_id, $request) {
 
         $task = DeliveryTask::findOrFail($task_id);
 
@@ -300,7 +284,6 @@ trait ReconciliationTrait
 
             // Update Sub-Order Status
             $this->suborderStatus($product->sub_order_id, 38); // Delivery Completed
-
             // AjkerDeal Operation
             if ($order_product->order->store_id == 83) {
                 $this->ajkerDealOrderStatus($order_product->order->merchant_order_id);
@@ -308,14 +291,10 @@ trait ReconciliationTrait
 
             // Ajker Deal Delivery Status Update
             // if($order_product->order->store->merchant->id == 78){
-
             //     $sub_order_merchant_order_id = $order_product->order->merchant_order_id;
-
             //     // Call to AjkerDeal API
             //     $this->CallToAjkerDeal($sub_order_merchant_order_id);
-
             // }
-
         } else if ($request->due_quantity == $product->quantity) {
 
             $task->status = 4; // Fail
@@ -333,7 +312,6 @@ trait ReconciliationTrait
 
             // Update Sub-Order Status
             $this->suborderStatus($product->sub_order_id, 33); // Products Delivery Failed
-
             // Send SMS
             $this->smsDeliveryFailed($task->suborder->unique_suborder_id);
 
@@ -346,11 +324,9 @@ trait ReconciliationTrait
 
             // Create Due Product
             $new_product = $this->CreateNewProductDelivery($new_sub_order, $product);
-
         } else {
 
             $task->status = 3; // Pertial
-
             // Update Require Product
             $required_quantity = $product->quantity - $request->due_quantity;
             $required_sub_total = $product->unit_price * $required_quantity;
@@ -382,7 +358,6 @@ trait ReconciliationTrait
 
             // Update Sub-Order Status
             $this->suborderStatus($order_product->sub_order_id, 39); // Delivery Partial Completed
-
             // Create Due Sub-Order
             $new_sub_order = $this->CreatePertialSubOrderDelivery($product->sub_order_id, $request->sub_order_status);
             $new_sub_order = SubOrder::findOrFail($new_sub_order->id);
@@ -392,7 +367,6 @@ trait ReconciliationTrait
 
             // Create Due Product
             $new_product = $this->CreatePertialProductDelivery($new_sub_order, $product, $request->due_quantity);
-
         }
 
         if ($request->has('reason_id')) {
@@ -405,12 +379,10 @@ trait ReconciliationTrait
         $task->save();
 
         return $task->consignment_id;
-
     }
 
     // Create New Sub-Order
-    public function CreateNewSubOrder($sub_order_id, $sub_order_status)
-    {
+    public function CreateNewSubOrder($sub_order_id, $sub_order_status) {
 
         $exist_sub_order = SubOrder::where('id', $sub_order_id)->first();
 
@@ -422,9 +394,11 @@ trait ReconciliationTrait
         $sub_order->unique_suborder_id = $new_unique_suborder_id;
         $sub_order->order_id = $exist_sub_order->order_id;
         $sub_order->return = $exist_sub_order->return;
+        $sub_order->post_delivery_return = $exist_sub_order->post_delivery_return;
         $sub_order->source_hub_id = $exist_sub_order->source_hub_id;
         $sub_order->destination_hub_id = $exist_sub_order->destination_hub_id;
         $sub_order->next_hub_id = $exist_sub_order->next_hub_id;
+        $sub_order->tm_picking_status = 1; // to listed the order in pickup list
         if ($exist_sub_order->parent_sub_order_id == 0) {
             $sub_order->parent_sub_order_id = $sub_order_id;
         } else {
@@ -436,12 +410,10 @@ trait ReconciliationTrait
         $this->suborderStatus($sub_order->id, $sub_order_status);
 
         return $sub_order;
-
     }
 
     // Create New Product
-    public function CreateNewProduct($new_sub_order, $product)
-    {
+    public function CreateNewProduct($new_sub_order, $product) {
 
         $order_product = new OrderProduct();
         $order_product->product_unique_id = $new_sub_order->unique_suborder_id;
@@ -468,12 +440,10 @@ trait ReconciliationTrait
         $order_product->save();
 
         return $order_product;
-
     }
 
     // Create New Sub-Order
-    public function CreatePertialSubOrder($sub_order_id, $sub_order_status)
-    {
+    public function CreatePertialSubOrder($sub_order_id, $sub_order_status) {
 
         $exist_sub_order = SubOrder::where('id', $sub_order_id)->first();
 
@@ -495,12 +465,10 @@ trait ReconciliationTrait
         $this->suborderStatus($sub_order->id, $sub_order_status);
 
         return $sub_order;
-
     }
 
     // Create New Product
-    public function CreatePertialProduct($new_sub_order, $product, $due_quantity)
-    {
+    public function CreatePertialProduct($new_sub_order, $product, $due_quantity) {
 
         // Update Due Product
         $due_sub_total = $product->unit_price * $due_quantity;
@@ -536,17 +504,12 @@ trait ReconciliationTrait
         $order_product->save();
 
         return $order_product;
-
     }
 
     // Create New Sub-Order Delivery
-    public function CreateNewSubOrderDelivery($sub_order_id, $sub_order_status)
-    {
+    public function CreateNewSubOrderDelivery($sub_order_id, $sub_order_status) {
 
         $exist_sub_order = SubOrder::where('id', $sub_order_id)->first();
-
-        $last_sub_order = SubOrder::where('order_id', $exist_sub_order->order_id)->where('return', $exist_sub_order->return)->orderBy('id', 'desc')->first();
-        $last_sub_order_number = substr($last_sub_order->unique_suborder_id, -2);
 
         if ($sub_order_status == 35) {
 
@@ -558,9 +521,8 @@ trait ReconciliationTrait
 
             $exist_sub_order->return = $return;
             $exist_sub_order->save();
-
         } else {
-            $new_unique_suborder_id = substr($last_sub_order->unique_suborder_id, 0, 8) . sprintf("%02d", $last_sub_order_number + 1);
+            $new_unique_suborder_id = $this->createUniqueSubOrderId($exist_sub_order->unique_suborder_id);
             $return = 0;
 
             $source_hub_id = $exist_sub_order->source_hub_id;
@@ -573,7 +535,7 @@ trait ReconciliationTrait
         $sub_order->return = $return;
         $sub_order->source_hub_id = $source_hub_id;
         $sub_order->destination_hub_id = $destination_hub_id;
-        $sub_order->next_hub_id = $destination_hub_id;
+        $sub_order->current_hub_id = auth()->user()->reference_id;
         if ($exist_sub_order->parent_sub_order_id == 0) {
             $sub_order->parent_sub_order_id = $sub_order_id;
         } else {
@@ -581,24 +543,26 @@ trait ReconciliationTrait
         }
         $sub_order->save();
 
+        $sub_order->next_hub_id = $this->createTransitMap($sub_order->id, $sub_order->source_hub_id, $sub_order->destination_hub_id);
+        $sub_order->save();
+
         // Update Sub-Order Status
-        if ($sub_order_status == 34) {
-            $this->suborderStatus($sub_order->id, 34);
-        } else {
-            if ($sub_order->source_hub_id == $sub_order->destination_hub_id) {
-                $this->suborderStatus($sub_order->id, 26);
+
+        if ($sub_order->current_hub_id == $sub_order->destination_hub_id) {
+            if ($sub_order_status == 34) {
+                $this->suborderStatus($sub_order->id, 34);
             } else {
-                $this->suborderStatus($sub_order->id, 15);
+                $this->suborderStatus($sub_order->id, 26);
             }
+        } else {
+            $this->suborderStatus($sub_order->id, 15);
         }
 
         return $sub_order;
-
     }
 
     // Create New Product Delivery
-    public function CreateNewProductDelivery($new_sub_order, $product)
-    {
+    public function CreateNewProductDelivery($new_sub_order, $product) {
 
         $order_product = new OrderProduct();
         $order_product->product_unique_id = $new_sub_order->unique_suborder_id;
@@ -625,12 +589,10 @@ trait ReconciliationTrait
         $order_product->save();
 
         return $order_product;
-
     }
 
     // Create New Sub-Order Delivery
-    public function CreatePertialSubOrderDelivery($sub_order_id, $sub_order_status)
-    {
+    public function CreatePertialSubOrderDelivery($sub_order_id, $sub_order_status) {
 
         $exist_sub_order = SubOrder::where('id', $sub_order_id)->first();
 
@@ -642,7 +604,6 @@ trait ReconciliationTrait
             $new_unique_suborder_id = $this->createReturnSubOrder($exist_sub_order->unique_suborder_id);
             // $new_unique_suborder_id = 'R'.substr($last_sub_order->unique_suborder_id, 1);
             $return = 1;
-
         } else {
             $new_unique_suborder_id = substr($last_sub_order->unique_suborder_id, 0, 8) . sprintf("%02d", $last_sub_order_number + 1);
             $return = 0;
@@ -672,12 +633,10 @@ trait ReconciliationTrait
         }
 
         return $sub_order;
-
     }
 
     // Create New Product Delivery
-    public function CreatePertialProductDelivery($new_sub_order, $product, $due_quantity)
-    {
+    public function CreatePertialProductDelivery($new_sub_order, $product, $due_quantity) {
 
         // Update Due Product
         $due_sub_total = $product->unit_price * $due_quantity;
@@ -719,12 +678,10 @@ trait ReconciliationTrait
         $order_product->save();
 
         return $order_product;
-
     }
 
     // picking Bulk Reconcile
-    public function pickingBulkReconcile($task_id, $request)
-    {
+    public function pickingBulkReconcile($task_id, $request) {
 
         $task = PickingTask::findOrFail($task_id);
 
@@ -746,7 +703,6 @@ trait ReconciliationTrait
                 // Update Sub-Order Status
                 $this->suborderStatus($product->sub_order_id, 37); // Return Completed
             }
-
         } else if ($due_quantity == $product->quantity) {
 
             if (strtolower($task->type) == 'picking') {
@@ -754,7 +710,6 @@ trait ReconciliationTrait
                 if ($request->sub_order_status_picking == 13) {
 
                     $this->suborderStatus($product->sub_order_id, 13); // Pickup order Cancelled
-
                 } else {
 
                     $this->suborderStatus($product->sub_order_id, 6); // Pick up failed
@@ -771,25 +726,19 @@ trait ReconciliationTrait
 
                     // Create Due Product
                     $new_product = $this->CreateNewProduct($new_sub_order, $product);
-
                 }
 
                 // Update Sub-Order Status
                 // $this->suborderStatus($product->sub_order_id, 13); // Pickup order Cancelled
-
                 // Create Due Sub-Order
                 // $new_sub_order = $this->CreateNewSubOrder($product->sub_order_id, $request->sub_order_status_picking);
-
                 // Create Due Product
                 // $new_product = $this->CreateNewProduct($new_sub_order, $product);
-
             } else {
 
                 // Update Sub-Order Status
                 $this->suborderStatus($product->sub_order_id, 26); // Full order racked at Destination Hub
-
             }
-
         } else {
 
             // Update Require Product
@@ -811,13 +760,11 @@ trait ReconciliationTrait
 
             // Update Sub-Order Status
             $this->suborderStatus($order_product->sub_order_id, 9); // Product received from rider
-
             // Create Due Sub-Order
             $new_sub_order = $this->CreatePertialSubOrder($product->sub_order_id, $request->sub_order_status_picking);
 
             // Create Due Product
             $new_product = $this->CreatePertialProduct($new_sub_order, $product, $due_quantity);
-
         }
 
         if ($request->has('reason_id')) {
@@ -830,12 +777,10 @@ trait ReconciliationTrait
         $task->save();
 
         return $task->consignment_id;
-
     }
 
     // delivery Bulk Reconcile
-    public function deliveryBulkReconcile($task_id, $request)
-    {
+    public function deliveryBulkReconcile($task_id, $request) {
 
         $task = DeliveryTask::findOrFail($task_id);
 
@@ -852,12 +797,10 @@ trait ReconciliationTrait
 
             // Update Sub-Order Status
             $this->suborderStatus($product->sub_order_id, 38); // Delivery Completed
-
             // AjkerDeal Operation
             if ($order_product->order->store_id == 83) {
                 $this->ajkerDealOrderStatus($order_product->order->merchant_order_id);
             }
-
         } else if ($due_quantity == $product->quantity) {
 
             $order_product = OrderProduct::where('id', $product->id)->first();
@@ -865,8 +808,7 @@ trait ReconciliationTrait
             $order_product->save();
 
             // Update Sub-Order Status
-//            $this->suborderStatus($product->sub_order_id, 33); // Products Delivery Failed
-
+            // $this->suborderStatus($product->sub_order_id, 33); // Products Delivery Failed
             // Send SMS
             $this->smsDeliveryFailed($task->suborder->unique_suborder_id);
 
@@ -875,7 +817,6 @@ trait ReconciliationTrait
 
             // Create Due Product
             $new_product = $this->CreateNewProductDelivery($new_sub_order, $product);
-
         } else {
 
             // Update Require Product
@@ -902,13 +843,11 @@ trait ReconciliationTrait
 
             // Update Sub-Order Status
             $this->suborderStatus($order_product->sub_order_id, 39); // Delivery Partial Completed
-
             // Create Due Sub-Order
             return $new_sub_order = $this->CreatePertialSubOrderDelivery($product->sub_order_id, $request->sub_order_status_delivery);
 
             // Create Due Product
             $new_product = $this->CreatePertialProductDelivery($new_sub_order, $product, $due_quantity);
-
         }
 
         if ($request->has('reason_id')) {
@@ -921,11 +860,23 @@ trait ReconciliationTrait
         $task->save();
 
         return $task->consignment_id;
-
     }
 
-    public function createReturnSubOrder($unique_suborder_id)
-    {
+    public function createUniqueSubOrderId($unique_suborder_id) {
+        $new_unique_suborder_id = $unique_suborder_id;
+        while (1) {
+            $last_sub_order_number = substr($new_unique_suborder_id, -2);
+            $new_unique_suborder_id = substr($new_unique_suborder_id, 0, 8) . sprintf("%02d", $last_sub_order_number + 1);
+Log::info("new_unique_suborder_id $new_unique_suborder_id");
+            $count = SubOrder::where('unique_suborder_id', $new_unique_suborder_id)->count();
+
+            if ($count == 0) {
+                return $new_unique_suborder_id;
+            }
+        }
+    }
+
+    public function createReturnSubOrder($unique_suborder_id) {
 
         $new_unique_suborder_id = 'R' . substr($unique_suborder_id, 1);
         $count = SubOrder::where('unique_suborder_id', $new_unique_suborder_id)->count();
@@ -944,13 +895,10 @@ trait ReconciliationTrait
                     return $new_unique_suborder_id;
                 }
             }
-
         }
-
     }
 
-    public function CallToAjkerDeal($sub_order_merchant_order_id)
-    {
+    public function CallToAjkerDeal($sub_order_merchant_order_id) {
 
         $curl = curl_init();
 
@@ -982,7 +930,6 @@ trait ReconciliationTrait
         } else {
             return $response;
         }
-
     }
 
 }

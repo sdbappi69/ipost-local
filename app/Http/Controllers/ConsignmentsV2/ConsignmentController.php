@@ -29,6 +29,7 @@ use App\SubOrder;
 use App\Status;
 use App\Reason;
 use App\ExtractLog;
+use Log;
 
 class ConsignmentController extends Controller
 {
@@ -115,9 +116,11 @@ class ConsignmentController extends Controller
                         $amount_collected += $task->collected;
                         switch ($task->task_type_id) {
                             case 1:
+                            case 5:
                                 $pickingQuantity += $task->quantity;
                                 break;
                             case 2:
+                            case 6:
                                 $deliveryQuantity += $task->quantity;
                                 break;
                             case 4:
@@ -141,8 +144,8 @@ class ConsignmentController extends Controller
 
                     $datasheet[$i] = array(
                         $i,
-                        $consignment->consignment_unique_id or '',
-                        $consignment->rider->name or '',
+                        $consignment->consignment_unique_id,
+                        $consignment->rider->name ?? '',
                         $amount_to_collect,
                         $amount_collected,
                         $pickingQuantity,
@@ -168,7 +171,7 @@ class ConsignmentController extends Controller
     public function show($id)
     {
         $consignment = ConsignmentCommon::with('task.suborder.product.product_category', 'task.reason', 'rider')->findOrFail($id);
-//dd($consignment);
+        //dd($consignment);
         return view('consignmentsv2.view', compact('consignment'));
     }
 
@@ -187,7 +190,7 @@ class ConsignmentController extends Controller
         $picking_sub_order_status = Status::where('active', '1')->whereIn('code', [2, 13])->orderBy('id', 'asc')->lists('title', 'id')->toArray();
         $delivery_sub_order_status = Status::where('active', '1')->whereIn('code', [34, 35])->orderBy('id', 'asc')->lists('title', 'id')->toArray();
         $return_sub_order_status = Status::where('active', '1')->where('code', 35)->orderBy('id', 'asc')->lists('title', 'id')->toArray();
-//        dd($consignment);
+        //        dd($consignment);
         return view('consignmentsv2.edit', compact('consignment', 'picking_sub_order_status', 'delivery_sub_order_status', 'return_sub_order_status', 'reasons', 'dueCount'));
     }
 
@@ -200,6 +203,12 @@ class ConsignmentController extends Controller
             $due_quantity = $request->due_quantity;
         } else {
             $due_quantity = 0;
+        }
+
+        // client asked not to set zero quantity for failed reconcile
+        // if zero need to alow the following condition can be removed only
+        if($due_quantity == 0){
+            return redirect()->back()->withErrors("Failed quantity may not be zero!");
         }
         if ($due_quantity != 0 && !$request->has('sub_order_status')) {
             return redirect()->back()->withErrors("Products due. You have to select what to do.");
@@ -300,9 +309,9 @@ class ConsignmentController extends Controller
         }
 
         foreach ($consignment->task as $task) {
-            
-            if($task->status == 2 && ($task->task_type_id == 2 || $task->task_type_id == 6)){
 
+            if($task->status == 2 && ($task->task_type_id == 2 || $task->task_type_id == 3 || $task->task_type_id == 6 || $task->task_type_id == 7)){
+                
                 # Require Product
                 $product = $task->suborder->product;
 
@@ -318,9 +327,7 @@ class ConsignmentController extends Controller
         }
 
         ConsignmentTask::where('consignment_id', $id)
-                ->whereStatus(2)
-                ->whereIn('task_type_id', [2,4,6])
-                // ->whereTaskTypeId(2)
+                ->whereStatus(2) // success tasks
                 ->update(['reconcile' => 1]);
 
         $count = ConsignmentTask::where('consignment_id', $id)->where('reconcile', 0)->count();

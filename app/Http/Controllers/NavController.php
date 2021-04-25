@@ -42,7 +42,7 @@ class NavController extends Controller {
         $data['outbound_nav'] = $data['office_delivery_nav'] + $data['accept_suborder_nav'];
 
         $data['trip_nav'] = $this->totalTrip();
-        
+
         $data['cash_collection'] = $this->totalCashCollection();
         $data['cash_transfer'] = $this->totalCashTransfer();
         $data['account_bill'] = $this->totalCashCollection() + $this->totalCashTransfer();
@@ -50,7 +50,7 @@ class NavController extends Controller {
         return $data;
     }
 
-    public function headAccountManager(){
+    public function headAccountManager() {
         $data['receive_hub_payment'] = $this->receiveHubPayment();
         $data['merchant_checkout'] = $this->merchantCheckout();
         $data['manage_checkout'] = $this->manageCheckout();
@@ -58,28 +58,29 @@ class NavController extends Controller {
         return $data;
     }
 
-    private function receiveHubPayment(){
+    private function receiveHubPayment() {
 
         $start_date = date('Y-m-d');
         $end_date = date('Y-m-d');
 
-       $query = CollectedCashAccumulated::WhereBetween('date', array($start_date, $end_date))->where('status',1);
-       return $receiveHubPayment = $query->count();
+        $query = CollectedCashAccumulated::WhereBetween('date', array($start_date, $end_date))->where('status', 1);
+        return $receiveHubPayment = $query->count();
     }
-    private function merchantCheckout(){
+
+    private function merchantCheckout() {
         $start_date = date('Y-m-d');
         $end_date = date('Y-m-d');
         $query = CollectedCashAccumulated::WhereBetween('date', array($start_date, $end_date))
-            ->where('merchant_accumulated_cash_status',0)
-            ->where('status',2);
+                ->where('merchant_accumulated_cash_status', 0)
+                ->where('status', 2);
         return $merchantCheckout = $query->count();
     }
 
-    private function manageCheckout(){
+    private function manageCheckout() {
         $start_date = date('Y-m-d');
         $end_date = date('Y-m-d');
-        $query = MerchantAccumulatedCash::WhereBetween('date', array($start_date, $end_date))->where('status',1);
-       return $manageCheckout = $query->count();
+        $query = MerchantAccumulatedCash::WhereBetween('date', array($start_date, $end_date))->where('status', 1);
+        return $manageCheckout = $query->count();
     }
 
     private function toatlDelivery() {
@@ -91,7 +92,7 @@ class NavController extends Controller {
                 ->where('sub_orders.tm_delivery_status', 1)
                 ->where('sub_orders.return', 0)
                 ->whereIn('sub_orders.sub_order_status', [26, 34])
-                ->where('sub_orders.destination_hub_id', '=', auth()->user()->reference_id);
+                ->whereRaw("IF (`sub_orders`.`post_delivery_return` = 0, `sub_orders`.`destination_hub_id`,`sub_orders`.`source_hub_id`) = " . auth()->user()->reference_id);
         return $sub_orders = $query->count();
     }
 
@@ -103,10 +104,12 @@ class NavController extends Controller {
                 // ->whereIn('sub_orders.sub_order_status', [2, 6])
                 ->whereIn('sub_orders.sub_order_status', [2])
                 ->where('sub_orders.tm_picking_status', '=', 1)
-                ->where('zones_p.hub_id', '=', auth()->user()->reference_id)
+                ->whereRaw("IF (`sub_orders`.`return` = 0, `zones_p`.`hub_id`,`zones_d`.`hub_id`) = " . auth()->user()->reference_id)
+                ->join('orders', 'orders.id', '=', 'sub_orders.order_id')
                 ->join('order_product AS op', 'op.sub_order_id', '=', 'sub_orders.id')
                 ->join('pickup_locations', 'pickup_locations.id', '=', 'op.pickup_location_id')
-                ->join('zones AS zones_p', 'zones_p.id', '=', 'pickup_locations.zone_id');
+                ->join('zones AS zones_p', 'zones_p.id', '=', 'pickup_locations.zone_id')
+                ->join('zones AS zones_d', 'zones_d.id', '=', 'orders.delivery_zone_id');
         return $sub_orders = $query->count();
     }
 
@@ -129,22 +132,21 @@ class NavController extends Controller {
         return $consignments = $query->count();
     }
 
-    
-    private function totalReceive(){
+    private function totalReceive() {
         return DB::table('consignments_tasks')
-                ->join('sub_orders', 'sub_orders.id', '=', 'consignments_tasks.sub_order_id')
-                ->join('order_product', 'sub_orders.id', '=', 'order_product.sub_order_id')
-                ->join('users', 'users.id', '=', 'consignments_tasks.rider_id')
-                ->join('pickup_locations', 'pickup_locations.id', '=', 'order_product.pickup_location_id')
-                ->join('zones AS pick_zones', 'pick_zones.id', '=', 'pickup_locations.zone_id')
-                ->select('users.name as rider_name', 'unique_suborder_id', 'product_title', 'order_product.quantity', 'consignments_tasks.otp')
-                ->whereIn('task_type_id', [1,5])
-//                ->whereIn('sub_order_status', [7, 8])
-                ->where('sub_order_status', 9)
-                ->where('consignments_tasks.status', '>', 1)
-                ->where('tm_picking_status', '=', 1)
-                ->where('sub_orders.source_hub_id', '=', auth()->user()->reference_id)
-                ->count();
+                        ->join('sub_orders', 'sub_orders.id', '=', 'consignments_tasks.sub_order_id')
+                        ->join('order_product', 'sub_orders.id', '=', 'order_product.sub_order_id')
+                        ->join('users', 'users.id', '=', 'consignments_tasks.rider_id')
+                        ->join('pickup_locations', 'pickup_locations.id', '=', 'order_product.pickup_location_id')
+                        ->join('zones AS pick_zones', 'pick_zones.id', '=', 'pickup_locations.zone_id')
+                        ->select('users.name as rider_name', 'unique_suborder_id', 'product_title', 'order_product.quantity', 'consignments_tasks.otp')
+                        ->whereIn('task_type_id', [1, 5])
+                        // ->whereIn('sub_order_status', [7, 8])
+                        ->where('sub_order_status', 9)
+                        ->where('consignments_tasks.status', '>', 1)
+                        ->where('tm_picking_status', '=', 1)
+                        ->where('sub_orders.source_hub_id', '=', auth()->user()->reference_id)
+                        ->count();
     }
 
     public function totalPicked() {
@@ -225,7 +227,6 @@ class NavController extends Controller {
                 )
                 ->where('sub_orders.status', '!=', 0)
                 ->where('sub_orders.current_hub_id', '!=', auth()->user()->reference_id)
-                // ->where('sub_orders.source_hub_id', '!=', auth()->user()->reference_id)
                 ->where('sub_orders.next_hub_id', '=', auth()->user()->reference_id)
                 ->whereIn('sub_orders.sub_order_status', [20, 21]);
         return $query->count();
@@ -236,30 +237,35 @@ class NavController extends Controller {
                         'sub_orders.id AS suborder_id'
                 )
                 ->where('sub_orders.status', 1)
-                ->whereIn('sub_orders.sub_order_status', [15, 16, 17, 47, 20])
+                ->whereIn('sub_orders.sub_order_status', [15, 16, 17, 47])
                 ->where('sub_orders.current_hub_id', '=', auth()->user()->reference_id)
-                // ->where('sub_orders.source_hub_id', '=', auth()->user()->reference_id)
                 ->where('sub_orders.next_hub_id', '!=', auth()->user()->reference_id);
         return $query->count();
     }
+
     //saif start
-    private function totalCashCollection(){
+    private function totalCashCollection() {
         $query = SubOrder::select('sub_orders.*', 'order_product.product_title', 'order_product.product_category_id', 'users.name as rider_name', 'consignments_tasks.end_time as delivery_time', 'orders.merchant_order_id', 'payment_types.name as payment_name')
-                ->leftJoin('order_product', 'order_product.product_unique_id', '=', 'sub_orders.unique_suborder_id')
-                ->leftJoin('consignments_tasks', 'consignments_tasks.sub_order_id', '=', 'sub_orders.id')
-                ->leftJoin('users', 'consignments_tasks.rider_id', '=', 'users.id')
-                ->leftJoin('orders', 'orders.id', '=', 'sub_orders.order_id')
-                ->leftJoin('payment_types', 'payment_types.id', '=', 'orders.payment_type_id')
+                ->join('order_product', 'order_product.product_unique_id', '=', 'sub_orders.unique_suborder_id')
+                ->join('consignments_tasks', 'consignments_tasks.sub_order_id', '=', 'sub_orders.id')
+                ->join('consignments_common', 'consignments_tasks.consignment_id', '=', 'consignments_common.id')
+                ->join('users', 'consignments_tasks.rider_id', '=', 'users.id')
+                ->join('orders', 'orders.id', '=', 'sub_orders.order_id')
+                ->join('payment_types', 'payment_types.id', '=', 'orders.payment_type_id')
                 ->whereIn('sub_orders.sub_order_status', [37, 38, 39])
                 ->where('sub_orders.accounts', 0)
                 ->where('consignments_tasks.task_type_id', 2)
-                ->where('sub_orders.collected_cash_status', 0);
-           return $query->count();
+                ->where('sub_orders.collected_cash_status', 0)
+                ->where('consignments_common.hub_id', auth()->user()->reference_id)
+                ->distinct();
+        return $query->count();
     }
-    private function totalCashTransfer(){
-        $start_date = date('Y-m-d');
+
+    private function totalCashTransfer() {
+        $start_date = date('Y-m-d', strtotime('-10 day'));
         $end_date = date('Y-m-d');
-        $query = CollectedCashAccumulated::WhereBetween('date', array($start_date, $end_date));
+        $query = CollectedCashAccumulated::whereHubId(auth()->user()->reference_id)
+                        ->WhereBetween('date', array($start_date, $end_date))->where('status', 1);
         return $query->count();
     }
 

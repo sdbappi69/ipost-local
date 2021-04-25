@@ -260,7 +260,7 @@ class ChargeCalculatorController extends Controller {
         $chargeDetails['total_quantity'] = $request->quantity;
         $chargeDetails['final_delivery_charge'] = $delivery_discount_charge * $request->quantity;
 
-        $productDetails[] = array(
+        $productDetails = array(
             'status' => 'Success',
             'message' => 'Request Successful',
             'product_category' => $request->product_category,

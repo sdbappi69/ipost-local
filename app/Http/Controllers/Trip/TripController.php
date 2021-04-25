@@ -69,7 +69,13 @@ class TripController extends Controller
 
         $hubs = Hub::select(array('id', 'title'))->where('status', '=', '1')->lists('title', 'id')->toArray();
 
-        $drivers = User::whereStatus(true)->where('user_type_id', '=', '8')->where('reference_id', '=', auth()->user()->reference_id)->lists('name', 'id')->toArray();
+        $drivers = User::select(DB::raw('CONCAT(users.name, " - ", vehicle_types.title) AS name'),'users.id')
+            ->join('vehicle_types','vehicle_types.id','=','users.transparent_mode')
+            ->join('rider_references','rider_references.user_id','=','users.id')
+            ->where('users.status',1)
+            ->where('user_type_id', '=', '8')
+            ->where('rider_references.reference_id', '=', auth()->user()->reference_id)
+            ->lists('name', 'id')->toArray();
 
         $status = array(
                             '1' => 'Waiting',
@@ -141,16 +147,17 @@ class TripController extends Controller
                                     'cities_d.name AS delivery_city',
                                     'states_d.name AS delivery_state',
                                     'hubs.title AS delivery_hub',
+                                    'next_hub.title AS next_hub_title',
                                     'order_product.product_title',
                                     'order_product.quantity',
                                     'pc.name AS product_category'
                                 )
                                 ->where('sub_orders.status', 1)
-                                ->whereIn('sub_orders.sub_order_status', [15, 16, 17, 47, 20])
+                                ->whereIn('sub_orders.sub_order_status', [15, 16, 17, 47])
                                 ->where('sub_orders.current_hub_id', '=', auth()->user()->reference_id)
-                                // ->where('sub_orders.source_hub_id', '=', auth()->user()->reference_id)
                                 ->where('sub_orders.next_hub_id', '!=', auth()->user()->reference_id)
                                 ->leftJoin('hubs','hubs.id','=','sub_orders.destination_hub_id')
+                                ->leftJoin('hubs as next_hub','next_hub.id','=','sub_orders.next_hub_id')
                                 ->leftJoin('orders','orders.id','=','sub_orders.order_id')
                                 ->leftJoin('order_product','order_product.sub_order_id','=','sub_orders.id')
                                 ->leftJoin('product_categories AS pc', 'pc.id', '=', 'order_product.product_category_id')
@@ -303,15 +310,12 @@ class TripController extends Controller
 
                         $sub_order = SubOrder::where('unique_suborder_id', $unique_suborder_id)
                                                 ->where('status', '1')
-                                                ->whereIn('sub_order_status', [15, 16, 47])
-                                                ->where(function($query) {
-                                                    $query->where('sub_orders.source_hub_id', '=', auth()->user()->reference_id);
-                                                    $query->orWhere('sub_orders.next_hub_id', '=', auth()->user()->reference_id);
-                                                })
+                                                ->whereIn('sub_order_status', [15, 16, 17, 47])
+                                                ->where('current_hub_id', '=', auth()->user()->reference_id)
                                                 ->where('destination_hub_id', '!=', auth()->user()->reference_id)
                                                 ->first();
 
-                        if(count($sub_order)>0){
+                        if($sub_order){
 
                             $count = SuborderTrip::where('sub_order_id', $sub_order->id)->where('trip_id', $trip->id)->count();
 
@@ -376,7 +380,7 @@ class TripController extends Controller
                                     'states_d.name AS delivery_state',
                                     'hubs.title AS delivery_hub',
                                     'order_product.product_title',
-                                    'order_product.quantity',
+                                    DB::Raw("SUM(cart_product.quantity) as quantity"),
                                     'pc.name AS product_category',
                                     'suborder_trip.status AS sub_order_trip_status'
                                 )
@@ -386,6 +390,7 @@ class TripController extends Controller
                                 ->leftJoin('hubs','hubs.id','=','sub_orders.destination_hub_id')
                                 ->leftJoin('orders','orders.id','=','sub_orders.order_id')
                                 ->leftJoin('order_product','order_product.sub_order_id','=','sub_orders.id')
+                                ->leftJoin('cart_product','cart_product.sub_order_id','=','sub_orders.id')
                                 ->leftJoin('product_categories AS pc', 'pc.id', '=', 'order_product.product_category_id')
                                 ->leftJoin('stores','stores.id','=','orders.store_id')
                                 ->leftJoin('pickup_locations', 'pickup_locations.id', '=', 'order_product.pickup_location_id')
@@ -393,7 +398,7 @@ class TripController extends Controller
                                 ->leftJoin('cities AS cities_d','cities_d.id','=','orders.delivery_city_id')
                                 ->leftJoin('states AS states_d','states_d.id','=','orders.delivery_state_id');
 
-        $sub_orders = $query->orderBy('sub_orders.id', 'desc')->get();
+        $sub_orders = $query->groupBy('sub_orders.id')->orderBy('sub_orders.id', 'desc')->get();
 
         return view('trips.view', compact('sub_orders'));
     }
@@ -421,18 +426,17 @@ class TripController extends Controller
                                     'cities_d.name AS delivery_city',
                                     'states_d.name AS delivery_state',
                                     'hubs.title AS delivery_hub',
+                                    'next_hub.title AS next_hub_title',
                                     'order_product.product_title',
                                     'order_product.quantity',
                                     'pc.name AS product_category'
                                 )
                                 ->where('sub_orders.status', 1)
-                                ->whereIn('sub_order_status', [15, 16, 47])
-                                ->where(function($query) {
-                                    $query->where('sub_orders.source_hub_id', '=', auth()->user()->reference_id);
-                                    $query->orWhere('sub_orders.next_hub_id', '=', auth()->user()->reference_id);
-                                })
+                                ->whereIn('sub_order_status', [15, 16, 17, 47])
+                                ->where('current_hub_id', '=', auth()->user()->reference_id)
                                 ->where('sub_orders.destination_hub_id', '!=', auth()->user()->reference_id)
                                 ->leftJoin('hubs','hubs.id','=','sub_orders.destination_hub_id')
+                                ->leftJoin('hubs as next_hub','next_hub.id','=','sub_orders.next_hub_id')
                                 ->leftJoin('orders','orders.id','=','sub_orders.order_id')
                                 ->leftJoin('order_product','order_product.sub_order_id','=','sub_orders.id')
                                 ->leftJoin('product_categories AS pc', 'pc.id', '=', 'order_product.product_category_id')
@@ -545,11 +549,8 @@ class TripController extends Controller
 
             $sub_order = SubOrder::where('unique_suborder_id', $unique_id)
                                     ->where('status', '1')
-                                    ->whereIn('sub_order_status', [15, 16, 47])
-                                    ->where(function($query) {
-                                        $query->where('source_hub_id', '=', auth()->user()->reference_id);
-                                        $query->orWhere('next_hub_id', '=', auth()->user()->reference_id);
-                                    })
+                                    ->whereIn('sub_order_status', [15, 16, 17, 47])
+                                    ->where('current_hub_id', '=', auth()->user()->reference_id)
                                     ->where('destination_hub_id', '!=', auth()->user()->reference_id)
                                     ->first();
 
@@ -613,12 +614,14 @@ class TripController extends Controller
         $trip = Trip::where('id', $id)->where('trip_status', '1')->first();
         if(count($trip) > 0){
             if(auth()->user()->reference_id == $trip->source_hub_id){
-                $trip_start = Trip::findOrFail($id);
-                $trip_start->updated_by = auth()->user()->id;
-                $trip_start->trip_status = '2';
-                $trip_start->save();
+                $trip->updated_by = auth()->user()->id;
+                $trip->trip_status = '2';
+                $trip->save();
 
-                foreach ($trip_start->suborders as $suborder) {
+                foreach ($trip->suborders as $suborder) {
+                    // setting next receive hub
+                    SubOrder::whereId($suborder->sub_order_id)->update(['next_hub_id' => $trip->destination_hub_id]);
+
                     // Update Sub-Order Status
                     $this->suborderStatus($suborder->sub_order_id, '20');
 
@@ -645,15 +648,20 @@ class TripController extends Controller
         $trip = Trip::where('id', $id)->where('trip_status', '2')->first();
         if(count($trip) > 0){
             if(auth()->user()->reference_id == $trip->destination_hub_id){
-                $trip_end = Trip::findOrFail($id);
-                $trip_end->updated_by = auth()->user()->id;
-                $trip_end->trip_status = '3';
-                $trip_end->save();
+                // need to check all suborder taken or not before ending the trip
+                $leftProducts = SuborderTrip::where('trip_id', '=', $id)->where('status', '=', '1')->get();
+                if(count($leftProducts) < 1){
+                    $trip->updated_by = auth()->user()->id;
+                    $trip->trip_status = '3';
+                    $trip->save();
 
-                $message = 'Trip ends at: '.$trip->destination_hub->title;
+                    $message = 'Trip ends at: '.$trip->destination_hub->title;
 
-                // activityLog('user_id', 'ref_id', 'ref_table', 'text')
-                $this->activityLog(auth()->user()->id, $trip->id, 'trips', $message);
+                    // activityLog('user_id', 'ref_id', 'ref_table', 'text')
+                    $this->activityLog(auth()->user()->id, $trip->id, 'trips', $message);
+                }else{
+                    $message = "All Product didn't receive yet!";
+                }
             }else{
                 $message = "You haven't permission to end the trip";
             }
@@ -702,6 +710,7 @@ class TripController extends Controller
                                     'cities_d.name AS delivery_city',
                                     'states_d.name AS delivery_state',
                                     'hubs.title AS delivery_hub',
+                                    'next_hub.title AS next_hub_title',
                                     'order_product.product_title',
                                     'order_product.quantity',
                                     'pc.name AS product_category'
@@ -710,6 +719,7 @@ class TripController extends Controller
                                 ->where('suborder_trip.trip_id', $id)
                                 ->leftJoin('sub_orders', 'sub_orders.id', '=', 'suborder_trip.sub_order_id')
                                 ->leftJoin('hubs','hubs.id','=','sub_orders.destination_hub_id')
+                                ->leftJoin('hubs as next_hub','next_hub.id','=','sub_orders.next_hub_id')
                                 ->leftJoin('orders','orders.id','=','sub_orders.order_id')
                                 ->leftJoin('order_product','order_product.sub_order_id','=','sub_orders.id')
                                 ->leftJoin('product_categories AS pc', 'pc.id', '=', 'order_product.product_category_id')
@@ -742,11 +752,8 @@ class TripController extends Controller
 
                         $sub_order = SubOrder::where('unique_suborder_id', $unique_suborder_id)
                                                 ->where('status', '1')
-                                                ->whereIn('sub_order_status', [15, 16, 47])
-                                                ->where(function($query) {
-                                                    $query->where('source_hub_id', '=', auth()->user()->reference_id);
-                                                    $query->orWhere('next_hub_id', '=', auth()->user()->reference_id);
-                                                })
+                                                ->whereIn('sub_order_status', [15, 16, 17, 47])
+                                                ->where('current_hub_id', '=', auth()->user()->reference_id)
                                                 ->where('destination_hub_id', '!=', auth()->user()->reference_id)
                                                 ->first();
 

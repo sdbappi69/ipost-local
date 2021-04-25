@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\LogsTrait;
+use App\Http\Traits\MerchantSubOrder;
 use App\SubOrder;
 use App\Trip;
 use App\SuborderTrip;
@@ -25,7 +26,7 @@ use DB;
 
 class HubReceiveController extends Controller {
 
-    use LogsTrait;
+    use LogsTrait, MerchantSubOrder;
 
     /**
      * Create a new controller instance.
@@ -222,11 +223,12 @@ class HubReceiveController extends Controller {
                 ->join('users', 'users.id', '=', 'consignments_tasks.rider_id')
                 ->join('pickup_locations', 'pickup_locations.id', '=', 'order_product.pickup_location_id')
                 ->join('zones AS pick_zones', 'pick_zones.id', '=', 'pickup_locations.zone_id')
-                ->select('users.name as rider_name', 'unique_suborder_id', 'product_title', 'order_product.quantity', 'consignments_tasks.otp')
+                ->select('users.name as rider_name', 'unique_suborder_id', 'product_title', 'order_product.quantity')
+                ->distinct()
                 ->whereIn('task_type_id', [1, 5])
                 // ->whereIn('sub_order_status', [7, 8])
                 ->where('sub_order_status', 9)
-                ->where('consignments_tasks.status', '>', 1)
+                ->where('consignments_tasks.status', '=', 2)
                 ->where('tm_picking_status', '=', 1)
                 ->where('sub_orders.source_hub_id', '=', auth()->user()->reference_id);
 
@@ -242,9 +244,30 @@ class HubReceiveController extends Controller {
 
     public function receivedAndVarified(Request $request) {
         if (is_array($request->unique_suborder_id)) {
-            $subOders = SubOrder::whereIn('unique_suborder_id', $request->unique_suborder_id)->get();
+            $subOders = SubOrder::join('consignments_tasks', 'sub_orders.id', '=', 'consignments_tasks.sub_order_id')
+                ->select("sub_orders.*")
+                ->whereIn('unique_suborder_id', $request->unique_suborder_id)
+                ->whereIn('task_type_id', [1, 5])
+                // ->whereIn('sub_order_status', [7, 8])
+                ->where('sub_order_status', 9)
+                ->where('consignments_tasks.status', '>', 1)
+                ->where('tm_picking_status', '=', 1)
+                ->where('sub_orders.source_hub_id', '=', auth()->user()->reference_id)
+                ->get();
         } else {
-            $subOders = SubOrder::where('unique_suborder_id', $request->unique_suborder_id)->get();
+            $subOders = SubOrder::join('consignments_tasks', 'sub_orders.id', '=', 'consignments_tasks.sub_order_id')
+                ->select("sub_orders.*")
+                ->where('unique_suborder_id', $request->unique_suborder_id)
+                ->whereIn('task_type_id', [1, 5])
+                // ->whereIn('sub_order_status', [7, 8])
+                ->where('sub_order_status', 9)
+                ->where('consignments_tasks.status', '>', 1)
+                ->where('tm_picking_status', '=', 1)
+                ->where('sub_orders.source_hub_id', '=', auth()->user()->reference_id)
+                ->get();
+        }
+        if(count($subOders) < 1){
+            return redirect()->back()->with('message', "Invalid Suborder!");
         }
         $products = array();
         foreach ($subOders as $subOder) {
@@ -412,20 +435,14 @@ class HubReceiveController extends Controller {
                             // $sub_order_due = OrderProduct::where('status', '!=', '5')->where('status', '!=', '0')->where('sub_order_id', '=', $row->id)->count();
                             // if($sub_order_due == 0){
                             // $sub_order->sub_order_status = '5';
-                            $sub_order->destination_hub_id = $delivery_hub_id;
-                            $sub_order_trip_map = SubOrderTripMap::where('sub_order_id', $sub_order->id)->orderBy('id', 'asc')->first();
-                            if ($sub_order_trip_map) {
-                                $sub_order->next_hub_id = $sub_order_trip_map->hub_id;
-                            } else {
-                                $sub_order->next_hub_id = $delivery_hub_id;
-                            }
-                            $sub_order->source_hub_id = auth()->user()->reference_id;
+//                            $sub_order->destination_hub_id = $delivery_hub_id;
+
+                            $sub_order->next_hub_id = $this->getNextHubId($sub_order->id, auth()->user()->reference_id);
+
                             $sub_order->current_hub_id = auth()->user()->reference_id;
-                            // }
+
                             $sub_order->save();
 
-                            // orderLog($user_id, $order_id, $sub_order_id, $product_id, $ref_id, $ref_table, $text)
-                            // $this->orderLog(auth()->user()->id, $sub_order->order_id, $sub_order->id, '', $delivery_hub_id, 'hubs', 'Decided destination for Sub-Order: '.$sub_order->unique_suborder_id);
                         }
                     }
 
@@ -454,24 +471,47 @@ class HubReceiveController extends Controller {
 
     public function receiveAndReject(Request $request) {
         if (is_array($request->unique_suborder_id)) {
-            $subOders = SubOrder::whereIn('unique_suborder_id', $request->unique_suborder_id)->get();
+            $subOders = SubOrder::join('consignments_tasks', 'sub_orders.id', '=', 'consignments_tasks.sub_order_id')
+                ->select("sub_orders.*")
+                ->whereIn('unique_suborder_id', $request->unique_suborder_id)
+                ->whereIn('task_type_id', [1, 5])
+                // ->whereIn('sub_order_status', [7, 8])
+                ->where('sub_order_status', 9)
+                ->where('consignments_tasks.status', '>', 1)
+                ->where('tm_picking_status', '=', 1)
+                ->where('sub_orders.source_hub_id', '=', auth()->user()->reference_id)
+                ->get();
         } else {
-            $subOders = SubOrder::where('unique_suborder_id', $request->unique_suborder_id)->get();
+            $subOders = SubOrder::join('consignments_tasks', 'sub_orders.id', '=', 'consignments_tasks.sub_order_id')
+                ->select("sub_orders.*")
+                ->where('unique_suborder_id', $request->unique_suborder_id)
+                ->whereIn('task_type_id', [1, 5])
+                // ->whereIn('sub_order_status', [7, 8])
+                ->where('sub_order_status', 9)
+                ->where('consignments_tasks.status', '>', 1)
+                ->where('tm_picking_status', '=', 1)
+                ->where('sub_orders.source_hub_id', '=', auth()->user()->reference_id)
+                ->get();
+        }
+        if(count($subOders) < 1){
+            return redirect()->back()->with('message', "Invalid Suborder!");
         }
         foreach ($subOders as $subOder) {
             ConsignmentTask::whereSubOrderId($subOder->id)->update(['reconcile' => 1]);
             if($subOder->return == 0) {
                 $this->suborderStatus($subOder->id, '6'); // pickup failed
+                $message = "SubOrder Pickup Failed!";
             } else {
                 $this->suborderStatus($subOder->id, '49'); // post delivery order cancel for quality issue
-                
+
                 $rider = ConsignmentTask::whereSubOrderId($subOder->id)->whereTaskTypeId(5)->orderBy('id','desc')->first();
                 $this->fcm_task_req($subOder->id, 1, $rider->rider_id);
                 $subOder->return = 0; // post delivery order return to buyer
                 $subOder->save();
+                $message = "SubOrder receive to send back to buyer.";
             }
         }
-        Session::flash('message', "Sub Ordre pickup faild.");
+        Session::flash('message', $message);
         return redirect('/receive-prodcut');
     }
 

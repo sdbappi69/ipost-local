@@ -13,145 +13,151 @@ use App\SubOrder;
 
 class CartPickUpController extends Controller
 {
-    public function add_pickup_cart(Request $request) {
-		
-    	$validation = Validator::make($request->all(), [
-	      'unique_suborder_id' => 'required'
-	     ]);
+    public function add_pickup_cart(Request $request)
+    {
 
-		if($validation->fails()) {
-			Session::flash('message', "Sub-Order Id required");
-		    return Redirect::back()->withErrors($validation)->withInput();
-		}
+        $validation = Validator::make($request->all(), [
+            'unique_suborder_id' => 'required'
+        ]);
 
-		$sub_order = $this->check_sub_order($request->unique_suborder_id);
+        if ($validation->fails()) {
+            Session::flash('message', "Sub-Order Id required");
+            return Redirect::back()->withErrors($validation)->withInput();
+        }
 
-		if(count($sub_order) == 1){
-			if (Session::has('pickup_cart')) {
+        $sub_order = $this->check_sub_order($request->unique_suborder_id);
 
-			    $pickup_cart = Session::get('pickup_cart');
-			    $exist = 0;
-			    foreach ($pickup_cart as $cart) {
-			    	if($cart == $sub_order->unique_suborder_id){
-			    		$exist = 1;
-			    		break;
-			    	}
-			    }
-			    if($exist == 0){
-			    	Session::push('pickup_cart', $sub_order->unique_suborder_id);
-			    	Session::flash('message', "Added to cart");
-			    }else{
-			    	Session::flash('message', "Already in cart");
-			    }
+        if (count($sub_order) == 1) {
+            if (Session::has('pickup_cart')) {
 
-			}else{
+                $pickup_cart = Session::get('pickup_cart');
+                $exist = 0;
+                foreach ($pickup_cart as $cart) {
+                    if ($cart == $sub_order->unique_suborder_id) {
+                        $exist = 1;
+                        break;
+                    }
+                }
+                if ($exist == 0) {
+                    Session::push('pickup_cart', $sub_order->unique_suborder_id);
+                    Session::flash('message', "Added to cart");
+                } else {
+                    Session::flash('message', "Already in cart");
+                }
 
-				Session::push('pickup_cart', $sub_order->unique_suborder_id);
-				Session::flash('message', "Added to cart");
+            } else {
 
-			}
-		}else{
-			Session::flash('message', "Invalid Sub-Order Id");
-		}
+                Session::push('pickup_cart', $sub_order->unique_suborder_id);
+                Session::flash('message', "Added to cart");
 
-		return Redirect::back();
+            }
+        } else {
+            Session::flash('message', "Invalid Sub-Order Id");
+        }
 
-	}
+        return Redirect::back();
 
-	public function add_bulk_pickup_cart(Request $request) {
+    }
 
-    	$validation = Validator::make($request->all(), [
-	      'unique_suborder_ids' => 'required'
-	     ]);
+    public function add_bulk_pickup_cart(Request $request)
+    {
 
-		if($validation->fails()) {
-			Session::flash('message', "Invalid Request");
-		    return Redirect::back()->withErrors($validation)->withInput();
-		}
+        $validation = Validator::make($request->all(), [
+            'unique_suborder_ids' => 'required'
+        ]);
 
-		$msg = array();
+        if ($validation->fails()) {
+            Session::flash('message', "Invalid Request");
+            return Redirect::back()->withErrors($validation)->withInput();
+        }
 
-		foreach ($request->unique_suborder_ids as $unique_suborder_id) {
-			$sub_order = $this->check_sub_order($unique_suborder_id);
+        $msg = array();
 
-			if($sub_order){
-				if (Session::has('pickup_cart')) {
+        foreach ($request->unique_suborder_ids as $unique_suborder_id) {
+            $sub_order = $this->check_sub_order($unique_suborder_id);
 
-				    $pickup_cart = Session::get('pickup_cart');
-				    $exist = 0;
-				    foreach ($pickup_cart as $cart) {
-				    	if($cart == $sub_order->unique_suborder_id){
-				    		$exist = 1;
-				    		break;
-				    	}
-				    }
-				    if($exist == 0){
-				    	Session::push('pickup_cart', $sub_order->unique_suborder_id);
-				    	$msg[] = "$unique_suborder_id: Added to cart";
-				    }else{
-				    	$msg[] = "$unique_suborder_id: Already in cart";
-				    }
+            if ($sub_order) {
+                if (Session::has('pickup_cart')) {
 
-				}else{
+                    $pickup_cart = Session::get('pickup_cart');
+                    $exist = 0;
+                    foreach ($pickup_cart as $cart) {
+                        if ($cart == $sub_order->unique_suborder_id) {
+                            $exist = 1;
+                            break;
+                        }
+                    }
+                    if ($exist == 0) {
+                        Session::push('pickup_cart', $sub_order->unique_suborder_id);
+                        $msg[] = "$unique_suborder_id: Added to cart";
+                    } else {
+                        $msg[] = "$unique_suborder_id: Already in cart";
+                    }
 
-					Session::push('pickup_cart', $sub_order->unique_suborder_id);
-					$msg[] = "$unique_suborder_id: Added to cart";
+                } else {
 
-				}
-			}else{
-				$msg[] = "$unique_suborder_id: Invalid Sub-Order Id";
-			}
-		}
+                    Session::push('pickup_cart', $sub_order->unique_suborder_id);
+                    $msg[] = "$unique_suborder_id: Added to cart";
 
-		$message = '';
-		foreach ($msg as $m) {
-			$message = $message.$m.'\n';
-		}
+                }
+            } else {
+                $msg[] = "$unique_suborder_id: Invalid Sub-Order Id";
+            }
+        }
 
-		Session::flash('message', $message);
-		return Redirect::back();
+        $message = '';
+        foreach ($msg as $m) {
+            $message = $message . $m . '\n';
+        }
 
-	}
+        Session::flash('message', $message);
+        return Redirect::back();
 
-	public function remove_pickup_cart($unique_suborder_id) {
+    }
 
-		if(count(Session::get('pickup_cart')) > 0){
+    public function remove_pickup_cart($unique_suborder_id)
+    {
 
-			$pickup_cart = Session::get('pickup_cart');
-			$new_cart = array();
+        if (count(Session::get('pickup_cart')) > 0) {
 
-			foreach ($pickup_cart as $cart) {
-				if($cart != $unique_suborder_id){
-					$new_cart[] = $cart;
-				}
-			}
+            $pickup_cart = Session::get('pickup_cart');
+            $new_cart = array();
 
-			if(count($new_cart) == 0){
-				Session::forget('pickup_cart');
-				Session::flash('message', "Cart removed");
-			}else{
-				Session::forget('pickup_cart');
-				Session::put('pickup_cart', $new_cart);
-				Session::flash('message', "Removed from cart");
-			}
+            foreach ($pickup_cart as $cart) {
+                if ($cart != $unique_suborder_id) {
+                    $new_cart[] = $cart;
+                }
+            }
 
-		}else{
-			Session::flash('message', "Cart is empty");
-		}
+            if (count($new_cart) == 0) {
+                Session::forget('pickup_cart');
+                Session::flash('message', "Cart removed");
+            } else {
+                Session::forget('pickup_cart');
+                Session::put('pickup_cart', $new_cart);
+                Session::flash('message', "Removed from cart");
+            }
 
-		return Redirect::back();
-	}
+        } else {
+            Session::flash('message', "Cart is empty");
+        }
 
-	public function check_sub_order($unique_suborder_id){
-		$sub_order = SubOrder::select('sub_orders.unique_suborder_id')
-								->where('sub_orders.status', 1)
-								->whereIn('sub_orders.sub_order_status', [2, 6])
-								->where('zones_p.hub_id', '=', auth()->user()->reference_id)
-								->where('sub_orders.unique_suborder_id', '=', $unique_suborder_id)
-								->leftJoin('order_product AS op','op.sub_order_id','=','sub_orders.id')
-                                ->leftJoin('pickup_locations AS pl', 'pl.id', '=', 'op.pickup_location_id')
-                                ->leftJoin('zones AS zones_p','zones_p.id','=','pl.zone_id')
-								->first();
-		return $sub_order;
-	}
+        return Redirect::back();
+    }
+
+    public function check_sub_order($unique_suborder_id)
+    {
+        $sub_order = SubOrder::select('sub_orders.unique_suborder_id')
+            ->where('sub_orders.status', 1)
+            ->whereIn('sub_orders.sub_order_status', [2, 6])
+            ->whereRaw("IF (`sub_orders`.`return` = 0, `zones_p`.`hub_id`,`zones_d`.`hub_id`) = " . auth()->user()->reference_id)
+            ->where('sub_orders.unique_suborder_id', '=', $unique_suborder_id)
+            ->join('orders', 'orders.id', '=', 'sub_orders.order_id')
+            ->leftJoin('order_product AS op', 'op.sub_order_id', '=', 'sub_orders.id')
+            ->leftJoin('pickup_locations AS pl', 'pl.id', '=', 'op.pickup_location_id')
+            ->leftJoin('zones AS zones_p', 'zones_p.id', '=', 'pl.zone_id')
+            ->join('zones AS zones_d', 'zones_d.id', '=', 'orders.delivery_zone_id')
+            ->first();
+        return $sub_order;
+    }
 }

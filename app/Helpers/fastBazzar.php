@@ -1,7 +1,7 @@
 <?php
 
 function fbStatusUpdate($sub_order) {
-    $baseUrl = "https://test.fastbazzar.com";
+    $baseUrl = config('app.fastbazzar_url');
     if ($sub_order->post_delivery_return == 0 && in_array($sub_order->sub_order_status, [7, 31, 37])) {
         $fastbazzar = getDeliveryUrlStatus($sub_order);
     } elseif ($sub_order->post_delivery_return == 1 && in_array($sub_order->sub_order_status, [7, 26, 31, 36, 37, 49])) {
@@ -11,9 +11,10 @@ function fbStatusUpdate($sub_order) {
     }
     try {
         dispatch(new \App\Jobs\FastBazzarOrderStatus($sub_order->id, $sub_order->order->merchant_order_id, $baseUrl . $fastbazzar['url'], $fastbazzar['status']));
+        \Illuminate\Support\Facades\Log::info('Job Created (merchant order id): ' . $sub_order->order->merchant_order_id .', status: ' . $sub_order->sub_order_status . ', title: ' . $fastbazzar['status'] .', suborderid: ' . $sub_order->id);
         return TRUE;
     } catch (Exception $e) {
-        Illuminate\Support\Facades\Log::error($e);
+        \Illuminate\Support\Facades\Log::error($e);
     }
 }
 

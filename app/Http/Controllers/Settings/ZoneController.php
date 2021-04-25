@@ -15,6 +15,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use DB;
+use Log;
 
 class ZoneController extends Controller
 {
@@ -27,7 +28,7 @@ class ZoneController extends Controller
     {
         $this->middleware('role:superadministrator|systemadministrator|operationmanager|operationalhead');
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -59,8 +60,9 @@ class ZoneController extends Controller
                 ->where('cities.status', 1)
                 ->orderBy('cities.name', 'asc')
                 ->lists('cities.name','cities.id')->toArray();
+        $activeZones = Zone::with('map')->whereHas('map',function($q){$q->whereNotNull('coordinates');})->whereStatus(1)->get();
 
-        return view('settings.zone.index', compact('title', 'zones', 'countries', 'hubs', 'cities'));
+        return view('settings.zone.index', compact('title', 'zones', 'activeZones', 'countries', 'hubs', 'cities'));
     }
 
     /**
@@ -84,10 +86,13 @@ class ZoneController extends Controller
         try {
             $zone = Zone::firstOrCreate( $request->except('country_id', 'state_id', '_token', 'coordinates') );
 
-            $zone->map()->create(['coordinates' => $request->coordinates]);
+            if(!empty($request->coordinates)){
+                $zone->map()->create(['coordinates' => $request->coordinates]);
+            }
         } catch (\Exception $e) {
+            Log::error($e);
             Session::flash('message', "Something went wrong.");
-            return redirect()->back();            
+            return redirect()->back();
         }
 
         Session::flash('message', "Zone Information Added Successfully.");
@@ -121,7 +126,9 @@ class ZoneController extends Controller
         $zone_genres = ZoneGenre::whereStatus(true)->lists('title', 'id')->toArray();
         $hubs = Hub::whereStatus(true)->lists('title', 'id')->toArray();
 
-        return view('settings.zone.edit', compact('title', 'zone', 'countries', 'zone_genres', 'hubs'));
+        $activeZones = Zone::with('map')->whereHas('map',function($q){$q->whereNotNull('coordinates');})->whereStatus(1)->get();
+
+        return view('settings.zone.edit', compact('title', 'zone', 'activeZones', 'countries', 'zone_genres', 'hubs'));
     }
 
     /**
@@ -138,15 +145,19 @@ class ZoneController extends Controller
             $zone->update($request->except('country_id', 'state_id', 'coordinates'));
 
             if(isset($zone->map)){
-                $zone->map->coordinates = $request->coordinates;
-                $zone->map->save();                
+                if(!empty($request->coordinates)){
+                    $zone->map->coordinates = $request->coordinates;
+                    $zone->map->save();
+                }
             } else {
-                $zone->map()->create(['coordinates' => $request->coordinates]);
+                if(!empty($request->coordinates)){
+                    $zone->map()->create(['coordinates' => $request->coordinates]);
+                }
             }
         } catch (\Exception $e) {
-            dd($e);
+            Log::error($e);
             Session::flash('message', "Something went wrong.");
-            return redirect()->back();   
+            return redirect()->back();
         }
 
         Session::flash('message', "Zone Information Updated Successfully.");

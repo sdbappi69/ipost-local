@@ -54,7 +54,7 @@ Route::get('/AgingData', function () {
 Route::get('/TatData', function () {
     Artisan::call('command:Tat');
 });
-        
+
     Route::get('suborder-details/{unique_suborder_id}','Order\SubOrderDetailsController@subOrderDetails');
 
 Route::get('/jsonview', function () {
@@ -93,7 +93,7 @@ Route::post('/fetch-locations', function (\Illuminate\Http\Request $request) {
 });
 
 Route::group(['middleware' => ['auth']], function () {
-    
+
     Route::get('/hub-manager-nav', 'NavController@hubManager');
     Route::get('/head-account-nav', 'NavController@headAccountManager');
 
@@ -126,6 +126,7 @@ Route::group(['middleware' => ['auth']], function () {
     /** Johnny **/
     Route::group(['namespace' => 'Rider'], function () {
         Route::resource('/rider', 'RiderController');
+        Route::resource('/rider-user', 'UserController');
         Route::get('/rider-profile-update-request', 'RiderController@updateRequests');
     });
 
@@ -182,7 +183,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('product-category-charge-approval/v2', 'v2\NewChargeController@approveCharge');
         Route::get('category-charge-approved/v2/{id}', 'v2\NewChargeController@approved');
         Route::post('category-charge-approve-all/v2/', 'v2\NewChargeController@approvedAll');
-        
+
         // Discount
         Route::resource('/discount', 'DiscountController');
 
@@ -245,7 +246,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::resource('/return-pickup', 'ReturnPickupController');
         Route::resource('/return-delivery', 'ReturnDeliveryController');
-        
+
         Route::get('receive-prodcut','HubReceiveController@receiveProduct');
         Route::post('received-varified-suborder','HubReceiveController@receivedAndVarified');
         Route::post('receive-reject-suborder','HubReceiveController@receiveAndReject');
@@ -257,7 +258,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('office-delivery-list', 'DeliveryOfficeController@index');
         Route::get('delivery-from-office/{id}', 'DeliveryOfficeController@delivery');
         Route::post('confirm-office-delivery/{id}', 'DeliveryOfficeController@confirmDelivery');
-        
+
     });
 
     Route::group(['namespace' => 'Trip'], function () {
@@ -382,6 +383,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/accumulated-collected-cash','CollectedCashAmountController@accumulatedCash');
         //Collected Cash Amount for head of account manager
         Route::get('/accumulated-collected-cash-confirm','CollectedCashAmountController@accumulatedCashConfirm');
+        Route::get('/accumulated-collected-cash-confirm-export/{type}','CollectedCashAmountController@accumulatedCashConfirmExport');
         Route::post('/accumulated-collected-cash-confirm','CollectedCashAmountController@accumulatedConfirmed');
         //HOA accumulated merchant checkout
         Route::get('collected-cash-merchant','CollectedCashAmountController@getLists');
@@ -395,6 +397,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('collected-cash-merchant-final','CollectedCashAmountController@merchantCashFinalLists');
 
         Route::get('collection-cash-details/{id}','CollectedCashAmountController@collectionCashDetails');
+        Route::get('collection-cash-details/{id}/{type}','CollectedCashAmountController@collectionCashDetailsExport');
 
         // Cash collection
         Route::get('/cash-collection', 'CashCollectionController@index');
@@ -611,4 +614,10 @@ Route::get('/awb/{unique_suborder_id}', 'Consignments\ConsignmentsControllerPubl
 
 Route::get('gmap', function () {
     return view('gmapRnD');
+});
+
+Route::get('getzone/{lat}/{lng}',function($lat, $lng){
+    // abort(404);
+//   dd(getZoneBound($lat, $lng));
+   dd('ci/cd test 3rd');
 });

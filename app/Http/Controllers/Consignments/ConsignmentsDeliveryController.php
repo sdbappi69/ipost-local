@@ -62,11 +62,13 @@ class ConsignmentsDeliveryController extends Controller
             ->where('sub_orders.tm_delivery_status', 1)
             ->where('sub_orders.return', 0)
             ->whereIn('sub_orders.sub_order_status', [26, 34])
-            ->where('sub_orders.destination_hub_id', '=', auth()->user()->reference_id)
+            ->whereRaw("IF (`sub_orders`.`post_delivery_return` = 0, `sub_orders`.`destination_hub_id`,`sub_orders`.`source_hub_id`) = " . auth()->user()->reference_id)
             ->leftJoin('orders', 'orders.id', '=', 'sub_orders.order_id')
             ->leftJoin('order_product AS op', 'op.sub_order_id', '=', 'sub_orders.id')
             ->leftJoin('stores', 'stores.id', '=', 'orders.store_id')
             ->leftJoin('pickup_locations', 'pickup_locations.id', '=', 'op.pickup_location_id')
+            ->leftJoin('zones AS zones_p', 'zones_p.id', '=', 'pickup_locations.zone_id')
+            ->leftJoin('cities AS cities_p', 'cities_p.id', '=', 'zones_p.city_id')
             ->leftJoin('zones AS zones_d', 'zones_d.id', '=', 'orders.delivery_zone_id')
             ->leftJoin('cities AS cities_d', 'cities_d.id', '=', 'orders.delivery_city_id')
             ->leftJoin('states AS states_d', 'states_d.id', '=', 'orders.delivery_state_id');
@@ -115,6 +117,36 @@ class ConsignmentsDeliveryController extends Controller
             $query->where('orders.delivery_zone_id', $request->delivery_zone_id);
         }
 
+        if ($request->has('pickup_city_id')) {
+            $query->where('cities_p.id', $request->pickup_city_id);
+        }
+
+        if ($request->has('delivery_city_id')) {
+            $query->where('cities_d.id', $request->delivery_city_id);
+        }
+
+        $orderBy = 'asc';
+        if ($request->has('order_by') && $request->order_by == 'desc') {
+            $orderBy = 'desc';
+        }
+
+        if ($request->has('order_by')) {
+            switch ($request->order_by) {
+                case 'address':
+                    $query->orderBy('orders.delivery_address1', $orderBy);
+                    break;
+                case 'zone':
+                    $query->orderBy('zones_d.id', $orderBy);
+                    break;
+                case 'city':
+                    $query->orderBy('cities_d.id', $orderBy);
+                    break;
+                default:
+                    $query->orderBy('sub_orders.id', 'desc');
+                    break;
+            }
+        }
+
         if ($request->has('start_date')) {
             $start_date = $request->start_date;
         } else {
@@ -129,7 +161,7 @@ class ConsignmentsDeliveryController extends Controller
 
         $query->WhereBetween('sub_orders.updated_at', array($start_date . ' 00:00:01', $end_date . ' 23:59:59'));
 
-        $sub_orders = $query->orderBy('sub_orders.id', 'desc')->get();
+        $sub_orders = $query->get();
 
 
         $deliveryman = User::join('rider_references','users.id','=','rider_references.user_id')
@@ -145,8 +177,9 @@ class ConsignmentsDeliveryController extends Controller
         select(DB::raw('CONCAT(zones.name, " - ",cities.name) AS name'), 'zones.id')
             ->leftJoin('cities', 'cities.id', '=', 'zones.city_id')->
             where('zones.status', true)->lists('name', 'zones.id')->toArray();
+        $cities = City::select('name', 'id')->where('status', true)->lists('name', 'id')->toArray();
 
-        return view('consignments.delivery.index', compact('sub_orders', 'deliveryman', 'merchants', 'stores', 'zones'));
+        return view('consignments.delivery.index', compact('sub_orders', 'deliveryman', 'merchants', 'stores', 'zones', 'cities'));
     }
 
     public function delivery_submit(Request $request)

@@ -14,6 +14,7 @@ use App\SubOrder;
 use App\Http\Traits\LogsTrait;
 use Auth;
 use DB;
+use Log;
 
 trait TaskTrait {
 
@@ -56,13 +57,21 @@ trait TaskTrait {
                         $delivery_title = $task->suborder->order->delivery_name;
                         $delivery_address = $task->suborder->order->delivery_address1;
                         break;
-                    case 3:
-                        $type = 'Pick & Deliver';
+                    case 3: // pick & delivery
+                        $type = 'Delivery';
                         $title = $task->suborder->order->delivery_name;
-                        $picking_title = $task->suborder->order->delivery_zone->hub->title;
-                        $picking_address = $task->suborder->order->delivery_zone->hub->address1;
+                        $picking_title = $task->suborder->product->pickup_location->title;
+                        $picking_address = $task->suborder->product->pickup_location->address1;
                         $delivery_title = $task->suborder->order->delivery_name;
                         $delivery_address = $task->suborder->order->delivery_address1;
+                        break;
+                    case 7: // delivery to return
+                        $type = 'Return';
+                        $title = $task->suborder->product->pickup_location->title;
+                        $picking_title = $task->suborder->order->delivery_name;
+                        $picking_address = $task->suborder->order->delivery_address1;
+                        $delivery_title = $task->suborder->product->pickup_location->title;
+                        $delivery_address = $task->suborder->product->pickup_location->address1;
                         break;
                     case 4:
                         $type = 'Return';
@@ -90,15 +99,15 @@ trait TaskTrait {
                         break;
                 }
                 if ($task->status > 1) {
-                    $task_status_text = 'Done';
+                    $task_status_text = trans('api.task_status.done');
                 } else if ($task->status == 1) {
-                    $task_status_text = 'Processing';
+                    $task_status_text = trans('api.task_status.processing');
                 } else {
-                    $task_status_text = 'Pending';
+                    $task_status_text = trans('api.task_status.pending');
                 }
                 $all_task[$key]['task_id'] = $task->id;
                 $all_task[$key]['task_type'] = $type;
-                $all_task[$key]['task_title'] = $task->suborder->product->product_title or '';
+                $all_task[$key]['task_title'] = str_replace('Package', trans('api.package'), $task->suborder->product->product_title) or '';
                 $all_task[$key]['product_unique_id'] = $task->suborder->product->product_unique_id or '';
                 $all_task[$key]['picking_title'] = $picking_title;
                 $all_task[$key]['picking_address'] = $picking_address;
@@ -110,8 +119,8 @@ trait TaskTrait {
                 $all_task[$key]['delivery_longitude'] = $task->end_long;
                 $all_task[$key]['distance'] = $task->distance ? $task->distance : '0.00';
                 $all_task[$key]['otp'] = $task->otp;
-                $all_task[$key]['quantity'] = $task->quantity;
-                $all_task[$key]['amount'] = $task->amount;
+                $all_task[$key]['quantity'] = (int) $task->quantity;
+                $all_task[$key]['amount'] = ($task->suborder->order->paymentMethod->id == 2) ? 0 : (int) $task->amount;
                 $all_task[$key]['consignment_unique_id'] = $consignment->consignment_unique_id;
                 $all_task[$key]['task_status'] = $task_status_text;
                 $key++;
@@ -137,7 +146,6 @@ trait TaskTrait {
         foreach ($consignments as $consignment) {
 
             $completed = array();
-
             foreach ($consignment->task as $key => $task) {
                 switch ($task->task_type_id) {
                     case 1:
@@ -160,10 +168,18 @@ trait TaskTrait {
                     case 3:
                         $type = 'Pick & Deliver';
                         $title = $task->suborder->order->delivery_name;
-                        $picking_title = $task->suborder->order->delivery_zone->hub->title;
-                        $picking_address = $task->suborder->order->delivery_zone->hub->address1;
+                        $picking_title = $task->suborder->product->pickup_location->title;
+                        $picking_address = $task->suborder->product->pickup_location->address1;
                         $delivery_title = $task->suborder->order->delivery_name;
                         $delivery_address = $task->suborder->order->delivery_address1;
+                        break;
+                    case 7: // delivery to return
+                        $type = 'Return';
+                        $title = $task->suborder->product->pickup_location->title;
+                        $picking_title = $task->suborder->order->delivery_name;
+                        $picking_address = $task->suborder->order->delivery_address1;
+                        $delivery_title = $task->suborder->product->pickup_location->title;
+                        $delivery_address = $task->suborder->product->pickup_location->address1;
                         break;
                     case 4:
                         $type = 'Return';
@@ -190,11 +206,10 @@ trait TaskTrait {
                         $delivery_address = '';
                         break;
                 }
-                $task_status_text = 'Completed';
+                $task_status_text = trans('api.task_status.completed');
                 $completed[$key]['task_id'] = $task->id;
                 $completed[$key]['task_type'] = $type;
-                $completed[$key]['task_title'] = $task->suborder->product->product_title or '';
-                ;
+                $completed[$key]['task_title'] = str_replace('Package', trans('api.package'), $task->suborder->product->product_title) or '';
                 $completed[$key]['picking_title'] = $picking_title;
                 $completed[$key]['picking_address'] = $picking_address;
                 $completed[$key]['picking_latitude'] = $task->start_lat;
@@ -206,8 +221,8 @@ trait TaskTrait {
                 $completed[$key]['distance'] = $task->distance ? $task->distance : '0.00';
                 $completed[$key]['consignment_unique_id'] = $consignment->consignment_unique_id;
                 $completed[$key]['task_status'] = $task_status_text;
-                $completed[$key]['quantity'] = $task->quantity;
-                $completed[$key]['amount'] = $task->amount;
+                $completed[$key]['quantity'] = (int) $task->quantity;
+                $completed[$key]['amount'] = ($task->suborder->order->paymentMethod->id == 2) ? 0 : (int) $task->amount;
             }
 
             $all_completed = array_merge($all_completed, $completed);
@@ -221,19 +236,19 @@ trait TaskTrait {
 
         switch ($consignment_status) {
             case '0':
-                $consignment_status = 'Canceled';
+                $consignment_status = trans('api.task_status.canceled');
                 break;
             case '1':
-                $consignment_status = 'Waiting';
+                $consignment_status = trans('api.task_status.waiting');
                 break;
             case '2':
-                $consignment_status = 'Running';
+                $consignment_status = trans('api.task_status.running');
                 break;
             case '3':
-                $consignment_status = 'Requested';
+                $consignment_status = trans('api.task_status.requested');
                 break;
             case '4':
-                $consignment_status = 'Completed';
+                $consignment_status = trans('api.task_status.completed');
                 break;
         }
 
@@ -248,26 +263,33 @@ trait TaskTrait {
             case 1:
             case 5:
                 $type = 'Pick';
+                $langType = trans('api.pick');
                 break;
             case 2:
                 $type = 'Delivery';
+                $langType = trans('api.delivery');
                 break;
             case 3:
                 $type = 'Pick & Deliver';
+                $langType = trans('api.pick_deliver');
                 break;
             case 4:
+            case 6:
+            case 7:
                 $type = 'Return';
+                $langType = trans('api.return');
                 break;
             default:
                 $type = '';
+                $langType = '';
                 break;
         }
         $products_list['task_id'] = $task->id;
-        $products_list['task_type'] = $type;
+        $products_list['task_type'] = $langType;
         $products_list['unique_suborder_id'] = $task->suborder->unique_suborder_id;
         $products_list['merchant_order_id'] = $task->suborder->order->merchant_order_id;
         $products_list['store_id'] = $task->suborder->order->store_id;
-        $products_list['title'] = $task->suborder->product->product_title;
+        $products_list['title'] = str_replace('Package', trans('api.package'), $task->suborder->product->product_title);
         $products_list['category'] = $task->suborder->product->product_category;
         $products_list['quantity'] = $task->quantity;
         if ($type == 'Pick' || $type == 'Return') {
@@ -278,14 +300,14 @@ trait TaskTrait {
             $products_list['payable_product_price'] = 0;
             $products_list['total_payable_amount'] = 0;
         } else {
-            $products_list['unit_product_price'] = (int)$task->suborder->product->unit_price;
-            $products_list['unit_delivery_charge'] = (int)$task->suborder->product->unit_deivery_charge;
-            $products_list['total_product_price'] = (int)$task->suborder->product->sub_total;
-            $products_list['total_delivery_charge'] = (int)$task->suborder->product->total_delivery_charge;
-            $products_list['payable_product_price'] = (int)$task->suborder->product->payable_product_price;
-            $products_list['total_payable_amount'] = ($task->suborder->product->total_payable_amount == null) ? 0 : (int)$task->suborder->product->total_payable_amount;
+            $products_list['unit_product_price'] = (int) $task->suborder->product->unit_price;
+            $products_list['unit_delivery_charge'] = (int) $task->suborder->product->unit_deivery_charge;
+            $products_list['total_product_price'] = (int) $task->suborder->product->sub_total;
+            $products_list['total_delivery_charge'] = (int) $task->suborder->product->total_delivery_charge;
+            $products_list['payable_product_price'] = ($task->suborder->order->paymentMethod->id == 2) ? 0 : (int) $task->suborder->product->payable_product_price; // for e-payment collect-able amount is 0
+            $products_list['total_payable_amount'] = ($task->suborder->order->paymentMethod->id == 2 || $task->suborder->product->total_payable_amount == null) ? 0 : (int) $task->suborder->product->total_payable_amount;
         }
-        $products_list['delivery_pay_by_cus'] = ($task->suborder->product->delivery_pay_by_cus == null) ? 0 : (int)$task->suborder->product->delivery_pay_by_cus;
+        $products_list['delivery_pay_by_cus'] = ($task->suborder->product->delivery_pay_by_cus == null) ? 0 : (int) $task->suborder->product->delivery_pay_by_cus;
         $products_list['start_time'] = ($task->start_time == null) ? "" : $task->start_time;
         $products_list['end_time'] = ($task->end_time == null) ? "" : $task->end_time;
         $products_list['distance'] = $task->distance ? $task->distance : '0.00';
@@ -322,10 +344,13 @@ trait TaskTrait {
 
     // Start Task
     public function startTask($task_id, $start_lat, $start_lon) {
+        Log::info("TaskTrait startTask in use");
         $task = ConsignmentTask::find($task_id);
         $task->status = 1;
-        $task->start_lat = $start_lat;
-        $task->start_long = $start_lon;
+        if (!empty(floatval($start_lat)) && !empty(floatval($start_lon))) {
+            $task->start_lat = $start_lat;
+            $task->start_long = $start_lon;
+        }
         $task->start_time = date("Y-m-d H:i:s");
         $task->updated_at = Auth::guard('api')->user()->id;
         $task->save();
@@ -379,7 +404,7 @@ trait TaskTrait {
                     }
                 }
                 // Update Sub-Order Status
-                $this->suborderStatus($task->sub_order_id, '30');
+                $this->suborderStatus($task->sub_order_id, '7');
                 break;
             case 5:
                 // Return Picking Attempt
@@ -484,6 +509,27 @@ trait TaskTrait {
                 $delivery_zone = $task->suborder->order->delivery_zone->name;
                 $delivery_city = $task->suborder->order->delivery_zone->city->name;
                 $delivery_state = $task->suborder->order->delivery_zone->city->state->name;
+                break;
+            case 7:
+                $picking_title = $task->suborder->order->delivery_name;
+                $picking_email = $task->suborder->order->delivery_email;
+                $picking_msisdn = $task->suborder->order->delivery_msisdn;
+                $picking_alt_msisdn = $task->suborder->order->delivery_alt_msisdn or '';
+                $picking_address1 = $task->suborder->order->delivery_address1;
+                $picking_address2 = $task->suborder->order->delivery_address2;
+                $picking_zone = $task->suborder->order->delivery_zone->name;
+                $picking_city = $task->suborder->order->delivery_zone->city->name;
+                $picking_state = $task->suborder->order->delivery_zone->city->state->name;
+
+                $delivery_title = $task->suborder->product->pickup_location->title;
+                $delivery_email = $task->suborder->product->pickup_location->email;
+                $delivery_msisdn = $task->suborder->product->pickup_location->msisdn;
+                $delivery_alt_msisdn = $task->suborder->product->pickup_location->alt_msisdn or '';
+                $delivery_address1 = $task->suborder->product->pickup_location->address1;
+                $delivery_address2 = $task->suborder->product->pickup_location->address2;
+                $delivery_zone = $task->suborder->product->pickup_location->zone->name;
+                $delivery_city = $task->suborder->product->pickup_location->zone->city->name;
+                $delivery_state = $task->suborder->product->pickup_location->zone->city->state->name;
                 break;
             case 4:
                 $picking_title = $task->suborder->source_hub->title;
@@ -619,7 +665,7 @@ trait TaskTrait {
                 $address = $task->suborder->source_hub->address1; // delivery address
                 break;
             case 2:
-            case 3:
+            case 3: // pick & delivery
             case 6: // post delivery order return to buyer
                 switch ($request->status) {
                     case 2:
@@ -635,6 +681,7 @@ trait TaskTrait {
                 $address = $task->suborder->order->delivery_address1;
                 break;
             case 4:
+            case 7:
                 switch ($request->status) {
                     case 2:
                         $status_update = 37;
@@ -670,8 +717,10 @@ trait TaskTrait {
         $task->collected_quantity = $product['quantity'];
         $task->collected = $product['amount'];
         $task->distance = $request->distance;
-        $task->end_lat = $end_lat;
-        $task->end_long = $end_lon;
+//        if (!empty(floatval($request->end_lat)) && !empty(floatval($request->end_lon))) {
+//            $task->end_lat = $request->end_lat;
+//            $task->end_long = $request->end_lon;
+//        }
         $task->status = $request->status;
         $task->reason_id = $product['reason_id'];
         $task->remarks = $product['remarks'];
@@ -680,15 +729,22 @@ trait TaskTrait {
         $task->end_time = date("Y-m-d H:i:s");
         $task->save();
 
+        Log::info("Rider End Location for task($task->id): Lat- $request->end_lat, Lang- $request->end_lon");
+
         // Update Sub-Order Status
         $this->suborderStatus($task->suborder->id, $status_update);
 
+        if ($task->task_type_id == 3 && $request->status == 4) {
+            $task->reconcile = 1;
+            $task->save();
+            $this->createDirectReturnTask($task);
+        }
 
         $spend = timeDifference($task->start_time, $task->end_time);
 
         $order = $task->suborder->order;
         $summery = array(
-            'title' => $task->suborder->product->product_title,
+            'title' => str_replace('Package', trans('api.package'), $task->suborder->product->product_title),
             'company' => $order->store->merchant->name,
             'address' => $address,
             'start_time' => $task->start_time,
@@ -746,7 +802,7 @@ trait TaskTrait {
         foreach ($consignmentTasks as $key => $task) {
             switch ($task->task_type_id) {
                 case 1:
-                    $type = 'Pick';
+                    $type = trans('api.pick');
                     $title = $task->suborder->product->product_unique_id;
                     $picking_title = $task->suborder->product->pickup_location->title;
                     $picking_address = $task->suborder->product->pickup_location->address1;
@@ -755,23 +811,31 @@ trait TaskTrait {
                     break;
                 case 2:
                 case 6: // post delivery order return to buyer
-                    $type = 'Delivery';
+                    $type = trans('api.delivery');
                     $title = $task->suborder->product->product_unique_id;
                     $picking_title = $task->suborder->order->delivery_zone->hub->title;
                     $picking_address = $task->suborder->order->delivery_zone->hub->address1;
                     $delivery_title = $task->suborder->order->delivery_name;
                     $delivery_address = $task->suborder->order->delivery_address1;
                     break;
-                case 3:
-                    $type = 'Pick & Deliver';
+                case 3: // pick & delivery
+                    $type = trans('api.pick_deliver');
                     $title = $task->suborder->product->product_unique_id;
-                    $picking_title = $task->suborder->order->delivery_zone->hub->title;
-                    $picking_address = $task->suborder->order->delivery_zone->hub->address1;
+                    $picking_title = $task->suborder->product->pickup_location->title;
+                    $picking_address = $task->suborder->product->pickup_location->address1;
                     $delivery_title = $task->suborder->order->delivery_name;
                     $delivery_address = $task->suborder->order->delivery_address1;
+                    break;
+                case 7: // delivery to return
+                    $type = trans('api.delivery_to_return');
+                    $title = $task->suborder->product->product_unique_id;
+                    $picking_title = $task->suborder->order->delivery_name;
+                    $picking_address = $task->suborder->order->delivery_address1;
+                    $delivery_title = $task->suborder->product->pickup_location->title;
+                    $delivery_address = $task->suborder->product->pickup_location->address1;
                     break;
                 case 4:
-                    $type = 'Return';
+                    $type = trans('api.return');
                     $title = $task->suborder->product->product_unique_id;
                     $picking_title = $task->suborder->product->pickup_location->title;
                     $picking_address = $task->suborder->product->pickup_location->address1;
@@ -779,7 +843,7 @@ trait TaskTrait {
                     $delivery_address = $task->suborder->product->pickup_location->zone->hub->address1;
                     break;
                 case 5:
-                    $type = 'Pick';
+                    $type = trans('api.pick');
                     $title = $task->suborder->product->product_unique_id;
                     $picking_title = $task->suborder->order->delivery_zone->hub->title;
                     $picking_address = $task->suborder->order->delivery_zone->hub->address1;
@@ -797,7 +861,7 @@ trait TaskTrait {
             }
             $allTask[$key]['task_id'] = $task->id;
             $allTask[$key]['task_type'] = $type;
-            $allTask[$key]['task_title'] = $task->suborder->product->product_title or '';
+            $allTask[$key]['task_title'] = str_replace('Package', trans('api.package'), $task->suborder->product->product_title) or '';
             $allTask[$key]['picking_title'] = $picking_title;
             $allTask[$key]['picking_address'] = $picking_address;
             $allTask[$key]['delivery_title'] = $delivery_title;
@@ -814,22 +878,43 @@ trait TaskTrait {
 
     private function taskStatusName($statusId, $reconcile) {
         if ($reconcile) {
-            return 'Complete';
+            return trans('api.task_status.completed');
         }
         switch ($statusId) {
             case 1:
-                $status = 'Processing';
+                $status = trans('api.task_status.processing');
                 break;
             case 2:
             case 3:
             case 4:
-                $status = 'Submitted';
+                $status = trans('api.task_status.submitted');
                 break;
             default :
-                $status = 'Pending';
+                $status = trans('api.task_status.pending');
                 break;
         }
         return $status;
+    }
+
+    private function createDirectReturnTask($preTask) {
+        $this->suborderStatus($preTask->suborder->id, 35); // rider requested for return 
+        $consignment_task = new ConsignmentTask;
+        $consignment_task->consignment_id = $preTask->consignment_id;
+        $consignment_task->rider_id = $preTask->rider_id;
+        $consignment_task->sub_order_id = $preTask->sub_order_id;
+        $consignment_task->task_type_id = 7; // Delivery to Return
+        $consignment_task->start_time = date('Y-m-d H:i:s');
+        $consignment_task->start_lat = $preTask->end_lat; // Rider start this task from this location
+        $consignment_task->start_long = $preTask->end_long;
+        $consignment_task->end_lat = $preTask->suborder->product->pickup_location->latitude;
+        $consignment_task->end_long = $preTask->suborder->product->pickup_location->longitude;
+        $consignment_task->quantity = $preTask->quantity;
+        $consignment_task->amount = $preTask->amount;
+        $consignment_task->otp = rand(100000, 999999);
+        // $consignment_task->otp = 123456; // for testing
+        $consignment_task->status = 1; // already rider have the product
+        $consignment_task->created_at = date('Y-m-d H:i:s');
+        $consignment_task->save();
     }
 
 }

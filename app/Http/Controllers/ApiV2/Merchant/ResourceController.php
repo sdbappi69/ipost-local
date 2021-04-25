@@ -150,7 +150,15 @@ class ResourceController extends Controller {
             if ($request->has("zone_title")) {
                 $zone = Zone::with('city.state.country')->whereName($request->zone_title)->first();
             } else {
-                $zone = Zone::with('city.state.country')->where('id', Auth::guard('api')->user()->zone_id)->first();
+//                $zone = Zone::with('city.state.country')->where('id', Auth::guard('api')->user()->zone_id)->first();
+                $zone = getZoneBound($request->latitude, $request->longitude);
+            }
+            if (!$zone) {
+                return response([
+                    'status' => "Failed",
+                    'status_code' => 500,
+                    'message' => ['Out of zone coverage!'],
+                        ], 200);
             }
             $pickup_location = PickingLocations::updateOrCreate(
                             ['title' => $request->title, 'merchant_id' => Auth::guard('api')->user()->reference_id], [
@@ -182,6 +190,39 @@ class ResourceController extends Controller {
                 'message' => ['Pickup location could not created.'],
                     ], 200);
         }
+    }
+
+    public function findNearestPickupLocation(Request $request) {
+        $validation = Validator::make($request->all(), [
+                    'delivery_lat' => 'required|min:0',
+                    'delivery_lng' => 'required|min:0'
+        ]);
+
+        if ($validation->fails()) {
+            $status_code = 404;
+            $message = $validation->errors()->all();
+            return $this->set_unauthorized($status_code, $message, $response = '');
+        }
+        $pickupLocations = PickingLocations::select('id', 'title', 'address1', 'latitude', 'longitude', \DB::raw("6371 * acos(cos(radians(" . $request->delivery_lat . "))
+                                     * cos(radians(latitude))
+                                     * cos(radians(longitude) - radians(" . $request->delivery_lng . "))
+                                     + sin(radians(" . $request->delivery_lat . "))
+                                     * sin(radians(latitude))) AS distance"))
+                        ->where('merchant_id', '=', Auth::guard('api')->user()->reference_id)
+                        ->where('status', 1)
+                        ->orderBy('distance', 'asc')
+                        ->take(3)->get()->toArray();
+        if (count($pickupLocations) > 0) {
+            $feedback['status_code'] = 200;
+            $feedback['message'] = ["Data Found"];
+            $feedback['response']['pickup_locations'] = $pickupLocations;
+        } else {
+            $status_code = 404;
+            $message[] = 'No data found';
+            return $this->set_unauthorized($status_code, $message, $response = '');
+        }
+
+        return response($feedback, 200);
     }
 
 }

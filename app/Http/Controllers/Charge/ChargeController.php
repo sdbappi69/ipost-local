@@ -332,7 +332,7 @@ class ChargeController extends Controller
         $response = curl_exec($ch);
         $charges = json_decode($response);
         // $charges = $charges[0];
-        if($charges[0]->status == 'Failed'){
+        if($charges->status == 'Failed'){
             abort(403);
         }
 

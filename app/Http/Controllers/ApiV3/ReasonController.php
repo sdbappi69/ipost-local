@@ -25,7 +25,7 @@ class ReasonController extends Controller {
                     ->distinct()
                     ->where('rider_references.user_id', Auth::guard('api')->user()->id)
                     ->get();
-            
+
             $allHubs = DB::table('hubs')
                     ->select('hubs.id', 'hubs.title', 'hubs.address1 as address')
                     ->where('status', 1)
@@ -50,10 +50,21 @@ class ReasonController extends Controller {
                 return $this->sendResponse('error', 422, $validator->errors()->all(), []);
             }
             $reason_type = ucfirst($request->input('reason_type'));
-            $reasons = Reason::select('id', 'reason')
-                            ->whereType($reason_type)
-                            ->orWhere('type', 'Both')
-                            ->orderBy('reason', 'ASC')->get();
+            $query = Reason::whereType($reason_type)
+                    ->orWhere('type', 'Both')
+                    ->orderBy('reason', 'ASC');
+            switch ($request->header('lang')) {
+                case 'ar':
+                    $query->select('id', 'reason_ar as reason');
+                    break;
+                case 'ku':
+                    $query->select('id', 'reason_ku as reason');
+                    break;
+                default :
+                    $query->select('id', 'reason');
+                    break;
+            }
+            $reasons = $query->get();
 
             return $this->sendResponse('success', 200, [], $reasons);
         } catch (\Exception $e) {

@@ -52,7 +52,6 @@ class ChargeCalculatorController extends Controller {
                         'data' => [],
                             ], 200);
         }
-//        dd($request->all());
         // Get unit_price
         if ($request->has('unit_price')) {
             $unit_price = $request->unit_price;
@@ -73,7 +72,7 @@ class ChargeCalculatorController extends Controller {
             return response()->json([
                         'status' => 'Failed',
                         'status_code' => 404,
-                        'message' => ['Picking location not found.'],
+                        'message' => [trans('api.picking_location_not_found')],
                         'data' => [],
                             ], 200);
         }
@@ -92,7 +91,7 @@ class ChargeCalculatorController extends Controller {
             return response()->json([
                         'status' => 'Failed',
                         'status_code' => 404,
-                        'message' => ['Delivery zone not found.'],
+                        'message' => [trans('api.delivery_location_not_found')],
                         'data' => [],
                             ], 200);
         }
@@ -105,7 +104,7 @@ class ChargeCalculatorController extends Controller {
             return response()->json([
                         'status' => 'Failed',
                         'status_code' => 404,
-                        'message' => ['Product category not found.'],
+                        'message' => [trans('api.product_category_not_found')],
                         'data' => [],
                             ], 200);
         }
@@ -117,12 +116,11 @@ class ChargeCalculatorController extends Controller {
             return response()->json([
                         'status' => 'Failed',
                         'status_code' => 404,
-                        'message' => ['Store not found.'],
+                        'message' => [trans('api.store_not_found')],
                         'data' => [],
                             ], 200);
         }
         $store_id = $store_data->id;
-//dd($product_category_id);
         $charge = $this->store_charge($product_category_id, $store_id, $pickup_zone_id, $delivery_zone_id, $weight);
         if ($charge['status_code'] != 200) {
             return response()->json($charge, 200);
@@ -149,7 +147,7 @@ class ChargeCalculatorController extends Controller {
 
         $productDetails[] = array(
             'status' => 'Success',
-            'message' => 'Request Successful',
+            'message' => trans('api.request_successful'),
             'product_category' => $request->product_category,
             'product_quantity' => $request->quantity,
             'product_unit_price' => $unit_price,

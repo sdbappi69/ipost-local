@@ -18,7 +18,6 @@ use App\Http\Traits\SmsApi;
 class UsersApiLoginController extends Controller
 {
     use SmsApi;
-
     /**
      * User login
      * @get User name , password , remember
@@ -41,7 +40,7 @@ class UsersApiLoginController extends Controller
         if ($key !== $secret_key) {
             $status = 'Bad Request';
             $status_code = 401;
-            $message[] = 'invalid secret key';
+            $message[] = trans('api.invalid_secret_key');
             return $this->set_unauthorized($status, $status_code, $message, $response = '');
         }
 
@@ -73,7 +72,7 @@ class UsersApiLoginController extends Controller
              */
             $status = 'success';
             $status_code = 200;
-            $message[] = 'login success';
+            $message[] = trans('api.login_success');
             $user = Auth::user();
 
             /**
@@ -114,7 +113,7 @@ class UsersApiLoginController extends Controller
              */
             $status = 'Unauthorized';
             $status_code = 404;
-            $message[] = 'Invalid authentication or access denied';
+            $message[] = trans('api.invalid_authentication');
 
             return $this->set_unauthorized($status, $status_code, $message, $response = '');
         }
@@ -157,7 +156,7 @@ class UsersApiLoginController extends Controller
         if (!Hash::check($request->old_password, $user->password)) {
             return response()->json([
                 'status' => 'error',
-                'message' => ['Password not match'],
+                'message' => [trans('api.password_not_match')],
                 'response' => [],
                 'status_code' => 422
             ], 200);
@@ -167,7 +166,7 @@ class UsersApiLoginController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => ['Password reset successfully.'],
+            'message' => [trans('api.password_reset_successfully')],
             'response' => [],
             'status_code' => 200
         ], 200);
@@ -197,7 +196,7 @@ class UsersApiLoginController extends Controller
             if (!$user) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => ['Invalid MSISDN'],
+                    'message' => [trans('api.invalid_msisdn')],
                     'response' => [],
                     'status_code' => 422
                 ], 200);
@@ -210,7 +209,7 @@ class UsersApiLoginController extends Controller
             $this->sendOTP($user->msisdn, $user->otp, '');
             return response()->json([
                 'status' => 'success',
-                'message' => ['An OTP is sent to your number.'],
+                'message' => [trans('api.otp_is_sent_to_your_number')],
                 'response' => [],
                 'status_code' => 200
             ], 200);
@@ -246,7 +245,7 @@ class UsersApiLoginController extends Controller
         if (!$user) {
             return response()->json([
                 'status' => 'error',
-                'message' => ['Invalid OTP or MSISDN'],
+                'message' => [trans('api.invalid_otp')],
                 'response' => (object)[],
                 'status_code' => 422
             ], 200);
@@ -258,7 +257,7 @@ class UsersApiLoginController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => ['Password reset successfully.'],
+            'message' => [trans('api.password_reset_successfully')],
             'response' => ['api_token' => $user->api_token],
             'status_code' => 200
         ], 200);
@@ -294,7 +293,7 @@ class UsersApiLoginController extends Controller
 
             // FeedBack
             $status = 'Success';
-            $message[] = 'Status updated successfully';
+            $message[] = trans('api.status_update_successfully');
 
             $feedback['status'] = $status;
             $feedback['status_code'] = 200;
@@ -305,7 +304,7 @@ class UsersApiLoginController extends Controller
             DB::rollback();
 
             $status = 'Error';
-            $message[] = 'There is a server error';
+            $message[] = trans('api.server_error');
 
             $feedback['status'] = $status;
             $feedback['status_code'] = 500;

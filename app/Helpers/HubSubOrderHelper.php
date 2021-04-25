@@ -2,7 +2,8 @@
 
 function hubAllStatus() {
 
-    $sub_order_status = \App\Status::select('id','title')->pluck('title','id')->toArray();
+    //$sub_order_status = \App\Status::select('id','title')->pluck('title','id')->toArray();
+    $sub_order_status = \App\Status::select('id','title')->whereIn('id',[2,3,4,6,7,9,10,11,13,15,19,20,21,22,23,24,25,26,28,29,30,31,33,34,35,36,37,38,40,49])->pluck('title','id')->toArray();
 
     return $sub_order_status;
 
@@ -205,7 +206,7 @@ function hubGetRealStatusId($sub_order_status){
 function countStatus($sub_order_group, $start_date, $end_date){
 
     $whereInStatusText = hubWhereInStatusText($sub_order_group);
-    
+
     return $count = DB::table('sub_orders')->where('sub_orders.status', '!=', 0)
                     ->leftJoin('order_logs','order_logs.sub_order_id','=','sub_orders.id')
                     ->WhereIn('order_logs.text',$whereInStatusText)
@@ -222,7 +223,7 @@ function countStatus($sub_order_group, $start_date, $end_date){
 function countStatusAll($sub_order_group, $start_date, $end_date){
 
     $whereInStatusText = hubWhereInStatusText($sub_order_group);
-    
+
     return $count = DB::table('sub_orders')->where('sub_orders.status', '!=', 0)
                     ->leftJoin('order_logs','order_logs.sub_order_id','=','sub_orders.id')
                     ->WhereIn('order_logs.text',$whereInStatusText)

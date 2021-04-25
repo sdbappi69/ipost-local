@@ -331,7 +331,7 @@ class BulkOrderController extends Controller
                                                     // if($order->merchant_order_id == '675978'){
                                                     //     print_r($charges);
                                                     // }
-                                                    $charges = $charges[0];
+//                                                    $charges = $charges[0];
                                                     // dd($charges);
                                                     // echo $order->merchant_order_id.'-'.$charges->status;
                                                     if ($charges) {

@@ -106,7 +106,7 @@ class StoreController extends Controller
         'merchant_id' => 'required',
         'store_type_id' => 'required',
         'status' => 'required',
-        'billing_address' => 'required',
+        'billing_address' => 'sometimes',
         'account_synq_cod' => 'sometimes',
         'account_synq_dc' => 'sometimes',
         'vat_include' => 'sometimes',

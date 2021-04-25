@@ -50,9 +50,10 @@ class WarehouseController extends Controller
     public function create()
     {
         $prefix = Country::whereStatus(true)->lists('prefix', 'id')->toArray();
-        $countries = Country::whereStatus(true)->lists('name', 'id')->toArray();
+//        $countries = Country::whereStatus(true)->lists('name', 'id')->toArray();
+        $zones = Zone::whereStatus(true)->lists('name', 'id')->toArray();
 
-        return view('warehouse.insert', compact('prefix', 'countries'));
+        return view('warehouse.insert', compact('prefix', 'zones'));
     }
 
     /**
@@ -123,7 +124,8 @@ class WarehouseController extends Controller
         $countries = Country::whereStatus(true)->lists('name', 'id')->toArray();
         $states = State::whereStatus(true)->where('country_id', '=', $warehouse->country_id)->lists('name', 'id')->toArray();
         $cities = City::whereStatus(true)->where('state_id', '=', $warehouse->state_id)->lists('name', 'id')->toArray();
-        $zones = Zone::whereStatus(true)->where('city_id', '=', $warehouse->city_id)->lists('name', 'id')->toArray();
+        // $zones = Zone::whereStatus(true)->where('city_id', '=', $warehouse->city_id)->lists('name', 'id')->toArray();
+        $zones = Zone::whereStatus(true)->lists('name', 'id')->toArray();
 
         return view('warehouse.edit', compact('prefix', 'countries', 'id', 'warehouse', 'states', 'cities', 'zones'));
     }

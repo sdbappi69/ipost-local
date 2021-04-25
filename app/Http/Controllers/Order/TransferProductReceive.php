@@ -200,7 +200,7 @@ class TransferProductReceive extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
         $response = curl_exec($ch);
         $charges = json_decode($response);
-        $charges = $charges[0];
+//        $charges = $charges[0];
         if($charges->status == 'Failed'){
             abort(403);
         }

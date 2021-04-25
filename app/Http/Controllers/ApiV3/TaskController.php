@@ -38,19 +38,18 @@ class TaskController extends Controller {
         if (!$consignments->count()) {
 
             $status = 'Data Found';
-            $message[] = 'Data available on response';
+            $message[] = trans('api.data_available');
 
             $feedback['status'] = $status;
             $feedback['status_code'] = 200;
             $feedback['message'] = $message;
-//            $feedback['response']['tasks'] = $this->completedTaskList($user_id); // complete/failed task not handle in app task list
+//          $feedback['response']['tasks'] = $this->completedTaskList($user_id); // complete/failed task not handle in app task list
             $feedback['response']['tasks'] = [];
         } else {
             $tasks = $this->getTasksList($user_id);
-//dd($tasks);
 
             $status = 'Data Found';
-            $message[] = 'Data available on response';
+            $message[] = trans('api.data_available');
 
             $feedback['status'] = $status;
             $feedback['status_code'] = 200;
@@ -73,8 +72,8 @@ class TaskController extends Controller {
             if (!$task) {
 
                 // Not Found
-                $status = 'Not Found';
-                $message[] = 'No data found';
+                $status = trans('api.not_found');
+                $message[] = trans('api.no_data_found');
 
                 $feedback['status'] = $status;
                 $feedback['status_code'] = 204;
@@ -122,7 +121,7 @@ class TaskController extends Controller {
     public function task_start(Request $request) {
         if (!$request->has('task_id')) {
             $status = 'Invalid';
-            $message[] = 'Invalid request';
+            $message[] = trans('api.invalid_request');
 
             $feedback['status'] = $status;
             $feedback['status_code'] = 400;
@@ -135,8 +134,8 @@ class TaskController extends Controller {
                         ->whereId($request->task_id)->whereStatus(0)->first();
 
         if (!$task) {
-            $status = 'Not Found';
-            $message[] = 'No data found';
+            $status = trans('api.not_found');
+            $message[] = trans('api.no_data_found');
 
             $feedback['status'] = $status;
             $feedback['status_code'] = 204;
@@ -149,8 +148,10 @@ class TaskController extends Controller {
             DB::beginTransaction();
 
             $task->status = 1;
-            $task->start_lat = $request->start_lat;
-            $task->start_long = $request->start_lon;
+//            if( !empty(floatval($request->start_lat)) && !empty(floatval($request->start_lon)) ){
+//                $task->start_lat = $request->start_lat;
+//                $task->start_long = $request->start_lon; 
+//            }            
             $task->start_time = date("Y-m-d H:i:s");
             $task->updated_at = Auth::guard('api')->user()->id;
             $task->save();
@@ -189,7 +190,7 @@ class TaskController extends Controller {
                     // Update Sub-Order Status
                     $this->suborderStatus($task->sub_order_id, '30');
                     break;
-                case 3:
+                case 3: // pick & delivery
                     $sop = SubOrder::where('id', $task->sub_order_id)->first();
                     if ($sop) {
                         $sop->picking_attempts = $sop->picking_attempts + 1;
@@ -204,7 +205,7 @@ class TaskController extends Controller {
                         }
                     }
                     // Update Sub-Order Status
-                    $this->suborderStatus($task->sub_order_id, '30');
+                    $this->suborderStatus($task->sub_order_id, '7');
                     break;
                 case 4:
                     $sop = SubOrder::where('id', $task->sub_order_id)->first();
@@ -252,7 +253,7 @@ class TaskController extends Controller {
 
             // FeedBack
             $status = 'Task Start';
-            $message[] = 'On the way to task location';
+            $message[] = trans('api.way_to_location');
 
             $feedback['status'] = $status;
             $feedback['status_code'] = 200;
@@ -263,7 +264,7 @@ class TaskController extends Controller {
         } catch (Exception $e) {
             DB::rollback();
             $status = 'Error';
-            $message[] = 'There is a server error';
+            $message[] = trans('api.server_error');
 
             $feedback['status'] = $status;
             $feedback['status_code'] = 500;
@@ -273,9 +274,10 @@ class TaskController extends Controller {
     }
 
     public function task_submit(Request $request) {
+//        Log::info($request->all());
         if (!$request->has('task_id')) {
             $status = 'Invalid';
-            $message[] = 'Invalid request';
+            $message[] = trans('api.invalid_request');
 
             $feedback['status'] = $status;
             $feedback['status_code'] = 204;
@@ -285,7 +287,7 @@ class TaskController extends Controller {
         }
         if (!$request->has('status') or ! in_array($request->status, [2, 3, 4])) {
             $status = 'Invalid';
-            $message[] = 'Status Should be Full, Partial or Fail';
+            $message[] = trans('api.status_should_full_partial_fail');
 
             $feedback['status'] = $status;
             $feedback['status_code'] = 204;
@@ -302,13 +304,14 @@ class TaskController extends Controller {
         }
 
         if (!$task) {
-            $status = 'Not Found';
-            $message[] = 'No data found';
+            $status = trans('api.not_found');
+            $message[] = trans('api.no_data_found');
 
             $feedback['status'] = $status;
             $feedback['status_code'] = 400;
             $feedback['message'] = $message;
             $feedback['response'] = [];
+            
             return response($feedback, 200);
         }
 
@@ -329,7 +332,7 @@ class TaskController extends Controller {
             $location->save();
 
             $status = 'Task Complete';
-            $message[] = 'The task is complete';
+            $message[] = trans('api.task_completed');
 
             $feedback['status'] = $status;
             $feedback['status_code'] = 200;
@@ -340,7 +343,7 @@ class TaskController extends Controller {
         } catch (Exception $e) {
             DB::rollback();
             $status = 'Error';
-            $message[] = 'There is a server error';
+            $message[] = trans('api.server_error');
 
             $feedback['status'] = $status;
             $feedback['status_code'] = 304;
@@ -354,17 +357,17 @@ class TaskController extends Controller {
         $consignment = ConsignmentCommon::where('consignment_unique_id', '=', $request->consignment_unique_id)
                         ->whereStatus(2)->whereRiderId(Auth::guard('api')->user()->id)->first();
         if (!$consignment) {
-            $feedback['status'] = 'Fail';
+            $feedback['status'] = trans('api.fail');
             $feedback['status_code'] = 404;
-            $feedback['message'] = ['Consignment not found'];
+            $feedback['message'] = [trans('api.consignment_not_found')];
             $feedback['response'] = [];
             return response($feedback, 200);
         }
         $hub = Hub::find($request->hub_id);
         if (!$hub) {
-            $feedback['status'] = 'Fail';
+            $feedback['status'] = trans('api.fail');
             $feedback['status_code'] = 304;
-            $feedback['message'] = ['Hub not found.'];
+            $feedback['message'] = [trans('api.hub_not_found')];
             $feedback['response'] = [];
             return response($feedback, 200);
         }
@@ -372,9 +375,9 @@ class TaskController extends Controller {
         $dueTask = ConsignmentTask::where('consignment_id', $consignment->id)->where('status', '<', 2)->count();
 
         if ($dueTask > 0) {
-            $feedback['status'] = 'Not Modified';
+            $feedback['status'] = trans('api.not_modified');
             $feedback['status_code'] = 304;
-            $feedback['message'] = ['All task need to be finished'];
+            $feedback['message'] = [trans('api.all_task_need_finished')];
             $feedback['response'] = [];
             return response($feedback, 200);
         }
@@ -384,14 +387,14 @@ class TaskController extends Controller {
             $consignment->status = 3;
             $consignment->save();
 
-            $status = 'success';
+            $status = trans('api.success');
             $status_code = 200;
-            $message[] = 'Reconcilation Requested';
+            $message[] = trans('api.reconcilation_requested');
         } catch (Exception $e) {
             Log::error($e);
             $status = 'Error';
             $status_code = 304;
-            $message[] = 'There is a server error';
+            $message[] = trans('api.server_error');
         }
 
         $feedback['status'] = $status;
@@ -429,9 +432,9 @@ class TaskController extends Controller {
         $user->longitude = $request->lon;
         $user->save();
 
-        $feedback['status'] = 'success';
+        $feedback['status'] = trans('api.success');
         $feedback['status_code'] = 200;
-        $feedback['message'] = 'Locations updated successfully.';
+        $feedback['message'] = trans('api.locations_updated_successfully');
 
         return response($feedback, 200);
     }
@@ -470,8 +473,8 @@ class TaskController extends Controller {
                 ->get();
 
         if (count($consignments) == 0) {
-            $status = 'Not Found';
-            $message[] = 'No data found';
+            $status = trans('api.not_found');
+            $message[] = trans('api.no_data_found');
 
             $feedback['status'] = $status;
             $feedback['status_code'] = 204;
@@ -480,7 +483,7 @@ class TaskController extends Controller {
             $cons = $this->getConsignments($consignments);
 
             $status = 'Data Found';
-            $message[] = 'Data available on response';
+            $message[] = trans('api.data_available');
 
             $feedback['status'] = $status;
             $feedback['status_code'] = 200;
@@ -503,9 +506,9 @@ class TaskController extends Controller {
             return $feedback;
         }
         $user_id = Auth::guard('api')->user()->id;
-        $feedback['status'] = 'Success';
+        $feedback['status'] = trans('api.success');
         $feedback['status_code'] = 200;
-        $feedback['message'] = ['Data Found.'];
+        $feedback['message'] = [trans('api.data_found')];
         $feedback['response'] = $this->taskHistory($user_id, $request->date);
 
         return response($feedback, 200);

@@ -14,7 +14,7 @@ use App\SubOrder;
 class CartDeliveryController extends Controller
 {
     public function add_delivery_cart(Request $request) {
-		
+
     	$validation = Validator::make($request->all(), [
 	      'unique_suborder_id' => 'required'
 	     ]);
@@ -146,7 +146,7 @@ class CartDeliveryController extends Controller
 		$sub_order = SubOrder::select('unique_suborder_id')
 								->where('status', 1)
 								->whereIn('sub_order_status', [26, 34])
-								->where('destination_hub_id', '=', auth()->user()->reference_id)
+								->whereRaw("IF (`sub_orders`.`post_delivery_return` = 0, `sub_orders`.`destination_hub_id`,`sub_orders`.`source_hub_id`) = " . auth()->user()->reference_id)
 								->where('return', '=', '0')
 								->where('unique_suborder_id', '=', $unique_suborder_id)
 								->first();

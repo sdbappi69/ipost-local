@@ -28,7 +28,7 @@ class RiderRegistrationController extends Controller
 
         $feedback['status'] = 'success';
         $feedback['status_code'] = 200;
-        $feedback['message'] = ['data for rider registration.'];
+        $feedback['message'] = [trans('api.data_for_rider_registration')];
         $feedback['response'] = $data;
 
         return response($feedback, 200);
@@ -94,7 +94,7 @@ class RiderRegistrationController extends Controller
 
             $geocode = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?latlng=$request->lat,$request->lng&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM");
             $output = json_decode($geocode);
-            $delivery_address = $output->results[0]->formatted_address;
+            $delivery_address = (is_array($output->results) && isset($output->results[0])) ? $output->results[0]->formatted_address : '';
             $user->address1 = $delivery_address;
 
             $user->save();
@@ -138,7 +138,7 @@ class RiderRegistrationController extends Controller
             $this->sendOTP($user->msisdn, $user->otp, '');
             return response()->json([
                 'status' => 'success',
-                'message' => ['An OTP is sent to your number.'],
+                'message' => [trans('api.otp_is_sent_to_your_number')],
                 'response' => ['msisdn' => $user->msisdn],
                 'status_code' => 200
             ], 200);
@@ -176,7 +176,7 @@ class RiderRegistrationController extends Controller
             if (!$user) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => ['Invalid MSISDN'],
+                    'message' => [trans('api.invalid_msisdn')],
                     'response' => [],
                     'status_code' => 422
                 ], 200);
@@ -271,8 +271,9 @@ class RiderRegistrationController extends Controller
             ];
 
             $geocode = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?latlng=$request->lat,$request->lng&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM");
-            $output = json_decode($geocode);
-            $delivery_address = $output->results[0]->formatted_address;
+            $output = json_decode($geocode);            
+            $delivery_address = (is_array($output->results) && isset($output->results[0])) ? $output->results[0]->formatted_address : '';
+            
             $tem_data['address1'] = $delivery_address;
 
             $zone = getZoneBound($request->lat, $request->lng);

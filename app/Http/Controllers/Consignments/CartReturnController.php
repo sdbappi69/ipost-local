@@ -14,7 +14,7 @@ use App\SubOrder;
 class CartReturnController extends Controller
 {
     public function add_return_cart(Request $request) {
-		
+
     	$validation = Validator::make($request->all(), [
 	      'unique_suborder_id' => 'required'
 	     ]);
@@ -149,11 +149,11 @@ class CartReturnController extends Controller
 								->where('sub_orders.status', 1)
 								->whereIn('sub_orders.sub_order_status', [26, 27])
 								->where('sub_orders.return', '=', 1)
-                                ->where('sub_orders.destination_hub_id', '=', auth()->user()->reference_id)
+                ->where('sub_orders.destination_hub_id', '=', auth()->user()->reference_id)
 								->where('sub_orders.unique_suborder_id', '=', $unique_suborder_id)
 								->leftJoin('order_product AS op','op.sub_order_id','=','sub_orders.id')
-                                ->leftJoin('pickup_locations AS pl', 'pl.id', '=', 'op.pickup_location_id')
-                                ->leftJoin('zones AS zones_p','zones_p.id','=','pl.zone_id')
+                ->leftJoin('pickup_locations AS pl', 'pl.id', '=', 'op.pickup_location_id')
+                ->leftJoin('zones AS zones_p','zones_p.id','=','pl.zone_id')
 								->first();
 		return $sub_order;
 	}

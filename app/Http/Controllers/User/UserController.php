@@ -439,7 +439,7 @@ class UserController extends Controller {
 
             $user = User::findOrFail($id);
 
-            $user->fill($request->except('reference_id', 'rider_reference_id', 'rider_type', 'transparent_mode', 'msisdn_country', 'alt_msisdn_country', 'step', 'photo', 'password', 'password_confirmation'));
+            $user->fill($request->except('rider_reference_id', 'rider_type', 'transparent_mode', 'msisdn_country', 'alt_msisdn_country', 'step', 'photo', 'password', 'password_confirmation'));
 
             /**
              * reference type handle

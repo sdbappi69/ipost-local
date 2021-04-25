@@ -38,16 +38,18 @@ class CollectedCashAmountController extends Controller {
     }
 
     private function __getQuery($request) {
-        $query = SubOrder::select('sub_orders.*', 'order_product.product_title', 'order_product.product_category_id', 'users.name as rider_name', 'consignments_tasks.end_time as delivery_time', 'orders.merchant_order_id', 'payment_types.name as payment_name')
-                ->leftJoin('order_product', 'order_product.product_unique_id', '=', 'sub_orders.unique_suborder_id')
-                ->leftJoin('consignments_tasks', 'consignments_tasks.sub_order_id', '=', 'sub_orders.id')
-                ->leftJoin('users', 'consignments_tasks.rider_id', '=', 'users.id')
-                ->leftJoin('orders', 'orders.id', '=', 'sub_orders.order_id')
-                ->leftJoin('payment_types', 'payment_types.id', '=', 'orders.payment_type_id')
+        $query = SubOrder::select('sub_orders.*', 'orders.payment_type_id', 'order_product.product_title', 'order_product.product_category_id', 'users.name as rider_name', 'consignments_tasks.end_time as delivery_time', 'orders.merchant_order_id', 'payment_types.name as payment_name')
+                ->join('order_product', 'order_product.product_unique_id', '=', 'sub_orders.unique_suborder_id')
+                ->join('consignments_tasks', 'consignments_tasks.sub_order_id', '=', 'sub_orders.id')
+                ->join('consignments_common', 'consignments_tasks.consignment_id', '=', 'consignments_common.id')
+                ->join('users', 'consignments_tasks.rider_id', '=', 'users.id')
+                ->join('orders', 'orders.id', '=', 'sub_orders.order_id')
+                ->join('payment_types', 'payment_types.id', '=', 'orders.payment_type_id')
                 ->whereIn('sub_orders.sub_order_status', [37, 38, 39])
                 ->where('sub_orders.accounts', 0)
                 ->where('consignments_tasks.task_type_id', 2)
-                ->where('sub_orders.collected_cash_status', 0);
+                ->where('sub_orders.collected_cash_status', 0)
+                ->distinct();
 
         ($request->has('sub_unique_id')) ? $query->where('sub_orders.unique_suborder_id', trim($request->sub_unique_id)) : null;
 
@@ -55,7 +57,7 @@ class CollectedCashAmountController extends Controller {
 
         ($request->has('product_category_id')) ? $query->where('product_category_id', $request->product_category_id) : null;
 
-        $query->where('destination_hub_id', auth()->user()->reference_id);
+        $query->where('consignments_common.hub_id', auth()->user()->reference_id);
 
         return $query;
     }
@@ -75,10 +77,14 @@ class CollectedCashAmountController extends Controller {
                     $excel->sheet('collection', function($sheet) use ($sub_orders) {
 
                         $datasheet = array();
-                        $datasheet[0] = array('Sub-Order Id', 'Product Name', 'Product Category', 'Seller', 'Deliveryman', 'Delivery Time', 'Merchant Order Id', 'Pyment Type', 'Quantity', 'Collected', 'Delivery Amount');
+                        $datasheet[0] = array('Sub-Order Id', 'Product Name', 'Product Category', 'Seller', 'Deliveryman', 'Delivery Time', 'Merchant Order Id', 'Pyment Type', 'Quantity', 'Collected');
                         $i = 1;
                         foreach ($sub_orders as $c) {
-
+                            if($c->post_delivery_return == 1 || $c->return == 1 || $c->payment_type_id == 2){
+                                $collected_amount = 0;
+                            }else{
+                                $collected_amount = $c->product->delivery_paid_amount;
+                            }
                             $datasheet[$i] = array(
                                 $c->unique_suborder_id,
                                 $c->product->product_title,
@@ -89,8 +95,7 @@ class CollectedCashAmountController extends Controller {
                                 $c->merchant_order_id,
                                 $c->payment_name,
                                 $c->product->quantity,
-                                $c->product->delivery_paid_amount,
-                                $c->product->total_delivery_charge
+                                $collected_amount
                             );
 
                             $i++;
@@ -115,18 +120,24 @@ class CollectedCashAmountController extends Controller {
         }
         try {
             DB::beginTransaction();
-            $subOrder = SubOrder::whereIn('id', $request->sub_order_id);
+            $subOrder = SubOrder::whereIn('id', $request->sub_order_id)->whereIn('sub_order_status', [37, 38, 39]);
 
             $totalQuantity = 0;
             $total_collected_amount = 0;
             $final_total_delivery_charge = 0;
             foreach ($subOrder->get() as $key => $value) {
                 $totalQuantity += $value->product->quantity;
-                $total_collected_amount += $value->product->delivery_paid_amount;
-                $final_total_delivery_charge += $value->product->total_delivery_charge;
+                if($value->post_delivery_return == 1 || $value->return == 1 || $value->order->payment_type_id == 2){
+                    $total_collected_amount += 0;
+                }else{
+                    $total_collected_amount += $value->product->delivery_paid_amount;
+                }                
+                $final_total_delivery_charge += 0; // as there is no delivery charge for now
+//                $final_total_delivery_charge += $value->product->total_delivery_charge;
             }
 
             $cashAmount = new CollectedCashAccumulated();
+            $cashAmount->hub_id = auth()->user()->reference_id;
             $cashAmount->batch_id = "HT" . time() . rand(1, 999999);
             $cashAmount->total_quantity = $totalQuantity;
             $cashAmount->total_collected_amount = $total_collected_amount;
@@ -155,7 +166,7 @@ class CollectedCashAmountController extends Controller {
         if ($request->has('start_date')) {
             $start_date = $request->start_date;
         } else {
-            $start_date = date('Y-m-d');
+            $start_date = date('Y-m-d', strtotime('-10 day'));
         }
 
         if ($request->has('end_date')) {
@@ -164,11 +175,11 @@ class CollectedCashAmountController extends Controller {
             $end_date = date('Y-m-d');
         }
 
-        $query = CollectedCashAccumulated::WhereBetween('date', array($start_date, $end_date));
+        $query = CollectedCashAccumulated::whereHubId(auth()->user()->reference_id)->WhereBetween('date', array($start_date, $end_date));
 
         ($request->has('batch_id')) ? $query->where('batch_id', trim($request->batch_id)) : null;
 
-        ($request->has('status')) ? $query->where('status', trim($request->status)) : null;
+        ($request->has('status')) ? $query->where('status', trim($request->status)) : $query->where('status', 1);
 
         $data['accumulateLists'] = $query->paginate(50);
         return view('accounts.collected_cash.accumulated_cash', $data);
@@ -198,6 +209,71 @@ class CollectedCashAmountController extends Controller {
         $data['accumulateLists'] = $query->paginate(50);
 
         return view('accounts.collected_cash.accumulated_cash_confirm', $data);
+    }
+
+    public function accumulatedCashConfirmExport(Request $request,$type){
+        if ($request->has('start_date')) {
+            $start_date = $request->start_date;
+        } else {
+            $start_date = date('Y-m-d');
+        }
+
+        if ($request->has('end_date')) {
+            $end_date = $request->end_date;
+        } else {
+            $end_date = date('Y-m-d');
+        }
+
+        $query = CollectedCashAccumulated::WhereBetween('date', array($start_date, $end_date));
+
+        ($request->has('batch_id')) ? $query->where('batch_id', trim($request->batch_id)) : null;
+
+        ($request->has('status')) ? $query->where('status', trim($request->status)) : null;
+
+        $data = $query->get();
+
+        $ExtractLog = new ExtractLog();
+        $ExtractLog->user_id = Auth::user()->id;
+        $ExtractLog->extract_type = 'Hub Orders';
+        $ExtractLog->download_date = date('Y-m-d H:i:s');
+        $ExtractLog->save();
+
+        return Excel::create('cash_' . time(), function($excel) use ($data) {
+            $excel->sheet('cash', function($sheet) use ($data) {
+
+                $datasheet = array();
+                $datasheet[0] = array('Cash Transfer ID', 'Date', 'Total Qty', 'Collected', 'Status', 'Transaction ID', 'Remarks');
+                $i = 1;
+                foreach ($data as $c) {
+                    if($c->status == 1){
+                        $status = 'Pending';
+                    }elseif($c->status == 2){
+                        $status = 'Confirm';
+                    }else{
+                        $status = 'Inactive';
+                    }
+
+                    $datasheet[$i] = array(
+                        $c->batch_id,
+                        $c->date,
+                        $c->total_quantity,
+                        $c->total_collected_amount,
+                        $status,
+                        $c->transaction_id,
+                        $c->remark
+                    );
+
+                    $i++;
+                }
+
+                $sheet->setOrientation('landscape');
+
+                // Freeze first row
+                $sheet->freezeFirstRow();
+
+                $sheet->fromArray($datasheet);
+            });
+        })->download($type);
     }
 
     public function accumulatedConfirmed(Request $request) {
@@ -361,7 +437,7 @@ class CollectedCashAmountController extends Controller {
         if ($request->has('start_date')) {
             $start_date = $request->start_date;
         } else {
-            $start_date = date('Y-m-d');
+            $start_date = date('Y-m-d', strtotime('-30 days'));
         }
 
         if ($request->has('end_date')) {
@@ -477,6 +553,15 @@ class CollectedCashAmountController extends Controller {
     public function collectionCashDetails(Request $request, $id) {
 
         $data['titile'] = "Cash Collection Details";
+        $query = $this->__getCollectionCashDetail($request, $id);
+        $data['callectionCashDetails'] = $query->paginate(50);
+        $data['product_categories'] = ProductCategory::whereStatus(true)->orderBy('name', 'asc')->lists('name', 'id')->toArray();
+
+        $data['export_url'] = "https://$_SERVER[HTTP_HOST]/collection-cash-details/$id/xls";        
+        return view('accounts.collected_cash.cash_collection_details', $data);
+    }
+    
+    public function __getCollectionCashDetail($request, $id){
         $query = SubOrder::select('sub_orders.*', 'order_product.product_title', 'order_product.product_category_id', 'users.name as rider_name', 'consignments_tasks.end_time as delivery_time', 'orders.merchant_order_id', 'payment_types.name as payment_name')
                 ->leftJoin('order_product', 'order_product.product_unique_id', '=', 'sub_orders.unique_suborder_id')
                 ->leftJoin('consignments_tasks', 'consignments_tasks.sub_order_id', '=', 'sub_orders.id')
@@ -504,10 +589,56 @@ class CollectedCashAmountController extends Controller {
 
         ($request->has('product_category_id')) ? $query->where('product_category_id', $request->product_category_id) : null;
 
-        $data['callectionCashDetails'] = $query->paginate(50);
-        $data['product_categories'] = ProductCategory::whereStatus(true)->orderBy('name', 'asc')->lists('name', 'id')->toArray();
+        return $query;
+    }
 
-        return view('accounts.collected_cash.cash_collection_details', $data);
+    public function collectionCashDetailsExport(Request $request, $id, $type) {
+        $query = $this->__getCollectionCashDetail($request, $id);
+
+        $sub_orders = $query->get();
+
+        $ExtractLog = new ExtractLog();
+        $ExtractLog->user_id = Auth::user()->id;
+        $ExtractLog->extract_type = 'Hub Orders';
+        $ExtractLog->download_date = date('Y-m-d H:i:s');
+        $ExtractLog->save();
+
+        return Excel::create('collection_cash_details' . time(), function($excel) use ($sub_orders) {
+                    $excel->sheet('collection', function($sheet) use ($sub_orders) {
+
+                        $datasheet = array();
+                        $datasheet[0] = array('AWB', 'Product Name', 'Product Category', 'Seller', 'Deliveryman', 'Delivery Time', 'Merchant Order Id', 'Payment Type', 'Qty', 'Collected');
+                        $i = 1;
+                        foreach ($sub_orders as $c) {
+                            if($c->post_delivery_return == 1 || $c->return == 1 || $c->order->payment_type_id == 2){
+                                $amount = 0;
+                            }else{
+                                $amount = $c->product->delivery_paid_amount;
+                            }
+                            $datasheet[$i] = array(
+                                $c->order->id,
+                                $c->product->product_title,
+                                $c->product->product_category->name,
+                                $c->product->pickup_location->title,
+                                $c->rider_name,
+                                $c->delivery_time,
+                                $c->merchant_order_id,
+                                $c->payment_name,
+                                $c->product->quantity,
+                                $amount
+                            );
+
+                            $i++;
+                        }
+
+                        $sheet->setOrientation('landscape');
+
+                        // Freeze first row
+                        $sheet->freezeFirstRow();
+
+                        $sheet->fromArray($datasheet);
+                    });
+                })->download($type);
     }
 
 }

@@ -147,7 +147,7 @@ class CartTripController extends Controller
     public function check_sub_order($unique_suborder_id){
         $sub_order = SubOrder::select('sub_orders.unique_suborder_id')
                                 ->where('sub_orders.status', 1)
-                                ->whereIn('sub_orders.sub_order_status', [15, 16, 17, 47, 20])
+                                ->whereIn('sub_orders.sub_order_status', [15, 16, 17, 47])
                                 ->where('sub_orders.current_hub_id', '=', auth()->user()->reference_id)
                                 ->where('sub_orders.next_hub_id', '!=', auth()->user()->reference_id)
                                 ->where('sub_orders.unique_suborder_id', '=', $unique_suborder_id)

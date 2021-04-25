@@ -162,7 +162,7 @@ Route::group(['prefix' => 'api/v2', 'middleware' => 'auth:api'], function () {
 });
 
 /** api version 3 by johnny**/
-Route::group(['prefix' => 'api/v3', 'middleware' => 'auth:api'], function () {
+Route::group(['prefix' => 'api/v3', 'middleware' => ['auth:api','localization']], function () {
     Route::group(['namespace' => 'ApiV3'], function () {
         Route::post('charge-calculator', 'ChargeCalculatorController@index');
 
@@ -189,10 +189,9 @@ Route::group(['prefix' => 'api/v3', 'middleware' => 'auth:api'], function () {
     });
 });
 
-Route::group(['prefix' => 'api/v3'], function () {
+Route::group(['prefix' => 'api/v3', 'middleware' => 'localization'], function () {
     Route::group(['namespace' => 'ApiV3'], function () {
-        Route::post('/rider/login', 'UsersApiLoginController@login');
-
+        Route::post('/rider/login', 'UsersApiLoginController@login')->middleware('localization');
         Route::post('/forget-password', 'UsersApiLoginController@forgetPassword');
         Route::post('/new-password', 'UsersApiLoginController@newPassword');
         
@@ -254,6 +253,7 @@ Route::group(['prefix' => 'api/v2', 'middleware' => 'auth:api'], function () {
             
             /* create by johnny */
             Route::post('merchant/pickup-location', 'ResourceController@storePickupLocation');
+            Route::post('merchant/nearest-pickup-location', 'ResourceController@findNearestPickupLocation');
 
         });
     });

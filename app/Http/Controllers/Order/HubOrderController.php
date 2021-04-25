@@ -44,7 +44,7 @@ class HubOrderController extends Controller {
         $stores = Store::whereStatus(true)->lists('store_id', 'id')->toArray();
         $merchants = Merchant::whereStatus(true)->lists('name', 'id')->toArray();
         $sub_order_status = hubAllStatus();
-        // pick man 
+        // pick man
 
         $pickupman = User::select('name', 'id')->where('status', true)->where('user_type_id', '=', '8')->lists('name', 'users.id')->toArray();
 
@@ -132,7 +132,7 @@ class HubOrderController extends Controller {
                     $excel->sheet('orders', function($sheet) use ($sub_orders) {
 
                         $datasheet = array();
-                        $datasheet[0] = array('Order Id', 'Sub-Order Id', 'Type', 'Merchant Order Id', 'Current Status', 'Store', 'Seller', 'Created', 'Product', 'Quantity', 'Verified Weight', 'Picking Attempt', 'Picking Attempt', 'Delivery Name', 'Delivery Email', 'Delivery Mobile', 'Amount to be collected', 'Amount collected');
+                        $datasheet[0] = array('Order Id', 'Sub-Order Id', 'Type', 'Merchant Order Id', 'Current Status', 'Seller', 'Created', 'Product', 'Quantity', 'Verified Weight', 'Picking Attempt', 'Delivery Name', 'Delivery Email', 'Delivery Mobile', 'Amount to be collected', 'Amount collected');
                         $i = 1;
                         foreach ($sub_orders as $datanew) {
 
@@ -150,14 +150,19 @@ class HubOrderController extends Controller {
                             if(is_null($datanew->product)){
                                 continue;
                             }
-
+                            if($datanew->post_delivery_return == 1 || $datanew->return == 1 || $datanew->order->payment_type_id == 2) {
+                                $collectableAmount = 0;
+                                $collectedAmount = 0;
+                            }else{
+                                $collectableAmount = $datanew->parent_sub_order ? $datanew->parent_sub_order->product->payable_product_price : $datanew->product->payable_product_price;
+                                $collectedAmount = $datanew->product->delivery_paid_amount;
+                            }
                             $datasheet[$i] = array(
                                 $datanew->order->unique_order_id,
                                 $datanew->unique_suborder_id,
                                 $type,
                                 $datanew->order->merchant_order_id,
                                 $sub_order_status,
-                                $datanew->order->store->store_id,
                                 $datanew->product->pickup_location->title,
                                 $datanew->created_at,
                                 $datanew->product->product_title,
@@ -167,8 +172,8 @@ class HubOrderController extends Controller {
                                 $datanew->order->delivery_name,
                                 $datanew->order->delivery_email,
                                 $datanew->order->delivery_msisdn . ", " . $datanew->order->delivery_alt_msisdn,
-                                $datanew->product->sub_total,
-                                $datanew->product->delivery_paid_amount
+                                $collectableAmount,
+                                $collectedAmount
                             );
 
                             $i++;
@@ -212,7 +217,7 @@ class HubOrderController extends Controller {
     public function show($id) {
         $order = Order::whereStatus(true)->findOrFail($id);
 //        dd($order->suborders[0]->products[0]->charge_details, json_decode($order->suborders[0]->products[0]->charge_details));
-//        return view('hub-orders.view', compact('order'));    
+//        return view('hub-orders.view', compact('order'));
         return view('hub-orders.view-suborders', compact('order'));
     }
 

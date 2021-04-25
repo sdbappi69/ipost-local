@@ -30,13 +30,14 @@ use Entrust;
 use App\Merchant;
 use App\User;
 use App\OrderLog;
+use App\Http\Traits\MerchantSubOrder;
 
-class MerchantOrderController extends Controller
-{
+class MerchantOrderController extends Controller {
 
     use LogsTrait;
     use CreateOrderId;
     use ChargeCalculetorTrait;
+    use MerchantSubOrder;
 
     /**
      * Store a newly created resource in storage.
@@ -44,16 +45,12 @@ class MerchantOrderController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store_order(Request $request)
-    {
-
+    public function store_order(Request $request) {
         Log::info($request->all());
 
-        // return $request->all();
-
         $validation = Validator::make($request->all(), [
-            'store_id' => 'required',
-            'orders' => 'required'
+                    'store_id' => 'required',
+                    'orders' => 'required'
         ]);
 
         if ($validation->fails()) {
@@ -66,84 +63,77 @@ class MerchantOrderController extends Controller
 
         $orders = json_decode($request->orders, true);
 
-        if ($orders != null) {
+        if ($orders == null) {
+            $feedback['status_code'] = 401;
+            $message[] = "Order not found.";
+            $feedback['message'] = $message;
+        }
 
-            $store = Store::whereStatus(true)->where('store_id', $request->store_id)->first();
+        $store = Store::whereStatus(true)->where('store_id', $request->store_id)->first();
 
-            $i = 0;
+        $i = 0;
 
-            foreach ($orders as $order) {
+        foreach ($orders as $order) {
 
-                $i++;
+            $i++;
 
-                // Validation Start
+            if (!isset($order['delivery_name'])) {
+                $message[$i] = [
+                    'status' => 422,
+                    'message' => 'delivery_name not found',
+                    'data' => (object) [],
+                ];
+                continue;
+            }
+            $delivery_name = $order['delivery_name'];
 
-                if (!isset($order['delivery_name'])) {
-                    $message[$i] = [
-                        'status' => 422,
-                        'message' => 'delivery_name not found',
-                        'data' => (object)[],
-                    ];
-                    continue;
-                } else {
-                    $delivery_name = $order['delivery_name'];
-                }
+            $delivery_email = $order['delivery_email'] ?? null;
 
-                if (!isset($order['delivery_email'])) {
-                    $message[$i] = [
-                        'status' => 422,
-                        'message' => 'delivery_email not found',
-                        'data' => (object)[],
-                    ];
-                    continue;
-                } else {
-                    $delivery_email = $order['delivery_email'];
-                }
+            if (!isset($order['delivery_msisdn'])) {
+                $message[$i] = [
+                    'status' => 422,
+                    'message' => 'delivery_msisdn not found',
+                    'data' => (object) [],
+                ];
+                continue;
+            }
+            $delivery_msisdn = $order['delivery_msisdn'];
 
-                if (!isset($order['delivery_msisdn'])) {
-                    $message[$i] = [
-                        'status' => 422,
-                        'message' => 'delivery_msisdn not found',
-                        'data' => (object)[],
-                    ];
-                    continue;
-                } else {
-                    $delivery_msisdn = $order['delivery_msisdn'];
-                }
+            if (!isset($order['delivery_zone_lat']) || empty($order['delivery_zone_lat'])) {
+                $message[$i] = [
+                    'status' => 422,
+                    'message' => 'Invalid delivery location!',
+                    'data' => (object) [],
+                ];
+                continue;
+            }
+            $delivery_zone_lat = $order['delivery_zone_lat'];
 
-                if (!isset($order['delivery_zone_lat'])) {
-                    $message[$i] = [
-                        'status' => 422,
-                        'message' => 'delivery_zone_lat not found',
-                        'data' => (object)[],
-                    ];
-                    continue;
-                } else {
-                    $delivery_zone_lat = $order['delivery_zone_lat'];
-                }
+            if (!isset($order['delivery_zone_lng']) || empty($order['delivery_zone_lng'])) {
+                $message[$i] = [
+                    'status' => 422,
+                    'message' => 'Invalid delivery location!',
+                    'data' => (object) [],
+                ];
+                continue;
+            }
+            $delivery_zone_lng = $order['delivery_zone_lng'];
 
-                if (!isset($order['delivery_zone_lng'])) {
-                    $message[$i] = [
-                        'status' => 422,
-                        'message' => 'delivery_zone_lng not found',
-                        'data' => (object)[],
-                    ];
-                    continue;
-                } else {
-                    $delivery_zone_lng = $order['delivery_zone_lng'];
-                }
-                
-                if(!isset($order['payment_type_id']) || !\App\PaymentType::find($order['payment_type_id'])){
-//                    $message[$i] = [
-//                        'status' => 422,
-//                        'message' => 'Invalid Payment Type',
-//                        'data' => (object)[],
-//                    ];
-//                    continue;
-                    $paymentType = 1;
-                }else{
-                    $paymentType = $order['payment_type_id'];
-                }
+            if (!isset($order['merchant_order_id'])) {
+                $message[$i] = [
+                    'status' => 422,
+                    'message' => 'merchant_order_id not found',
+                    'data' => (object) [],
+                ];
+                continue;
+            }
+            $merchant_order_id = $order['merchant_order_id'];
+
+            if (!isset($order['payment_type_id']) || !\App\PaymentType::find($order['payment_type_id'])) {
+                $paymentType = 1;
+            } else {
+                $paymentType = $order['payment_type_id'];
+            }
 
 //                if(!isset($order['delivery_address'])){
 //                    $message[$i] = 'delivery_address not found';
@@ -151,642 +141,563 @@ class MerchantOrderController extends Controller
 //                }else{
 //                    $delivery_address = $order['delivery_address'];
 //                }
-                $geocode = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?latlng=$delivery_zone_lat,$delivery_zone_lng&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM");
+            $geocode = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?latlng=$delivery_zone_lat,$delivery_zone_lng&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM");
+            $output = json_decode($geocode);
+            $delivery_address = $output->results[0]->formatted_address;
 
-                $output = json_decode($geocode);
+            $delivery_zone = getZoneBound($delivery_zone_lat, $delivery_zone_lng);
 
-                $delivery_address = $output->results[0]->formatted_address;
+            if ($delivery_zone == null) {
+                $message[$i] = [
+                    'status' => 422,
+                    'message' => 'Delivery location out of zone coverage!',
+                    'data' => (object) [],
+                ];
+                continue;
+            }
+            if (!isset($order['remarks'])) {
+                $remarks = '';
+            } else {
+                $remarks = $order['remarks'];
+            }
 
-                if (!isset($order['merchant_order_id'])) {
+            if (isset($order['as_package']) && $order['as_package'] == 1) {
+                $as_package = 1;
+
+//                $defaultPickLocation = isset($order['pickup_location']) ? $this->getDefaultPickupLocation($order['pickup_location'], $delivery_zone) : $this->getDefaultPickupLocation('', $delivery_zone);
+                $defaultPickLocation = (isset($order['pickup_location_id']) && $order['pickup_location_id'] != '') ? $this->getDefaultPickupLocation($order['pickup_location_id']) : $this->getDefaultPickupLocation($order['pickup_location']);
+
+                if (!$defaultPickLocation['status']) {
                     $message[$i] = [
                         'status' => 422,
-                        'message' => 'merchant_order_id not found',
-                        'data' => (object)[],
+                        'message' => $defaultPickLocation['message'],
+                        'data' => (object) [],
                     ];
                     continue;
-                } else {
-                    $merchant_order_id = $order['merchant_order_id'];
                 }
+                $default_pickup_location_id = $defaultPickLocation['pickup_location_id'];
+                $default_pickup_location_zone_id = $defaultPickLocation['pickup_location_zone_id'];
+                $default_pickup_location_hub_id = $defaultPickLocation['pickup_location_hub_id'];
 
-                if (!isset($order['remarks'])) {
-                    $remarks = '';
-                } else {
-                    $remarks = $order['remarks'];
-                }
+                $default_picking_date = isset($order['picking_date']) ? $order['picking_date'] : '';
+            } else {
+                $as_package = 0;
+            }
 
-                if (isset($order['as_package']) && $order['as_package'] == 1) {
-                    $as_package = 1;
+            $delivery_pay_by_cus = (isset($order['delivery_pay_by_cus']) && $order['delivery_pay_by_cus'] == 1) ? 1 : 0;
+            $verified = (isset($order['verified']) && $order['verified'] == 1) ? 1 : 0;
 
-                    if (!isset($order['pickup_location'])) {
-                        $message[$i] = [
-                            'status' => 422,
-                            'message' => 'pickup_location not found',
-                            'data' => (object)[],
-                        ];
-                        continue;
-                    } else {
-                        $default_pickup_location = PickingLocations::whereStatus(true)
-                            ->where('title', $order['pickup_location'])
-                            ->where('merchant_id', Auth::guard('api')->user()->reference_id)
-                            ->first();
-                        if (!$default_pickup_location) {
-                            $message[$i] = [
-                                'status' => 422,
-                                'message' => 'pickup_location not valid',
-                                'data' => (object)[],
-                            ];
-                            continue;
-                        } else {
-                            $default_pickup_location_id = $default_pickup_location->id;
-                            $default_pickup_location_zone_id = $default_pickup_location->zone_id;
-                            $default_pickup_location_hub_id = $default_pickup_location->zone->hub_id;
-                        }
+            if (!isset($order['products']) || count($order['products']) == 0) {
+                $message[$i] = [
+                    'status' => 422,
+                    'message' => 'products not found',
+                    'data' => (object) [],
+                ];
+                continue;
+            }
+            $products = $order['products'];
 
-                        if (!isset($order['picking_date'])) {
-                            $default_picking_date = $order['picking_date'];
-                        } else {
-                            $default_picking_date = "";
-                        }
-                    }
+            $j = 0;
 
-                } else {
-                    $as_package = 0;
-                }
+            $total_width = 0;
+            $total_height = 0;
+            $total_length = 0;
+            $total_weight = 0;
+            $total_unit_price = 0;
+            $total_sub_total = 0;
 
-                if (isset($order['delivery_pay_by_cus']) && $order['delivery_pay_by_cus'] == 1) {
-                    $delivery_pay_by_cus = 1;
-                } else {
-                    $delivery_pay_by_cus = 0;
-                }
+            foreach ($products as $product) {
 
-                if (isset($order['verified']) && $order['verified'] == 1) {
-                    $verified = 1;
-                } else {
-                    $verified = 0;
-                }
+                $j++;
 
-                if (!isset($order['products'])) {
-                    $message[$i] = [
-                        'status' => 422,
-                        'message' => 'products not found',
-                        'data' => (object)[],
-                    ];
+                if (!isset($product['product_title'])) {
+                    $message[$i][$j]['status'] = 422;
+                    $message[$i][$j]['message'] = 'product_title not found';
+                    $message[$i][$j]['data'] = (object) [];
                     continue;
-                } else {
-                    $products = $order['products'];
-                    if (count($products) == 0) {
-                        $message[$i] = [
-                            'status' => 422,
-                            'message' => 'No products found',
-                            'data' => (object)[],
-                        ];
-                        continue;
-                    } else {
+                }
+                if (!isset($product['product_category'])) {
+                    $message[$i][$j]['status'] = 422;
+                    $message[$i][$j]['message'] = 'product_category not found';
+                    $message[$i][$j]['data'] = (object) [];
+                    continue;
+                }
+                if (!isset($product['quantity'])) {
+                    $message[$i][$j]['status'] = 422;
+                    $message[$i][$j]['message'] = 'quantity not found';
+                    $message[$i][$j]['data'] = (object) [];
+                    continue;
+                }
+                if (!isset($product['unit_price'])) {
+                    $message[$i][$j]['status'] = 422;
+                    $message[$i][$j]['message'] = 'unit_price not found';
+                    $message[$i][$j]['data'] = (object) [];
+                    continue;
+                }
+                $product_title[$i][$j] = $product['product_title'];
+                $product_category[$i][$j] = $product['product_category'];
+                $quantity[$i][$j] = $product['quantity'];
+                $unit_price[$i][$j] = $product['unit_price'];
 
-                        $j = 0;
+//                $pickLocation = isset($product['pickup_location']) ? $this->getDefaultPickupLocation($product['pickup_location'], $delivery_zone) : $this->getDefaultPickupLocation('', $delivery_zone);
+                $pickLocation = (isset($order['pickup_location_id']) && $order['pickup_location_id'] != '') ? $this->getDefaultPickupLocation($order['pickup_location_id']) : $this->getDefaultPickupLocation($order['pickup_location']);
+                if (!$pickLocation['status']) {
+                    $message[$i][$j]['status'] = 422;
+                    $message[$i][$j]['message'] = $pickLocation['message'];
+                    $message[$i][$j]['data'] = (object) [];
+                    continue;
+                }
+                $pickup_location_id[$i][$j] = $pickLocation['pickup_location_id'];
+                $pickup_location_zone_id[$i][$j] = $pickLocation['pickup_location_zone_id'];
+                $pickup_location_hub_id[$i][$j] = $pickLocation['pickup_location_hub_id'];
 
-                        $total_width = 0;
-                        $total_height = 0;
-                        $total_length = 0;
-                        $total_weight = 0;
-                        $total_unit_price = 0;
-                        $total_sub_total = 0;
+                $url[$i][$j] = $product['url'] ?? null;
 
-                        foreach ($products as $product) {
+                if (isset($product['weight'])) {
+                    $weight[$i][$j] = $product['weight'];
 
-                            $j++;
-
-                            if (!isset($product['product_title'])) {
-                                $message[$i][$j]['status'] = 422;
-                                $message[$i][$j]['message'] = 'product_title not found';
-                                $message[$i][$j]['data'] = (object)[];
-                                continue;
-                            } else {
-                                $product_title[$i][$j] = $product['product_title'];
-                            }
-
-                            if (!isset($product['product_category'])) {
-                                $message[$i][$j]['status'] = 422;
-                                $message[$i][$j]['message'] = 'product_category not found';
-                                $message[$i][$j]['data'] = (object)[];
-                                continue;
-                            } else {
-                                $product_category[$i][$j] = $product['product_category'];
-                            }
-
-                            if (!isset($product['quantity'])) {
-                                $message[$i][$j]['status'] = 422;
-                                $message[$i][$j]['message'] = 'quantity not found';
-                                $message[$i][$j]['data'] = (object)[];
-                                continue;
-                            } else {
-                                $quantity[$i][$j] = $product['quantity'];
-                            }
-
-                            if (!isset($product['unit_price'])) {
-                                $message[$i][$j]['status'] = 422;
-                                $message[$i][$j]['message'] = 'unit_price not found';
-                                $message[$i][$j]['data'] = (object)[];
-                                continue;
-                            } else {
-                                $unit_price[$i][$j] = $product['unit_price'];
-                            }
-
-                            if (!isset($product['pickup_location'])) {
-                                $message[$i][$j]['status'] = 422;
-                                $message[$i][$j]['message'] = 'pickup_location not found';
-                                $message[$i][$j]['data'] = (object)[];
-                                continue;
-                            } else {
-                                $pickup_location = PickingLocations::whereStatus(true)
-                                    ->where('title', $product['pickup_location'])
-                                    ->where('merchant_id', Auth::guard('api')->user()->reference_id)
-                                    ->first();
-                                if ($pickup_location == null) {
-                                    $message[$i][$j]['status'] = 422;
-                                    $message[$i][$j]['message'] = 'pickup_location not valid';
-                                    $message[$i][$j]['data'] = (object)[];
-                                    continue;
-                                } else {
-                                    $pickup_location_id[$i][$j] = $pickup_location->id;
-                                    $pickup_location_zone_id[$i][$j] = $pickup_location->zone_id;
-                                    $pickup_location_hub_id[$i][$j] = $pickup_location->zone->hub_id;
-                                }
-                            }
-
-                            if (isset($product['url'])) {
-                                $url[$i][$j] = $product['url'];
-                            } else {
-                                $url[$i][$j] = '';
-                            }
-
-                            if (isset($product['weight'])) {
-                                $weight[$i][$j] = $product['weight'];
-
-                                if ($product['weight'] > 99.99) {
-                                    $weight[$i][$j] = 99.99;
-                                } else if ($product['weight'] < 0.1) {
-                                    $weight[$i][$j] = 0.1;
-                                }
-                            } else {
-                                $weight[$i][$j] = 0.1;
-                            }
-
-                            if (isset($product['width'])) {
-                                $width[$i][$j] = $product['width'];
-                            } else {
-                                $width[$i][$j] = 0;
-                            }
-
-                            if (isset($product['height'])) {
-                                $height[$i][$j] = $product['height'];
-                            } else {
-                                $height[$i][$j] = 0;
-                            }
-
-                            if (isset($product['length'])) {
-                                $length[$i][$j] = $product['length'];
-                            } else {
-                                $length[$i][$j] = 0;
-                            }
-
-                            if (isset($product['picking_date'])) {
-                                $picking_date[$i][$j] = $product['picking_date'];
-                            } else {
-                                $picking_date[$i][$j] = '';
-                            }
-
-                            $total_weight = $total_weight + $weight[$i][$j];
-                            $total_width = $total_width + $width[$i][$j];
-                            $total_height = $total_height + $height[$i][$j];
-                            $total_length = $total_length + $length[$i][$j];
-                            $total_unit_price = $total_unit_price + $unit_price[$i][$j];
-                            $tmp_sub_total = $unit_price[$i][$j] * $quantity[$i][$j];
-                            $total_sub_total = $total_sub_total + $tmp_sub_total;
-
-                        }
-
+                    if ($product['weight'] > 99.99) {
+                        $weight[$i][$j] = 99.99;
+                    } else if ($product['weight'] < 0.1) {
+                        $weight[$i][$j] = 0.1;
                     }
+                } else {
+                    $weight[$i][$j] = 0.1;
                 }
 
-                if (isset($order['return']) && $order['return'] == 1) {
-                    $return = 1;
-                    $postDeliveryReturn = 1;
+                if (isset($product['width'])) {
+                    $width[$i][$j] = $product['width'];
                 } else {
-                    $return = 0;
-                    $postDeliveryReturn = 0;
+                    $width[$i][$j] = 0;
                 }
 
-                // Validation End
+                if (isset($product['height'])) {
+                    $height[$i][$j] = $product['height'];
+                } else {
+                    $height[$i][$j] = 0;
+                }
 
-                // Order Creation
-                try {
+                if (isset($product['length'])) {
+                    $length[$i][$j] = $product['length'];
+                } else {
+                    $length[$i][$j] = 0;
+                }
 
-                    DB::beginTransaction();
+                $picking_date[$i][$j] = (isset($product['picking_date'])) ? $product['picking_date'] : '';
 
-                    // return $delivery_zone_lat.",".$delivery_zone_lng;
-                    $delivery_zone = getZoneBound($delivery_zone_lat, $delivery_zone_lng);
+                $total_weight = $total_weight + $weight[$i][$j];
+                $total_width = $total_width + $width[$i][$j];
+                $total_height = $total_height + $height[$i][$j];
+                $total_length = $total_length + $length[$i][$j];
+                $total_unit_price = $total_unit_price + $unit_price[$i][$j];
+                $tmp_sub_total = $unit_price[$i][$j] * $quantity[$i][$j];
+                $total_sub_total = $total_sub_total + $tmp_sub_total;
+            }
 
-                    if ($delivery_zone == null) {
-                        $message[$i] = [
-                            'status' => 422,
-                            'message' => 'Invalid delivery zone',
-                            'data' => (object)[],
-                        ];
-                        continue;
-                    } else {
-                        $delivery_zone_id = $delivery_zone->id;
-                        $delivery_city_id = $delivery_zone->city->id;
-                        $delivery_state_id = $delivery_zone->city->state->id;
-                        $delivery_country_id = $delivery_zone->city->state->country->id;
-                        $delivery_hub_id = $delivery_zone->hub_id;
-                    }
+            if (isset($order['return']) && $order['return'] == 1) {
+                $return = 1;
+                $postDeliveryReturn = 1;
+            } else {
+                $return = 0;
+                $postDeliveryReturn = 0;
+            }
 
-                    // Create Order
-                    $new_order = new Order();
-                    $new_order->created_by = Auth::guard('api')->user()->id;
-                    $new_order->updated_by = Auth::guard('api')->user()->id;
-                    $new_order->merchant_order_id = $merchant_order_id;
-                    $new_order->delivery_address1 = $delivery_address;
-                    $new_order->delivery_zone_id = $delivery_zone_id;
-                    $new_order->delivery_city_id = $delivery_city_id;
-                    $new_order->delivery_state_id = $delivery_state_id;
-                    $new_order->delivery_country_id = $delivery_country_id;
-                    $new_order->delivery_latitude = $delivery_zone_lat;
-                    $new_order->delivery_longitude = $delivery_zone_lng;
-                    $new_order->delivery_name = $delivery_name;
-                    $new_order->delivery_email = $delivery_email;
-                    $new_order->delivery_msisdn = $delivery_msisdn;
-                    $new_order->order_remarks = $remarks;
-                    $new_order->as_package = $as_package;
-                    $new_order->unique_order_id = $this->newOrderId();
-                    $new_order->store_id = $store->id;
-                    $new_order->order_status = '1';
-                    $new_order->delivery_pay_by_cus = $delivery_pay_by_cus;
-                    $new_order->payment_type_id = $paymentType;
-                    $new_order->save();
+            try {
 
-                    $this->orderLog(Auth::guard('api')->user()->id, $new_order->id, '', '', $new_order->id, 'orders', 'Created a new order: ' . $new_order->unique_order_id);
+                DB::beginTransaction();
 
-                    $message[$i]['status'] = 200;
-                    $message[$i]['message'] = 'Success';
-                    $message[$i]['data']['order_id'] = $new_order->unique_order_id;
-                    $message[$i]['data']['merchant_order_id'] = $new_order->merchant_order_id;
+                $delivery_zone_id = $delivery_zone->id;
+                $delivery_city_id = $delivery_zone->city->id;
+                $delivery_state_id = $delivery_zone->city->state->id;
+                $delivery_country_id = $delivery_zone->city->state->country->id;
+                $delivery_hub_id = $delivery_zone->hub_id;
 
-                    // Create Sub-Order
-                    $k = 0;
+                // Create Order
+                $new_order = new Order();
+                $new_order->created_by = Auth::guard('api')->user()->id;
+                $new_order->updated_by = Auth::guard('api')->user()->id;
+                $new_order->merchant_order_id = $merchant_order_id;
+                $new_order->delivery_address1 = $delivery_address;
+                $new_order->delivery_zone_id = $delivery_zone_id;
+                $new_order->delivery_city_id = $delivery_city_id;
+                $new_order->delivery_state_id = $delivery_state_id;
+                $new_order->delivery_country_id = $delivery_country_id;
+                $new_order->delivery_latitude = $delivery_zone_lat;
+                $new_order->delivery_longitude = $delivery_zone_lng;
+                $new_order->delivery_name = $delivery_name;
+                $new_order->delivery_email = $delivery_email;
+                $new_order->delivery_msisdn = $delivery_msisdn;
+                $new_order->order_remarks = $remarks;
+                $new_order->as_package = $as_package;
+                $new_order->unique_order_id = $this->newOrderId();
+                $new_order->store_id = $store->id;
+                $new_order->order_status = '1';
+                $new_order->delivery_pay_by_cus = $delivery_pay_by_cus;
+                $new_order->payment_type_id = $paymentType;
+                $new_order->save();
 
-                    $total_payable_product_price = 0;
-                    $total_delivery_charge = 0;
-                    $total_payable_amount = 0;
+                $this->orderLog(Auth::guard('api')->user()->id, $new_order->id, '', '', $new_order->id, 'orders', 'Created a new order: ' . $new_order->unique_order_id);
 
-                    if ($as_package == 0) {
+                $message[$i]['status'] = 200;
+                $message[$i]['message'] = 'Success';
+                $message[$i]['data']['order_id'] = $new_order->unique_order_id;
+                $message[$i]['data']['merchant_order_id'] = $new_order->merchant_order_id;
 
-                        foreach ($products as $product) {
+                // Create Sub-Order
+                $k = 0;
 
-                            $k++;
+                $total_payable_product_price = 0;
+                $total_delivery_charge = 0;
+                $total_payable_amount = 0;
 
-                            if (!isset($message[$i][$k])) {
-
-                                // Call Charge Calculation API
-                                $post = [
-                                    'store_id' => $store->store_id,
-                                    'width' => $width[$i][$k],
-                                    'height' => $height[$i][$k],
-                                    'length' => $length[$i][$k],
-                                    'weight' => $weight[$i][$k],
-                                    'product_category' => $product_category[$i][$k],
-                                    'pickup_zone_id' => $pickup_location_zone_id[$i][$k],
-                                    'delivery_zone_id' => $delivery_zone_id,
-                                    'quantity' => $quantity[$i][$k],
-                                    'unit_price' => $unit_price[$i][$k],
-                                ];
-//dd($post);
-                                // return config("app.url").'api/charge-calculator';
-                                $ch = curl_init();
-                                curl_setopt($ch, CURLOPT_URL, config("app.url").'api/charge-calculator');
-//                                curl_setopt($ch, CURLOPT_URL, 'http://localhost/ipost/public/api/charge-calculator');
-//                                    curl_setopt($ch, CURLOPT_URL, 'http://localhost:8484/api/v2/charge-calculator');
-                                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
-                                $response = curl_exec($ch);
-                                $charges = json_decode($response);
-//                                dd($charges);
-                                $charges = $charges[0];
-//                                dd($charges,$charges['chargeDetails'], json_encode($charges['chargeDetails']));
-                                if (isset($charges) && $charges->status == 'Failed') {
-                                    $message[$i][$k] = [
-                                        'status' => 422,
-                                        'message' => "Charge calculation failed",
-                                        'data' => (object)[],
-                                    ];
-                                    continue;
-                                } else {
-
-                                    $category = ProductCategory::whereStatus(true)->where('name', $product_category[$i][$k])->first();
-
-                                    // Create Sub-Order
-                                    $sub_order = new SubOrder();
-                                    $sub_order->order_id = $new_order->id;
-
-                                    if($return == 1){
-
-                                        $sub_order->unique_suborder_id = 'R' . $new_order->unique_order_id . sprintf("%02d", $k);
-                                        $sub_order->source_hub_id = $delivery_hub_id;
-                                        $sub_order->next_hub_id = $pickup_location_hub_id[$i][$k];
-                                        $sub_order->destination_hub_id = $pickup_location_hub_id[$i][$k];
-                                        $sub_order->return = 1;
-                                        $sub_order->post_delivery_return = $postDeliveryReturn;
-
-                                        $sub_total = 0;
-                                        $payable_product_price = 0;
-                                        if($delivery_pay_by_cus == 1){
-                                            $total_payable_amount = $payable_product_price + $charges->product_delivery_charge;
-                                        }else{
-                                            $total_payable_amount = $payable_product_price;
-                                        }
-
-                                    }else{
-
-                                        $sub_order->unique_suborder_id = 'D' . $new_order->unique_order_id . sprintf("%02d", $k);
-                                        $sub_order->source_hub_id = $pickup_location_hub_id[$i][$k];
-                                        $sub_order->next_hub_id = $delivery_hub_id;
-                                        $sub_order->destination_hub_id = $delivery_hub_id;
-
-                                        $sub_total = $charges->product_total_price;
-                                        $payable_product_price = $charges->product_total_price;
-                                        if($delivery_pay_by_cus == 1){
-                                            $total_payable_amount = $payable_product_price + $charges->product_delivery_charge;
-                                        }else{
-                                            $total_payable_amount = $payable_product_price;
-                                        }
-
-                                    }
-
-                                    $sub_order->save();
-                                    // Update Sub-Order Status
-                                    $this->suborderStatus($sub_order->id, '2');
-
-                                    // Create Product
-                                    $order_product = new OrderProduct();
-                                    $order_product->product_unique_id = $sub_order->unique_suborder_id;
-                                    $order_product->product_category_id = $category->id;
-                                    $order_product->order_id = $new_order->id;
-                                    $order_product->sub_order_id = $sub_order->id;
-                                    $order_product->pickup_location_id = $pickup_location_id[$i][$k];
-                                    $order_product->picking_date = $picking_date[$i][$k];
-                                    $order_product->product_title = $product_title[$i][$k];
-                                    $order_product->url = $url[$i][$k];
-                                    $order_product->unit_price = $unit_price[$i][$k];
-                                    $order_product->quantity = $quantity[$i][$k];
-                                    $order_product->sub_total = $sub_total;
-
-                                    $order_product->unit_deivery_charge = $charges->product_unit_delivery_charge;
-                                    $order_product->payable_product_price = $payable_product_price;
-                                    $order_product->total_delivery_charge = $charges->product_delivery_charge;
-                                    $order_product->delivery_pay_by_cus = $delivery_pay_by_cus;
-                                    $order_product->total_payable_amount = $total_payable_amount;
-
-                                    $order_product->delivery_paid_amount = 0;
-                                    $order_product->width = $width[$i][$k];
-                                    $order_product->height = $height[$i][$k];
-                                    $order_product->length = $length[$i][$k];
-                                    $order_product->weight = $weight[$i][$k];
-                                    $order_product->status = 1;
-                                    $order_product->charge_details = json_encode($charges['chargeDetails']);
-                                    $order_product->save();
-
-                                    $this->orderLog(Auth::guard('api')->user()->id, $order_product->order_id, $order_product->sub_order_id, '', $order_product->id, 'order_product', 'Individual item added: ' . $order_product->product_unique_id);
-                                    $message[$i]['data'][$k]['status'] = 200;
-                                    $message[$i]['data'][$k]['message'] = 'success';
-                                    $message[$i]['data'][$k]['data']['product_id'] = $order_product->product_unique_id;
-                                    $message[$i]['data'][$k]['data']['product_title'] = $order_product->product_title;
-                                    $message[$i]['data'][$k]['data']['delivery_charge'] = $order_product->total_delivery_charge;
-
-                                    $total_payable_product_price = $total_payable_product_price + $order_product->payable_product_price;
-                                    $total_delivery_charge = $total_delivery_charge + $order_product->total_delivery_charge;
-
-                                }
-
-                            }
-
-                        }
-
-                    } else {
+                if ($as_package == 0) {
+                    foreach ($products as $product) {
 
                         $k++;
+
+                        if (isset($message[$i][$k])) {
+                            continue; // as this value contains error message
+                        }
 
                         // Call Charge Calculation API
                         $post = [
                             'store_id' => $store->store_id,
-                            'width' => $total_width,
-                            'height' => $total_height,
-                            'length' => $total_length,
-                            'weight' => $total_weight,
-                            'product_category' => 'Bulk Product',
-                            'pickup_zone_id' => $default_pickup_location_zone_id,
+                            'width' => $width[$i][$k],
+                            'height' => $height[$i][$k],
+                            'length' => $length[$i][$k],
+                            'weight' => $weight[$i][$k],
+                            'product_category' => $product_category[$i][$k],
+                            'pickup_zone_id' => $pickup_location_zone_id[$i][$k],
                             'delivery_zone_id' => $delivery_zone_id,
-                            'quantity' => 1,
-                            // 'unit_price' => $total_unit_price,
-                            'unit_price' => $total_sub_total,
+                            'quantity' => $quantity[$i][$k],
+                            'unit_price' => $unit_price[$i][$k],
                         ];
-                        // return config("app.url").'/api/charge-calculator';
+
+                        // return config("app.url").'api/charge-calculator';
                         $ch = curl_init();
                         curl_setopt($ch, CURLOPT_URL, config("app.url") . 'api/charge-calculator');
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
                         $response = curl_exec($ch);
-                        $charges = json_decode($response, true);
-                        $charges = $charges[0];
-                        if ($charges['status'] == 'Failed') {
+                        $charges = json_decode($response);
+                        if (isset($charges) && $charges->status == 'Failed') {
                             $message[$i][$k] = [
                                 'status' => 422,
                                 'message' => "Charge calculation failed",
-                                'data' => (object)[],
+                                'data' => (object) [],
                             ];
                             continue;
+                        }
+
+                        $category = ProductCategory::whereStatus(true)->where('name', $product_category[$i][$k])->first();
+
+                        // Create Sub-Order
+                        $sub_order = new SubOrder();
+                        $sub_order->order_id = $new_order->id;
+
+                        if ($return == 1) {
+
+                            $sub_order->unique_suborder_id = 'R' . $new_order->unique_order_id . sprintf("%02d", $k);
+                            $sub_order->source_hub_id = $delivery_hub_id;
+                            $sub_order->destination_hub_id = $pickup_location_hub_id[$i][$k];
+                            $sub_order->return = 1;
+                            $sub_order->post_delivery_return = $postDeliveryReturn;
+
+                            $sub_total = $unit_price[$i][$k] * $quantity[$i][$k]; // to show the product price
+                            $payable_product_price = 0;
+                            if ($delivery_pay_by_cus == 1) {
+                                $total_payable_amount = $payable_product_price + $charges->product_delivery_charge;
+                            } else {
+                                $total_payable_amount = $payable_product_price;
+                            }
                         } else {
 
-                            // Create Sub-Order
-                            $sub_order = new SubOrder();
-                            $sub_order->order_id = $new_order->id;
+                            $sub_order->unique_suborder_id = 'D' . $new_order->unique_order_id . sprintf("%02d", $k);
+                            $sub_order->source_hub_id = $pickup_location_hub_id[$i][$k];
+                            $sub_order->destination_hub_id = $delivery_hub_id;
 
-                            if($return == 1){
-
-                                $sub_order->unique_suborder_id = 'R' . $new_order->unique_order_id . sprintf("%02d", $k);
-                                $sub_order->source_hub_id = $delivery_hub_id;
-                                $sub_order->next_hub_id = $default_pickup_location_hub_id;
-                                $sub_order->destination_hub_id = $default_pickup_location_hub_id;
-                                $sub_order->return = 1;
-                                $sub_order->post_delivery_return = $postDeliveryReturn;
-
-                                $sub_total = 0;
-                                $payable_product_price = 0;
-                                if($delivery_pay_by_cus == 1){
-                                    $total_payable_amount = $payable_product_price + $charges['product_delivery_charge'];
-                                }else{
-                                    $total_payable_amount = $payable_product_price;
-                                }
-
-                            }else{
-
-                                $sub_order->unique_suborder_id = 'D' . $new_order->unique_order_id . sprintf("%02d", $k);
-                                $sub_order->source_hub_id = $default_pickup_location_hub_id;
-                                $sub_order->next_hub_id = $delivery_hub_id;
-                                $sub_order->destination_hub_id = $delivery_hub_id;
-
-                                $sub_total = $total_sub_total;
-                                $payable_product_price = $charges['product_total_price'];
-                                if($delivery_pay_by_cus == 1){
-                                    $total_payable_amount = $payable_product_price + $charges['product_delivery_charge'];
-                                }else{
-                                    $total_payable_amount = $payable_product_price;
-                                }
-
+                            $sub_total = $unit_price[$i][$k] * $quantity[$i][$k];
+                            $payable_product_price = (isset($order["payable_product_price"]) && !is_null($order["payable_product_price"])) ? $order["payable_product_price"] : $charges['product_total_price'];
+                            if ($delivery_pay_by_cus == 1) {
+                                $total_payable_amount = $payable_product_price + $charges['product_delivery_charge'];
+                            } else {
+                                $total_payable_amount = $payable_product_price;
                             }
-
-                            $sub_order->save();
-                            // Update Sub-Order Status
-                            $this->suborderStatus($sub_order->id, '2');
-
-                            // Create Product
-                            $order_product = new OrderProduct();
-                            $order_product->product_unique_id = $sub_order->unique_suborder_id;
-                            $order_product->product_category_id = 5;
-                            $order_product->order_id = $new_order->id;
-                            $order_product->sub_order_id = $sub_order->id;
-                            $order_product->pickup_location_id = $default_pickup_location_id;
-                            $order_product->picking_date = $default_picking_date;
-                            $order_product->product_title = 'Package';
-                            $order_product->unit_price = $total_sub_total;
-                            $order_product->quantity = 1;
-                            $order_product->sub_total = $total_sub_total;
-
-                            $order_product->unit_deivery_charge = $charges['product_unit_delivery_charge'];
-                            $order_product->payable_product_price = $payable_product_price;
-                            $order_product->total_delivery_charge = $charges['product_delivery_charge'];
-                            $order_product->delivery_pay_by_cus = $delivery_pay_by_cus;
-                            $order_product->total_payable_amount = $total_payable_amount;
-
-                            $order_product->delivery_paid_amount = 0;
-                            $order_product->width = $total_width;
-                            $order_product->height = $total_height;
-                            $order_product->length = $total_length;
-                            $order_product->weight = $total_weight;
-                            $order_product->status = 1;
-                            $order_product->charge_details = json_encode($charges['chargeDetails']);
-                            $order_product->save();
-
-                            // Cart Product
-                            foreach ($products as $product) {
-
-                                $cart_product_category = ProductCategory::where('name', $product['product_category'])->first();
-                                if($cart_product_category){
-                                    $cart_product_category_id = $cart_product_category->id;
-                                }else{
-                                    $new_cart_product_category = new ProductCategory;
-                                    $new_cart_product_category->name = $product['product_category'];
-                                    $new_cart_product_category->category_type = "parent";
-                                    $new_cart_product_category->status = 1;
-                                    $new_cart_product_category->created_by = Auth::guard('api')->user()->id;
-                                    $new_cart_product_category->updated_by = Auth::guard('api')->user()->id;
-                                    $new_cart_product_category->created_at = date('Y-m-d H:i:s');
-                                    $new_cart_product_category->save();
-                                    $cart_product_category_id = $new_cart_product_category->id;
-
-                                    // DB::commit();
-                                }
-
-                                $cart_product = new CartProduct();
-                                $cart_product->product_unique_id = $sub_order->unique_suborder_id;
-                                $cart_product->product_category_id = $cart_product_category_id;
-                                $cart_product->order_id = $new_order->id;
-                                $cart_product->sub_order_id = $sub_order->id;
-                                $cart_product->order_product_id = $order_product->id;
-                                $cart_product->pickup_location_id = $default_pickup_location_id;
-                                $cart_product->picking_date = $product['picking_date'];
-                                $cart_product->product_title = $product['product_title'];
-                                $cart_product->unit_price = $product['unit_price'];
-                                $cart_product->quantity = $product['quantity'];
-                                $cart_product->sub_total = $product['quantity'] * $product['unit_price'];
-                                $cart_product->width = $product['width'];
-                                $cart_product->height = $product['height'];
-                                $cart_product->length = $product['length'];
-                                $cart_product->weight = $product['weight'];
-                                $cart_product->status = 1;
-                                $cart_product->save();
-                            }
-
-                            $this->orderLog(Auth::guard('api')->user()->id, $order_product->order_id, $order_product->sub_order_id, '', $order_product->id, 'order_product', 'Individual item added: ' . $order_product->product_unique_id);
-                            $message[$i]['data'][$k]['status'] = 200;
-                            $message[$i]['data'][$k]['message'] = 'success';
-                            $message[$i]['data'][$k]['data']['product_id'] = $order_product->product_unique_id;
-                            $message[$i]['data'][$k]['data']['product_title'] = $order_product->product_title;
-                            $message[$i]['data'][$k]['data']['delivery_charge'] = $order_product->total_delivery_charge;
-
-                            $total_payable_product_price = $total_payable_product_price;
-                            $total_delivery_charge = $total_delivery_charge;
-
                         }
 
+                        $sub_order->save();
+
+                        // setting up next hub
+                        $sub_order->next_hub_id = $this->createTransitMap($sub_order->id, $sub_order->source_hub_id, $sub_order->destination_hub_id);
+                        $sub_order->save();
+
+                        // Update Sub-Order Status
+                        $this->suborderStatus($sub_order->id, '2');
+
+                        // Create Product
+                        $order_product = new OrderProduct();
+                        $order_product->product_unique_id = $sub_order->unique_suborder_id;
+                        $order_product->product_category_id = $category->id;
+                        $order_product->order_id = $new_order->id;
+                        $order_product->sub_order_id = $sub_order->id;
+                        $order_product->pickup_location_id = $pickup_location_id[$i][$k];
+                        $order_product->picking_date = $picking_date[$i][$k];
+                        $order_product->product_title = $product_title[$i][$k];
+                        $order_product->url = $url[$i][$k];
+                        $order_product->unit_price = $unit_price[$i][$k];
+                        $order_product->quantity = $quantity[$i][$k];
+                        $order_product->sub_total = $sub_total;
+
+                        // $order_product->discount_amount = $order["discount_amount"];
+                        $order_product->unit_deivery_charge = $charges['product_unit_delivery_charge'];
+                        $order_product->payable_product_price = $payable_product_price;
+                        $order_product->total_delivery_charge = $charges['product_delivery_charge'];
+                        $order_product->delivery_pay_by_cus = $delivery_pay_by_cus;
+                        $order_product->total_payable_amount = $total_payable_amount;
+
+                        $order_product->delivery_paid_amount = 0;
+                        $order_product->width = $width[$i][$k];
+                        $order_product->height = $height[$i][$k];
+                        $order_product->length = $length[$i][$k];
+                        $order_product->weight = $weight[$i][$k];
+                        $order_product->status = 1;
+                        $order_product->charge_details = json_encode($charges['chargeDetails']);
+                        $order_product->save();
+
+                        $this->orderLog(Auth::guard('api')->user()->id, $order_product->order_id, $order_product->sub_order_id, '', $order_product->id, 'order_product', 'Individual item added: ' . $order_product->product_unique_id);
+                        $message[$i]['data'][$k]['status'] = 200;
+                        $message[$i]['data'][$k]['message'] = 'success';
+                        $message[$i]['data'][$k]['data']['product_id'] = $order_product->product_unique_id;
+                        $message[$i]['data'][$k]['data']['product_title'] = $order_product->product_title;
+                        $message[$i]['data'][$k]['data']['delivery_charge'] = $order_product->total_delivery_charge;
+
+                        $total_payable_product_price = $total_payable_product_price + $order_product->payable_product_price;
+                        $total_delivery_charge = $total_delivery_charge + $order_product->total_delivery_charge;
+                    }
+                } else {
+
+                    $k++;
+
+                    // Call Charge Calculation API
+                    $post = [
+                        'store_id' => $store->store_id,
+                        'width' => $total_width,
+                        'height' => $total_height,
+                        'length' => $total_length,
+                        'weight' => $total_weight,
+                        'product_category' => 'Bulk Product',
+                        'pickup_zone_id' => $default_pickup_location_zone_id,
+                        'delivery_zone_id' => $delivery_zone_id,
+                        'quantity' => 1,
+                        // 'unit_price' => $total_unit_price,
+                        'unit_price' => $total_sub_total,
+                    ];
+                    Log::info('post: ' . json_encode($post));
+
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_URL, config("app.url") . 'api/charge-calculator');
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
+                    $response = curl_exec($ch);
+                    $charges = json_decode($response, true);
+                    if ($charges['status'] == 'Failed') {
+                        $message[$i][$k] = [
+                            'status' => 422,
+                            'message' => "Charge calculation failed",
+                            'data' => (object) [],
+                        ];
+                        continue;
                     }
 
-                    $old_order = Order::where('id', $new_order->id)->first();
-                    $old_order->total_product_price = $total_payable_product_price;
-                    $old_order->collectable_product_price = $total_payable_product_price;
-                    $old_order->delivery_payment_amount = $total_delivery_charge;
-                    if ($total_delivery_charge != 0 && $verified == 1) {
-                        $old_order->order_status = 2;
-                        $old_order->verified_by = Auth::guard('api')->user()->id;
+                    // Create Sub-Order
+                    $sub_order = new SubOrder();
+                    $sub_order->order_id = $new_order->id;
 
-                        foreach ($old_order->suborders as $sub_order) {
-                            // Update Sub-Order Status
-                            $this->suborderStatus($sub_order->id, '2');
+                    if ($return == 1) {
+                        $sub_order->unique_suborder_id = 'R' . $new_order->unique_order_id . sprintf("%02d", $k);
+                        $sub_order->source_hub_id = $delivery_hub_id;
+                        $sub_order->destination_hub_id = $default_pickup_location_hub_id;
+                        $sub_order->return = 1;
+                        $sub_order->post_delivery_return = $postDeliveryReturn;
+
+                        $sub_total = $total_sub_total = (isset($order["payable_product_price"]) && !is_null($order["payable_product_price"])) ? $order["payable_product_price"] : $charges['product_total_price']; // to show the post delivery return amount
+                        $payable_product_price = 0;
+                        if ($delivery_pay_by_cus == 1) {
+                            $total_payable_amount = $payable_product_price + $charges['product_delivery_charge'];
+                        } else {
+                            $total_payable_amount = $payable_product_price;
+                        }
+                    } else {
+                        $sub_order->unique_suborder_id = 'D' . $new_order->unique_order_id . sprintf("%02d", $k);
+                        $sub_order->source_hub_id = $default_pickup_location_hub_id;
+                        $sub_order->destination_hub_id = $delivery_hub_id;
+
+                        $sub_total = $total_sub_total;
+                        $payable_product_price = (isset($order["payable_product_price"]) && !is_null($order["payable_product_price"])) ? $order["payable_product_price"] : $charges['product_total_price'];
+                        if ($delivery_pay_by_cus == 1) {
+                            $total_payable_amount = $payable_product_price + $charges['product_delivery_charge'];
+                        } else {
+                            $total_payable_amount = $payable_product_price;
                         }
                     }
-                    $old_order->save();
 
-                    DB::commit();
+                    $sub_order->save();
 
-                    // Call the microservice
-                    $fcm_task = $this->fcm_task_req($sub_order->id);
-                    $fcm_task = json_decode($fcm_task, true);
+                    // setting up next hub by creating suborder trip map
+                    $sub_order->next_hub_id = $this->createTransitMap($sub_order->id, $sub_order->source_hub_id, $sub_order->destination_hub_id);
+                    $sub_order->save();
 
-                    if(isset($fcm_task["status_code"]) && $fcm_task["status_code"] == 200){
-                        Log::info("TmTask created for SubOrder: ".$sub_order->id);
-                    }else{
-                        Log::info("Failed to create TmTask for SubOrder: ".$sub_order->id);
+                    // Update Sub-Order Status
+                    $this->suborderStatus($sub_order->id, '2');
+
+                    // Create Product
+                    $order_product = new OrderProduct();
+                    $order_product->product_unique_id = $sub_order->unique_suborder_id;
+                    $order_product->product_category_id = 5;
+                    $order_product->order_id = $new_order->id;
+                    $order_product->sub_order_id = $sub_order->id;
+                    $order_product->pickup_location_id = $default_pickup_location_id;
+                    $order_product->picking_date = $default_picking_date;
+                    $order_product->product_title = 'Package';
+                    $order_product->unit_price = $total_sub_total;
+                    $order_product->quantity = 1;
+                    $order_product->sub_total = $total_sub_total;
+
+                    // $order_product->discount_amount = $order["discount_amount"];
+                    $order_product->unit_deivery_charge = $charges['product_unit_delivery_charge'];
+                    $order_product->payable_product_price = $payable_product_price;
+                    $order_product->total_delivery_charge = $charges['product_delivery_charge'];
+                    $order_product->delivery_pay_by_cus = $delivery_pay_by_cus;
+                    $order_product->total_payable_amount = $total_payable_amount;
+
+                    $order_product->delivery_paid_amount = 0;
+                    $order_product->width = $total_width;
+                    $order_product->height = $total_height;
+                    $order_product->length = $total_length;
+                    $order_product->weight = $total_weight;
+                    $order_product->status = 1;
+                    $order_product->charge_details = json_encode($charges['chargeDetails']);
+                    $order_product->save();
+
+                    // Cart Product
+                    foreach ($products as $product) {
+
+                        $cart_product_category = ProductCategory::where('name', $product['product_category'])->first();
+                        if ($cart_product_category) {
+                            $cart_product_category_id = $cart_product_category->id;
+                        } else {
+                            $new_cart_product_category = new ProductCategory;
+                            $new_cart_product_category->name = $product['product_category'];
+                            $new_cart_product_category->category_type = "parent";
+                            $new_cart_product_category->status = 1;
+                            $new_cart_product_category->created_by = Auth::guard('api')->user()->id;
+                            $new_cart_product_category->updated_by = Auth::guard('api')->user()->id;
+                            $new_cart_product_category->created_at = date('Y-m-d H:i:s');
+                            $new_cart_product_category->save();
+                            $cart_product_category_id = $new_cart_product_category->id;
+
+                            // DB::commit();
+                        }
+
+                        $cart_product = new CartProduct();
+                        $cart_product->product_unique_id = $sub_order->unique_suborder_id;
+                        $cart_product->product_category_id = $cart_product_category_id;
+                        $cart_product->order_id = $new_order->id;
+                        $cart_product->sub_order_id = $sub_order->id;
+                        $cart_product->order_product_id = $order_product->id;
+                        $cart_product->pickup_location_id = $default_pickup_location_id;
+                        $cart_product->picking_date = $product['picking_date'];
+                        $cart_product->product_title = $product['product_title'];
+                        $cart_product->unit_price = $product['unit_price'];
+                        $cart_product->quantity = $product['quantity'];
+                        $cart_product->sub_total = $product['quantity'] * $product['unit_price'];
+                        $cart_product->width = $product['width'];
+                        $cart_product->height = $product['height'];
+                        $cart_product->length = $product['length'];
+                        $cart_product->weight = $product['weight'];
+                        $cart_product->status = 1;
+                        $cart_product->save();
                     }
 
-                } catch (Exception $e) {
+                    $this->orderLog(Auth::guard('api')->user()->id, $order_product->order_id, $order_product->sub_order_id, '', $order_product->id, 'order_product', 'Individual item added: ' . $order_product->product_unique_id);
+                    $message[$i]['data'][$k]['status'] = 200;
+                    $message[$i]['data'][$k]['message'] = 'success';
+                    $message[$i]['data'][$k]['data']['product_id'] = $order_product->product_unique_id;
+                    $message[$i]['data'][$k]['data']['product_title'] = $order_product->product_title;
+                    $message[$i]['data'][$k]['data']['delivery_charge'] = $order_product->total_delivery_charge;
 
-                    DB::rollback();
-
+                    $total_payable_product_price = $total_payable_product_price;
+                    $total_delivery_charge = $total_delivery_charge;
                 }
 
+                $old_order = Order::where('id', $new_order->id)->first();
+                $old_order->total_product_price = $total_payable_product_price;
+                $old_order->collectable_product_price = $total_payable_product_price;
+                $old_order->delivery_payment_amount = $total_delivery_charge;
+                if ($total_delivery_charge != 0 && $verified == 1) {
+                    $old_order->order_status = 2;
+                    $old_order->verified_by = Auth::guard('api')->user()->id;
+
+                    foreach ($old_order->suborders as $sub_order) {
+                        // Update Sub-Order Status
+                        $this->suborderStatus($sub_order->id, '2');
+                    }
+                }
+                $old_order->save();
+
+                DB::commit();
+
+                // Call the task
+                $fcm_task = $this->fcm_task_req($sub_order->id);
+            } catch (Exception $e) {
+                Log::error($e);
+                DB::rollback();
             }
-
-            $feedback['status_code'] = 200;
-            $msg[] = "Operation done successfully";
-            $feedback['message'] = $msg;
-            $feedback['response'] = $message;
-
-        } else {
-            $feedback['status_code'] = 401;
-            $message[] = "Order not found.";
-            $feedback['message'] = $message;
         }
 
-        return response($feedback, 200);
+        $feedback['status_code'] = 200;
+        $msg[] = "Operation done successfully";
+        $feedback['message'] = $msg;
+        $feedback['response'] = $message;
 
+        return response($feedback, 200);
     }
 
-    public function view_order(Request $request)
-    {
+    private function getDefaultPickupLocation($location, $delivery_zone = null) {
+//        if (Auth::guard('api')->user()->reference_id == 12) { // FIB Merchant
+//            $pickup_location = PickingLocations::whereStatus(true)
+//                    ->where('city_id', $delivery_zone->city_id)
+//                    ->where('merchant_id', Auth::guard('api')->user()->reference_id)
+//                    ->first();
+//        } else {
+//            $pickup_location = PickingLocations::whereStatus(true)
+//                    ->where('title', $location)
+//                    ->where('merchant_id', Auth::guard('api')->user()->reference_id)
+//                    ->first();
+//        }
+        $pickup_location = PickingLocations::whereStatus(true)
+                ->where(function ($q) use ($location) {
+                    $q->where('id', $location)->orWhere('title', $location);
+                })
+                ->where('merchant_id', Auth::guard('api')->user()->reference_id)
+                ->first();
+        if (!$pickup_location) {
+            return ['status' => false, 'message' => 'Pickup location not found'];
+        }
+        $data['pickup_location_id'] = $pickup_location->id;
+        $data['pickup_location_zone_id'] = $pickup_location->zone_id;
+        $data['pickup_location_hub_id'] = $pickup_location->zone->hub_id;
+
+        $data['status'] = true;
+
+        return $data;
+    }
+
+    public function view_order(Request $request) {
 
         $validation = Validator::make($request->all(), [
-            'store_id' => 'required',
-            'orders' => 'required'
+                    'store_id' => 'required',
+                    'orders' => 'required'
         ]);
 
         if ($validation->fails()) {
@@ -812,6 +723,7 @@ class MerchantOrderController extends Controller
                 $i++;
 
                 $order = Order::where('unique_order_id', $o)->where('store_id', $store->id)->first();
+
                 if (count($order) > 0) {
 
                     if ($order->order_status == 1) {
@@ -870,9 +782,7 @@ class MerchantOrderController extends Controller
                                     'history' => array_reverse($history),
                                 );
                             }
-
                         }
-
                     }
 
                     $tracked_orders[] = array(
@@ -884,16 +794,13 @@ class MerchantOrderController extends Controller
                         'status' => $order_status,
                         'products' => $products,
                     );
-
                 }
-
             }
 
             $feedback['status_code'] = 200;
             $message[] = "Operation done successfully";
             $feedback['message'] = $message;
             $feedback['response'] = $tracked_orders;
-
         } else {
             $feedback['status_code'] = 401;
             $message[] = "No order found.";
@@ -901,11 +808,9 @@ class MerchantOrderController extends Controller
         }
 
         return response($feedback, 200);
-
     }
 
-    private function set_unauthorized($status_code, $message, $response)
-    {
+    private function set_unauthorized($status_code, $message, $response) {
         $feedback = [];
         //$feedback['status']        =  $status;
         $feedback['status_code'] = $status_code;

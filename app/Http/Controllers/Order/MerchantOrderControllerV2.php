@@ -453,7 +453,7 @@ class MerchantOrderControllerV2 extends Controller
                         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
                         $response = curl_exec($ch);
                         $charges = json_decode($response, true);
-                        $charges = $charges[0];
+//                        $charges = $charges[0];
 
                         if($charges['status'] == 'Success'){
                             // $sub_order = SubOrder::where('id', $product->sub_order_id)->first();

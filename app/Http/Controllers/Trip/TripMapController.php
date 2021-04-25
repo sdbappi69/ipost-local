@@ -33,11 +33,11 @@ class TripMapController extends Controller
         $query = TripMap::whereStatus(true)->groupBy('start_hub_id', 'end_hub_id');
 
         if($request->has('start_hub_id')){
-            $query->whereIn('start_hub_id', $request->start_hub_id);
+            $query->where('start_hub_id', $request->start_hub_id);
         }
 
         if($request->has('end_hub_id')){
-            $query->whereIn('end_hub_id', $request->end_hub_id);
+            $query->where('end_hub_id', $request->end_hub_id);
         }
 
         $trip_maps = $query->paginate(10);

@@ -8,6 +8,7 @@ use App\TripMap;
 use App\SubOrderTripMap;
 use App\SubOrder;
 use App\SubOrderTrip;
+use Illuminate\Support\Facades\Log;
 
 trait MerchantSubOrder {
 
@@ -188,7 +189,7 @@ trait MerchantSubOrder {
                             ->where('end_hub_id', $end_hub_id)
                             ->orderBy('priority', 'asc')
                             ->get();
-
+        Log::info('Total Trip Found: ' . count($trip_maps));
         if(count($trip_maps) > 0){
 
             try {
@@ -204,8 +205,14 @@ trait MerchantSubOrder {
                         $sub_order_trip_map->sub_order_id = $sub_order_id;
                         $sub_order_trip_map->trip_map_id = $trip_map->id;
                         $sub_order_trip_map->hub_id = $trip_map->hub_id;
-                        $sub_order_trip_map->created_by = auth()->user()->id;
-                        $sub_order_trip_map->updated_by = auth()->user()->id;
+                        if(Auth::guard('api')->user()){
+                            $sub_order_trip_map->created_by = Auth::guard('api')->user()->id;
+                            $sub_order_trip_map->updated_by = Auth::guard('api')->user()->id;
+                        }else{
+                            $sub_order_trip_map->created_by = auth()->user()->id;
+                            $sub_order_trip_map->updated_by = auth()->user()->id;
+                        }
+
                         $sub_order_trip_map->save();
 
                         if($i == 1){
@@ -239,38 +246,32 @@ trait MerchantSubOrder {
         $sub_order = SubOrder::where('id', $sub_order_id)->first();
 
         try {
-            DB::beginTransaction();
-
-                $sub_order_trip_map = SubOrderTripMap::where('sub_order_id', $sub_order_id)
+            $sub_order_trip_map = SubOrderTripMap::where('sub_order_id', $sub_order_id)
                                         ->where('hub_id', $hub_id)
                                         ->where('status', 0)
                                         ->first();
-                if(count($sub_order_trip_map) > 0){
+            if($sub_order_trip_map){
+                // "where('id' , '<=', $sub_order_trip_map->id)" as client asked if there is any way to skip any transit hub
+                SubOrderTripMap::where('sub_order_id', $sub_order_id)->where('id' , '<=', $sub_order_trip_map->id)->update(['status' => 1]);
+//                    $sub_order_trip_map->status = 1;
+//                    $sub_order_trip_map->save();
+            }
 
-                    $sub_order_trip_map->status = 1;
-                    $sub_order_trip_map->save();
+            $new_sub_order_trip_map = SubOrderTripMap::where('sub_order_id', $sub_order_id)
+                ->where('status', 0)
+                ->orderBy('id', 'asc')
+                ->first();
 
-                    $new_sub_order_trip_map = SubOrderTripMap::where('sub_order_id', $sub_order_id)
-                                        ->where('status', 0)
-                                        ->orderBy('id', 'asc')
-                                        ->first();
-
-                    if(count($new_sub_order_trip_map) > 0){
-                        $next_hub_id = $new_sub_order_trip_map->hub_id;
-                    }else{
-                        $next_hub_id = $sub_order->destination_hub_id;
-                    }
-                }else{
-                    $next_hub_id = $sub_order->destination_hub_id;
-                }
-
-            DB::commit();
+            if($new_sub_order_trip_map){
+                $next_hub_id = $new_sub_order_trip_map->hub_id;
+            }else{
+                $next_hub_id = $sub_order->destination_hub_id;
+            }
 
             return $next_hub_id;
 
         } catch (Exception $e) {
-            DB::rollback();
-
+            Log::error($e);
             return $next_hub_id = $sub_order->destination_hub_id;
         }
 

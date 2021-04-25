@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use DB;
 
-class FastBazzarOrderStatus extends Job implements ShouldQueue {
+class FIBOrderStatus extends Job implements ShouldQueue {
 
     use InteractsWithQueue,
         Queueable;
@@ -21,9 +21,9 @@ class FastBazzarOrderStatus extends Job implements ShouldQueue {
      */
     protected $sub_order_id;
     protected $merchant_order_id;
-    protected $fb_url;
+    protected $fib_url;
     protected $sub_order_status;
-    protected $fb_status;
+    protected $fib_status;
     public $retryAfter = 120;
     public $tries = 3;
 
@@ -32,12 +32,12 @@ class FastBazzarOrderStatus extends Job implements ShouldQueue {
      *
      * @return void
      */
-    public function __construct($sub_order_id, $merchant_order_id, $fb_url, $fb_status) {
-//        Log::info("FastBazzar URL: $fb_url, merchant order id: $merchant_order_id, suborder: $sub_order_id");
+    public function __construct($sub_order_id, $merchant_order_id, $fib_url, $fib_status) {
+//        Log::info("FIB URL: $fib_url, merchant order id: $merchant_order_id, suborder: $sub_order_id");
         $this->sub_order_id = $sub_order_id;
         $this->merchant_order_id = $merchant_order_id;
-        $this->fb_url = $fb_url;
-        $this->fb_status = $fb_status;
+        $this->fib_url = $fib_url;
+        $this->fib_status = $fib_status;
     }
 
     /**
@@ -47,12 +47,12 @@ class FastBazzarOrderStatus extends Job implements ShouldQueue {
      */
     public function handle() {
         try {
-            Log::info("FastBazzar Merchant Order Id: $this->merchant_order_id");
+            Log::info("FIB Merchant Order Id: $this->merchant_order_id");
 
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => $this->fb_url,
+                CURLOPT_URL => $this->fib_url,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => "",
                 CURLOPT_MAXREDIRS => 10,
@@ -60,24 +60,25 @@ class FastBazzarOrderStatus extends Job implements ShouldQueue {
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => "POST",
-                CURLOPT_POSTFIELDS => "{\n  \"orderNumber\":\"" . $this->merchant_order_id . "\", \n  \"status\":\"" . $this->fb_status . "\"\n}",
+                CURLOPT_POSTFIELDS => '{"merchantOrderId":"' . $this->merchant_order_id . '","status": "' . $this->fib_status . '"}', // raw data
+//                "{\n  \"merchantOrderId\":\"" . $this->merchant_order_id . "\", \n  \"status\":\"" . $this->fib_status . "\"\n}", // form data
                 CURLOPT_HTTPHEADER => array(
-                    "Content-Type: application/json",
-                    "Authorization: Bearer g246d49n9d88fb78994nvkqtl25j1szf"
+                    "Content-Type: application/json"
+//                    "Authorization: Bearer g246d49n9d88fb78994nvkqtl25j1szf"
                 ),
             ));
 
             $response = curl_exec($curl);
-            Log::info("Fastbazzar Response: $response");
+            Log::info("FIB Response: $response");
             $err = curl_error($curl);
             curl_close($curl);
 
             if ($err) {
-                Log::error("FastBazzar Error: " . $err);
+                Log::error("FIB Error: " . $err);
             }
-//            Log::info("FastBazzar call end($this->sub_order_id): " . date("Y-m-d H:i:s"));
+//            Log::info("FIB call end($this->sub_order_id): " . date("Y-m-d H:i:s"));
         } catch (Exception $e) {
-            Log::error("FastBazzar Curl Error: " . $e);
+            Log::error("FIB Curl Error: " . $e);
         }
     }
 

@@ -4,27 +4,24 @@ namespace App\Http\Traits;
 
 // use Illuminate\Support\Facades\Log;
 use Log;
-
 use App\SubOrder;
 use App\CartProduct;
 use App\OrderProduct;
 use App\TmTask;
+use App\ConsignmentTask;
 use App\Http\Traits\LogsTrait;
-
 use DB;
 use App\User;
 
-trait FcmTaskManager
-{
+trait FcmTaskManager {
 
     use LogsTrait;
 
-    public function fcm_task_req($sub_order_id, $fource = 0, $user_id = null)
-    {
+    public function fcm_task_req($sub_order_id, $fource = 0, $user_id = null) {
         $sub_order = SubOrder::findOrFail($sub_order_id);
         $picking_hub_id = $sub_order->product->pickup_location->zone->hub_id;
-        $delivery_hub_id = $sub_order->order->delivery_zone->hub_id;
         $picking_hub_title = $sub_order->product->pickup_location->zone->hub->title;
+        $delivery_hub_id = $sub_order->order->delivery_zone->hub_id;
         $delivery_hub_title = $sub_order->order->delivery_zone->hub->title;
 
         // if($picking_hub_id == $delivery_hub_id){
@@ -35,25 +32,31 @@ trait FcmTaskManager
         //     $task_type_id = 2;
         // }
 
-        if($sub_order->sub_order_status == 2 || $sub_order->sub_order_status == 3){
-            if($sub_order->return == 1){
-                $task_type_id = 5;
-            }else{
-                $task_type_id = 1;
+        $task_hub = $sub_order->source_hub_id; // to find hub wise rider
+
+        if ($sub_order->sub_order_status == 2 || $sub_order->sub_order_status == 3) {
+            if ($sub_order->order->store->merchant_id == 12) { // FIB Merchant
+                $task_type_id = 3;
+            } else {
+                if ($sub_order->return == 1) {
+                    $task_type_id = 5;
+                } else {
+                    $task_type_id = 1;
+                }
             }
-        }elseif($sub_order->sub_order_status == 9 || $sub_order->sub_order_status == 49){
+        } elseif ($sub_order->sub_order_status == 9 || $sub_order->sub_order_status == 49) {
             $task_type_id = 6; // post delivery order return to buyer
-        }else{
+        } else {
             $task_type_id = 2;
         }
 
-        if($task_type_id == 3){
+        if ($task_type_id == 3) {
 
             $sub_order_id = $sub_order->id;
             $unique_suborder_id = $sub_order->unique_suborder_id;
             $picking_title = $sub_order->product->product_title;
 
-            if($sub_order->return == 1){
+            if ($sub_order->return == 1) {
 
                 $picking_address = $sub_order->order->delivery_address1;
                 $picking_latitude = $sub_order->order->delivery_latitude;
@@ -62,8 +65,7 @@ trait FcmTaskManager
                 $delivery_address = $sub_order->product->pickup_location->address1;
                 $delivery_latitude = $sub_order->product->pickup_location->latitude;
                 $delivery_longitude = $sub_order->product->pickup_location->longitude;
-
-            }else{
+            } else {
 
                 $picking_address = $sub_order->product->pickup_location->address1;
                 $picking_latitude = $sub_order->product->pickup_location->latitude;
@@ -72,16 +74,18 @@ trait FcmTaskManager
                 $delivery_address = $sub_order->order->delivery_address1;
                 $delivery_latitude = $sub_order->order->delivery_latitude;
                 $delivery_longitude = $sub_order->order->delivery_longitude;
-
             }
 
             $quantity = $sub_order->product->quantity;
-            // $quantity = $this->get_sub_order_quantity($sub_order->id);
-            $amount = $sub_order->product->total_payable_amount;
+            // $quantity = $this->get_sub_order_quantity($sub_order->id);            
+            if ($sub_order->order->paymentMethod->id == 2) {
+                $amount = 0;
+            } else {
+                $amount = $sub_order->product->total_payable_amount;
+            }
             $hub_id = $delivery_hub_id;
             $hub_title = $delivery_hub_title;
-
-        }else if($task_type_id == 1) {
+        } else if ($task_type_id == 1) {
 
             $sub_order_id = $sub_order->id;
             $unique_suborder_id = $sub_order->unique_suborder_id;
@@ -98,8 +102,7 @@ trait FcmTaskManager
             $amount = 0;
             $hub_id = $picking_hub_id;
             $hub_title = $picking_hub_title;
-
-        }else if($task_type_id == 5){
+        } else if ($task_type_id == 5) {
 
             $sub_order_id = $sub_order->id;
             $unique_suborder_id = $sub_order->unique_suborder_id;
@@ -116,40 +119,37 @@ trait FcmTaskManager
             $amount = 0;
             $hub_id = $delivery_hub_id;
             $hub_title = $delivery_hub_title;
-
-        } elseif ($task_type_id == 6){ //post delivery order return to buyer
+        } elseif ($task_type_id == 6) { //post delivery order return to buyer
             $sub_order_id = $sub_order->id;
             $unique_suborder_id = $sub_order->unique_suborder_id;
             $quantity = $sub_order->product->quantity;
             // $quantity = $this->get_sub_order_quantity($sub_order->id);
             $picking_title = $sub_order->product->product_title;
-            
+
             $picking_address = $sub_order->order->delivery_zone->hub->address1;
-                $picking_latitude = $sub_order->order->delivery_zone->hub->latitude;
-                $picking_longitude = $sub_order->order->delivery_zone->hub->longitude;
-                $delivery_title = $sub_order->order->delivery_name;
-                $delivery_address = $sub_order->order->delivery_address1;
-                $delivery_latitude = $sub_order->order->delivery_latitude;
-                $delivery_longitude = $sub_order->order->delivery_longitude;
+            $picking_latitude = $sub_order->order->delivery_zone->hub->latitude;
+            $picking_longitude = $sub_order->order->delivery_zone->hub->longitude;
+            $delivery_title = $sub_order->order->delivery_name;
+            $delivery_address = $sub_order->order->delivery_address1;
+            $delivery_latitude = $sub_order->order->delivery_latitude;
+            $delivery_longitude = $sub_order->order->delivery_longitude;
 
-                $amount = $sub_order->product->total_payable_amount;
-                
-                $hub_id = $delivery_hub_id;
+            $amount = 0;
+
+            $hub_id = $delivery_hub_id;
             $hub_title = $delivery_hub_title;
-            
-        }else{  //task type 2 or 4
-
+        } else {  //task type 2 or 4
             $sub_order_id = $sub_order->id;
             $unique_suborder_id = $sub_order->unique_suborder_id;
             $quantity = $sub_order->product->quantity;
             // $quantity = $this->get_sub_order_quantity($sub_order->id);
             $picking_title = $sub_order->product->product_title;
 
-            if($sub_order->return == 1){
+            if ($sub_order->return == 1) {
 
-                $picking_address = $sub_order->order->delivery_zone->hub->address1;
-                $picking_latitude = $sub_order->order->delivery_zone->hub->latitude;
-                $picking_longitude = $sub_order->order->delivery_zone->hub->longitude;
+                $picking_address = $sub_order->source_hub->address1;
+                $picking_latitude = $sub_order->source_hub->latitude;
+                $picking_longitude = $sub_order->source_hub->longitude;
                 $delivery_title = $sub_order->product->pickup_location->title;
                 $delivery_address = $sub_order->product->pickup_location->address1;
                 $delivery_latitude = $sub_order->product->pickup_location->latitude;
@@ -157,7 +157,7 @@ trait FcmTaskManager
                 $task_type_id = 4;  // return
 
                 $amount = 0;
-            }else{
+            } else {
 
                 $picking_address = $sub_order->order->delivery_zone->hub->address1;
                 $picking_latitude = $sub_order->order->delivery_zone->hub->latitude;
@@ -167,40 +167,44 @@ trait FcmTaskManager
                 $delivery_latitude = $sub_order->order->delivery_latitude;
                 $delivery_longitude = $sub_order->order->delivery_longitude;
 
-                $amount = $sub_order->product->total_payable_amount;
+                if ($sub_order->order->paymentMethod->id == 2) {
+                    $amount = 0;
+                } else {
+                    $amount = $sub_order->product->total_payable_amount;
+                }
+
+                $task_hub = $sub_order->destination_hub_id;
 
                 // Update Sub-Order Status
                 // $this->suborderStatus($product->sub_order->id, '28');
-                
             }
 
-            
+
             $hub_id = $delivery_hub_id;
             $hub_title = $delivery_hub_title;
-
         }
 
-        $myBody['sub_order_id'] = (string)$sub_order_id;
-        $myBody['unique_suborder_id'] = (string)$unique_suborder_id;
-        $myBody['task_type_id'] = (string)$task_type_id;
-        $myBody['picking_title'] = (string)$picking_title;
-        $myBody['picking_address'] = (string)$picking_address;
-        $myBody['picking_latitude'] = (string)$picking_latitude;
-        $myBody['picking_longitude'] = (string)$picking_longitude;
-        $myBody['delivery_title'] = (string)$delivery_title;
-        $myBody['delivery_address'] = (string)$delivery_address;
-        $myBody['delivery_latitude'] = (string)$delivery_latitude;
-        $myBody['delivery_longitude'] = (string)$delivery_longitude;
-        $myBody['quantity'] = (string)$quantity;
-        $myBody['amount'] = (string)$amount;
-        $myBody['hub_id'] = (string)$hub_id;
-        $myBody['hub_title'] = (string)$hub_title;
+        $myBody['sub_order_id'] = (string) $sub_order_id;
+        $myBody['unique_suborder_id'] = (string) $unique_suborder_id;
+        $myBody['task_type_id'] = (string) $task_type_id;
+        $myBody['picking_title'] = (string) $picking_title;
+        $myBody['picking_address'] = (string) $picking_address;
+        $myBody['picking_latitude'] = (string) $picking_latitude;
+        $myBody['picking_longitude'] = (string) $picking_longitude;
+        $myBody['delivery_title'] = (string) $delivery_title;
+        $myBody['delivery_address'] = (string) $delivery_address;
+        $myBody['delivery_latitude'] = (string) $delivery_latitude;
+        $myBody['delivery_longitude'] = (string) $delivery_longitude;
+        $myBody['quantity'] = (string) $quantity;
+        $myBody['amount'] = (string) $amount;
+        $myBody['hub_id'] = (string) $hub_id;
+        $myBody['hub_title'] = (string) $hub_title;
 
         // Revarse FCM notification
         $sub_order_count = SubOrder::where('id', $sub_order_id)->count();
-        if($sub_order_count == 0){
+        if ($sub_order_count == 0) {
             Log::info("SubOrder not found");
-        }else{
+        } else {
 
             $now = date("Y-m-d H:i:s");
             $attempt_start = $now;
@@ -209,66 +213,51 @@ trait FcmTaskManager
             $created_at = $now;
 
             $exist = TmTask::where('sub_order_id', $sub_order_id)
-                            ->where('task_type_id', $task_type_id)
-                            ->orderBy('id', 'desc')
-                            ->count();
+                    ->where('task_type_id', $task_type_id)
+                    ->orderBy('id', 'desc')
+                    ->count();
 
-            if($user_id){
-
-                $user = User::select("users.id as user_id")
-                                ->where('users.status', 1)
-                                ->where('users.online_status', 1)
-                                ->where('id', $user_id)
-                                ->first();
-
-                $task = TmTask::where('sub_order_id', $sub_order_id)
-                                ->where('task_type_id', $task_type_id)
-                                ->orderBy('id', 'desc')
-                                ->first();
-                if($task){
-                    $attempt = $task->attempt;
-                    $attempt = $attempt + 1;
-                }else{
-                    $attempt = 1;
-                }
-
-            }else if($exist == 0){
-                $task = TmTask::where('sub_order_id', $sub_order_id)
-                                ->where('task_type_id', $task_type_id)
-                                ->orderBy('id', 'desc')
-                                ->first();
-                $user = User::select("users.id as user_id", \DB::raw("6371 * acos(cos(radians(" . $picking_latitude . "))
-                                     * cos(radians(users.latitude)) 
-                                     * cos(radians(users.longitude) - radians(" . $picking_longitude . ")) 
-                                     + sin(radians(" .$picking_latitude. ")) 
-                                     * sin(radians(users.latitude))) AS distance"))
-                                ->join('role_user', 'role_user.user_id', '=', 'users.id')
-                                ->where('role_user.role_id', 8)
-                                ->where('users.status', 1)
-                                ->where('users.online_status', 1)
-                                ->orderBy('distance', 'asc')
-                                ->first();
-
-                $attempt = 1;
-
-            }else{
-
-                $task = TmTask::where('sub_order_id', $sub_order_id)
-                                ->where('task_type_id', $task_type_id)
-                                ->orderBy('id', 'desc')
-                                ->first();
+            $task = TmTask::where('sub_order_id', $sub_order_id)
+//                ->where('task_type_id', $task_type_id)
+                    ->whereStatus(1)
+                    ->orderBy('id', 'desc')
+                    ->first();
+            if ($task) {
                 $task->status = 3;
                 $task->save();
+                $attempt = $task->attempt + 1;
+            } else {
+                $attempt = 1;
+            }
 
-                if($task->attempt >= config('app.max_attempt')){
+            if ($user_id) {
+                $user = User::select("users.id as user_id")
+                        ->where('users.status', 1)
+                        ->where('users.online_status', 1)
+                        ->where('id', $user_id)
+                        ->first();
+            } else if ($exist == 0) {
+                $user = User::select("users.id as user_id", \DB::raw("6371 * acos(cos(radians(" . $picking_latitude . "))
+                                     * cos(radians(users.latitude))
+                                     * cos(radians(users.longitude) - radians(" . $picking_longitude . "))
+                                     + sin(radians(" . $picking_latitude . "))
+                                     * sin(radians(users.latitude))) AS distance"))
+                        ->join('role_user', 'role_user.user_id', '=', 'users.id')
+                        ->join('rider_references', 'rider_references.user_id', '=', 'users.id')
+                        ->where('rider_references.reference_id', '=', $task_hub)
+                        ->where('role_user.role_id', 8)
+                        ->where('users.status', 1)
+                        ->where('users.online_status', 1)
+                        ->orderBy('distance', 'asc')
+                        ->first();
+            } else {
+                if ($attempt > config('app.max_attempt')) {
 
                     $this->setSubOrderTaskStatus($sub_order_id, $task_type_id);
 
-                    Log::info("Max attempt limit over");
-
-                    if ($task->task_type_id == 1 || $task->task_type_id == 5){
+                    if ($task->task_type_id == 1 || $task->task_type_id == 5 || $task->task_type_id == 3) {
                         $status_code = 2;
-                    }else{
+                    } else {
                         $status_code = 26;
                     }
 
@@ -276,55 +265,58 @@ trait FcmTaskManager
                     $this->suborderStatus($task->sub_order_id, $status_code);
 
                     return 0;
-
-                }else{
-
-                    $attempt = $task->attempt;
-                    $attempt = $attempt + 1;
-
+                } else {
                     $used_users = TmTask::where('sub_order_id', $sub_order_id)
-                                    ->where('task_type_id', $task_type_id)
-                                    ->pluck('user_id')
-                                    ->toArray();
+                            ->where('task_type_id', $task_type_id)
+                            ->pluck('user_id')
+                            ->toArray();
 
                     $user = User::select("users.id as user_id", \DB::raw("6371 * acos(cos(radians(" . $picking_latitude . "))
-                                 * cos(radians(users.latitude)) 
-                                 * cos(radians(users.longitude) - radians(" . $picking_longitude . ")) 
-                                 + sin(radians(" .$picking_latitude. ")) 
-                                 * sin(radians(users.latitude))) AS distance"))
+                                     * cos(radians(users.latitude))
+                                     * cos(radians(users.longitude) - radians(" . $picking_longitude . "))
+                                     + sin(radians(" . $picking_latitude . "))
+                                     * sin(radians(users.latitude))) AS distance"))
                             ->join('role_user', 'role_user.user_id', '=', 'users.id')
+                            ->join('rider_references', 'rider_references.user_id', '=', 'users.id')
+                            ->where('rider_references.reference_id', '=', $task_hub)
                             ->where('role_user.role_id', 8)
                             ->where('users.status', 1)
                             ->where('users.online_status', 1)
                             ->whereNotIn('users.id', $used_users)
                             ->orderBy('distance', 'asc')
                             ->first();
-
                 }
-
             }
 
-            if(!$user){
+            if (!$user) {
 
                 $this->setSubOrderTaskStatus($sub_order_id, $task_type_id);
 
                 Log::info("No rider found");
 
-                if($task){
-                    if ($task->task_type_id == 1 || $task->task_type_id == 5){
+                if ($task) {
+                    if ($task->task_type_id == 1 || $task->task_type_id == 5 || $task->task_type_id == 3) {
                         $status_code = 2;
-                    }else{
+                    } else {
                         $status_code = 26;
                     }
-                }else{
+                } else {
                     $status_code = 2;
                 }
 
                 // Log Status
                 $this->suborderStatus($sub_order->id, $status_code);
+            } else {
 
-            }else{
+                // to prevent single order, multi notification
+                if (
+                        (TmTask::whereSubOrderId($sub_order_id)->whereTaskTypeId($task_type_id)->whereFource(0)->where('status', '<', 3)->exists() || TmTask::whereSubOrderId($sub_order_id)->whereTaskTypeId($task_type_id)->whereFource(1)->whereStatus(1)->exists() ) && 
+                        ConsignmentTask::whereSubOrderId($sub_order_id)->whereTaskTypeId($task_type_id)->where('status', '<', 3)->exists()
+                ) {
+                    Log::info("Multi Notification Attempt: suborder: $unique_suborder_id, user: $user_id, attampt: $attempt, task type: $task_type_id");
 
+                    return 1;
+                }
                 $user_id = $user->user_id;
 
                 $tm_task = new TmTask;
@@ -352,31 +344,27 @@ trait FcmTaskManager
                 $tm_task->fource = $fource;
                 $tm_task->save();
 
-                if ($task_type_id == 1 || $task_type_id == 5){
+                if ($task_type_id == 1 || $task_type_id == 3 || $task_type_id == 5) {
                     $status_code = 3;
-                }else if ($task_type_id == 2 || $task_type_id == 3 || $task_type_id == 6){
+                } else if ($task_type_id == 2 || $task_type_id == 6) {
                     $status_code = 28;
-                }else{
+                } else {
                     $status_code = 35;
                 }
 
                 // Log Status
                 $this->suborderStatus($sub_order_id, $status_code);
 
-                Log::info("Succesfully Save to tm_tasks data: ".$tm_task->id);
-
+                Log::info("Task Created: $unique_suborder_id");
+                Log::info($tm_task);
             }
-
         }
 
         return 1;
 
         // $jsonData = json_encode($myBody);
-
         // Log::info($jsonData);
-
         // dd($jsonData);
-
         // $ch = curl_init("http://tm-ipost.publicdemo.xyz/gen_fcm");
         // curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         // curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
@@ -409,22 +397,21 @@ trait FcmTaskManager
         // }
         // //close connection
         // curl_close($ch);
-
     }
 
-    public function setSubOrderTaskStatus($sub_order_id, $task_type_id){
+    public function setSubOrderTaskStatus($sub_order_id, $task_type_id) {
 
         $sub_order_query = SubOrder::where('id', $sub_order_id);
 
-        if($sub_order_query->count() > 0){
+        if ($sub_order_query->count() > 0) {
             $sub_order = $sub_order_query->first();
-            if ($task_type_id == 1 || $task_type_id == 5){
+            if ($task_type_id == 1 || $task_type_id == 5) {
                 $sub_order->tm_picking_status = 1;
-            }elseif ($task_type_id == 2){
+            } elseif ($task_type_id == 2) {
                 $sub_order->tm_delivery_status = 1;
-            }elseif ($task_type_id == 4){
+            } elseif ($task_type_id == 4) {
                 $sub_order->tm_delivery_status = 1;
-            }else{
+            } else {
                 $sub_order->tm_picking_status = 1;
                 $sub_order->tm_delivery_status = 1;
             }
@@ -432,30 +419,26 @@ trait FcmTaskManager
         }
 
         return 0;
-
     }
 
-    public function get_sub_order_quantity($sub_order_id){
+    public function get_sub_order_quantity($sub_order_id) {
 
         $quantity = 0;
 
         $cart_products = CartProduct::where('sub_order_id', $sub_order_id)->get();
 
-        if($cart_products){
+        if ($cart_products) {
 
             foreach ($cart_products as $cart_product) {
                 $quantity = $quantity + $cart_product->quantity;
             }
-
-        }else{
+        } else {
 
             $order_product = OrderProduct::where('sub_order_id', $sub_order_id)->first();
             $quantity = $order_product->quantity;
-
         }
 
         return $quantity;
-
     }
 
 }

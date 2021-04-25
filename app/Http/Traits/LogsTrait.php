@@ -237,7 +237,7 @@ trait LogsTrait {
                     if(auth()->user()){
                         $user_id = auth()->user()->id;
                     }else{
-                        $user_id = Auth::guard('api')->user()->id;
+                        $user_id = Auth::guard('api')->user() ? Auth::guard('api')->user()->id : 3;
                     }
                     // $user_id = auth()->user()->id;
                     break;
@@ -246,14 +246,14 @@ trait LogsTrait {
                     if(auth()->user()){
                         $user_id = auth()->user()->id;
                     }else{
-                        $user_id = Auth::guard('api')->user()->id;
+                        $user_id = Auth::guard('api')->user() ? Auth::guard('api')->user()->id : 3;
                     }
                     break;
                 default:
                     if(auth()->user()){
                         $user_id = auth()->user()->id;
                     }else{
-                        $user_id = Auth::guard('api')->user()->id;
+                        $user_id = Auth::guard('api')->user() ? Auth::guard('api')->user()->id : 3;
                     }
             }
 
@@ -329,8 +329,12 @@ trait LogsTrait {
                 // $api_token = $this->lpLogin();
                 // $this->lpUpdate($api_token, $sub_order->unique_suborder_id, $sub_order->sub_order_status);
 
-                // Notify to Fast Bazzar
-                fbStatusUpdate($sub_order);
+                // Notify to Merchant
+                if ($sub_order->order->store->merchant_id == 12) {
+                    fibStatusUpdate($sub_order);
+                } else {
+                    fbStatusUpdate($sub_order);
+                }
 
                 return $order->order_status;
             }else{

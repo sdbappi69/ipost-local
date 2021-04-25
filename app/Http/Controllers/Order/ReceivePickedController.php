@@ -553,7 +553,7 @@ class ReceivePickedController extends Controller {
         $response = curl_exec($ch);
 //        dd($response);
         $charges = json_decode($response);
-        $charges = $charges[0];
+//        $charges = $charges[0];
 //        dd($charges);
         if ($charges->status == 'Failed') {
             abort(403);

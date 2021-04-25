@@ -82,6 +82,10 @@ class SubOrder extends Model {
         return $this->hasOne(ConsignmentTask::class, 'sub_order_id', 'id')->whereIn('task_type_id', [2, 4, 6])->orderBy("id", 'desc');
     }
 
+    public function picking_task() {
+        return $this->hasOne(ConsignmentTask::class, 'sub_order_id', 'id')->whereIn('task_type_id', [1, 5])->orderBy("id", 'desc');
+    }
+
     public function orderLogs() {
         return $this->hasMany(OrderLog::class, "sub_order_id", 'id');
     }
