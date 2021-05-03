@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('merchant-order') }}">Orders</a>
+                <a href="{{ secure_url('merchant-order') }}">Orders</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -28,14 +28,14 @@
 
     <div class="mt-element-step">
         <div class="row step-background-thin">
-            <a href="{{ URL::to('merchant-orderv2/'.$order->id.'/edit?step=1') }}">
+            <a href="{{ secure_url('merchant-orderv2/'.$order->id.'/edit?step=1') }}">
                 <div class="col-md-6 bg-grey-steel mt-step-col @if($step=='1') {{ 'active' }} @endif">
                     <div class="mt-step-number">1</div>
                     <div class="mt-step-title uppercase font-grey-cascade">Order</div>
                     <div class="mt-step-content font-grey-cascade">Order information</div>
                 </div>
             </a>
-            <a href="{{ URL::to('merchant-orderv2/'.$order->id.'/edit?step=3') }}">
+            <a href="{{ secure_url('merchant-orderv2/'.$order->id.'/edit?step=3') }}">
                 <div class="col-md-6 bg-grey-steel mt-step-col @if($step=='3') {{ 'active' }} @endif">
                     <div class="mt-step-number">2</div>
                     <div class="mt-step-title uppercase font-grey-cascade">Confirmation</div>

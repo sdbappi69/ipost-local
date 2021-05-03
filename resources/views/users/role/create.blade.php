@@ -6,11 +6,11 @@
   <div class="page-bar">
       <ul class="page-breadcrumb">
           <li>
-              <a href="{{ URL::to('home') }}">Home</a>
+              <a href="{{ secure_url('home') }}">Home</a>
               <i class="fa fa-circle"></i>
           </li>
           <li>
-              <a href="{{ URL::to('role') }}">Role</a>
+              <a href="{{ secure_url('role') }}">Role</a>
               <i class="fa fa-circle"></i>
           </li>
           <li>
@@ -26,7 +26,7 @@
   <!-- END PAGE TITLE-->
   <!-- END PAGE HEADER-->
   
-  {{ Form::open(['route' => 'role.store']) }}  
+  {{ Form::open(['url' => secure_url('') . '/role','method'=>'post']) }}
 
     <div class="row">
         <div class="col-md-12 col-lg-6">
@@ -79,7 +79,7 @@
 
     &nbsp;
     <div class="row padding-top-10">
-        <a href="{{ URL::to('role') }}" class="btn default"> Cancel </a>
+        <a href="{{ secure_url('role') }}" class="btn default"> Cancel </a>
         {!! Form::submit('Save', ['class' => 'btn green pull-right']) !!}
     </div>
     &nbsp;

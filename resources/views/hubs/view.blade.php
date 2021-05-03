@@ -2,24 +2,24 @@
 
 @section('content')
 
-    <link href="{{ URL::asset('assets/pages/css/profile.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/pages/css/profile.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('hub') }}">Hubs</a>
+                <a href="{{ secure_url('hub') }}">Hubs</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
                 <span>View</span>
             </li>
         </ul>
-        <a class="btn btn-warning pull-right" href="{{ url('hub/'. $hub->id .'/edit') }}">Edit</a>
+        <a class="btn btn-warning pull-right" href="{{ secure_url('hub/'. $hub->id .'/edit') }}">Edit</a>
     </div>
     <!-- END PAGE BAR -->
     <!-- BEGIN PAGE TITLE-->
@@ -61,7 +61,7 @@
                         <h4 class="profile-desc-title">Contact</h4>
                         <div class="margin-top-20 profile-desc-link">
                             <i class="fa fa-envelope"></i>
-                            <a href="mailto:{{ $hub->email }}">{{ $hub->responsible_user->email }}</a>
+                            <a href="mailto:{{ $hub->email }}">{{ $hub->responsible_user->email or '' }}</a>
                         </div>
                         <div class="margin-top-20 profile-desc-link">
                             <i class="fa fa-mobile"></i>
@@ -117,10 +117,10 @@
             highlight_nav('hub-manage', 'hubs');
         });
     </script>
-    <script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
+    <script src="https://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
     <script>
         $(function () {
-          var image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
+          var image = 'https://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
               bounds = new google.maps.LatLngBounds();
               mapOptions = {
                 mapTypeId: google.maps.MapTypeId.ROADMAP,

@@ -6,14 +6,14 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
                 @if(isset($_GET['store_id'])&&$_GET['store_id'] != '')
-                    <a href="{{ URL::to('store/'.$_GET['store_id'].'/edit?step=2') }}">Category</a>
+                    <a href="{{ secure_url('store/'.$_GET['store_id'].'/edit?step=2') }}">Category</a>
                 @else
-                    <a href="{{ URL::to('product-category') }}">Category</a>
+                    <a href="{{ secure_url('product-category') }}">Category</a>
                 @endIf
                 <i class="fa fa-circle"></i>
             </li>
@@ -171,7 +171,7 @@
 
                                                 <div class="portlet-body util-btn-margin-bottom-5" style="overflow: hidden;">
 
-                                                    {!! Form::open(array('url' => '/product-category-charge-submit', 'method' => 'post')) !!}
+                                                    {!! Form::open(array('url' => secure_url('') . '/product-category-charge-submit', 'method' => 'post')) !!}
 
                                                         <input type="hidden" name="product_category_id" value="{{ $product_category->id }}">
 
@@ -191,7 +191,7 @@
                                                         @if($charge_id != 0)
                                                             {!! Form::submit('Save', ['class' => 'btn green col-md-6']) !!}
                                                             
-                                                            <a href="{{ URL::to('charge-remove/'.$charge_id) }}" class="btn red col-md-6" data-toggle="confirmation" data-original-title="Are you sure ?" title="">Remove</a>
+                                                            <a href="{{ secure_url('charge-remove/'.$charge_id) }}" class="btn red col-md-6" data-toggle="confirmation" data-original-title="Are you sure ?" title="">Remove</a>
 
                                                         @else
                                                             {!! Form::submit('Save', ['class' => 'btn green col-md-12']) !!}
@@ -313,7 +313,7 @@
 
                                                 <div class="portlet-body util-btn-margin-bottom-5" style="overflow: hidden;">
 
-                                                    {!! Form::open(array('url' => '/product-category-charge-submit', 'method' => 'post')) !!}
+                                                    {!! Form::open(array('url' => secure_url('') . '/product-category-charge-submit', 'method' => 'post')) !!}
 
                                                         <input type="hidden" name="product_category_id" value="{{ $product_category->id }}">
 
@@ -345,7 +345,7 @@
                                                         @if($charge_id != 0)
                                                             {!! Form::submit('Save', ['class' => 'btn green col-md-6']) !!}
 
-                                                            <a href="{{ URL::to('charge-remove/'.$charge_id) }}" class="btn red col-md-6" data-toggle="confirmation" data-original-title="Are you sure ?" title="">Remove</a>
+                                                            <a href="{{ secure_url('charge-remove/'.$charge_id) }}" class="btn red col-md-6" data-toggle="confirmation" data-original-title="Are you sure ?" title="">Remove</a>
                                                         @else
                                                             {!! Form::submit('Save', ['class' => 'btn green col-md-12']) !!}
                                                         @endIf

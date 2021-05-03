@@ -6,7 +6,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         {{-- <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li> --}}
         <li>
@@ -94,7 +94,7 @@
             </div>
 
             <div class="portlet-body util-btn-margin-bottom-5">
-                {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+                {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
                 <div class="col-md-4" style="margin-bottom:5px;">
                     <label class="control-label">Merchants</label>
@@ -153,7 +153,7 @@
                 <br><br>
 
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('order') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('order') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -185,8 +185,8 @@
                 
              @foreach($recent_orders as $order)
              <tr>
-                {{-- */ $update_url = URL::to('order').'/'.$order->id.'/edit?step=3'; /* --}}
-                {{-- */ $view_url = URL::to('order').'/'.$order->id; /* --}}
+                {{-- */ $update_url = secure_url('order').'/'.$order->id.'/edit?step=3'; /* --}}
+                {{-- */ $view_url = secure_url('order').'/'.$order->id; /* --}}
                 <td>
                     {{-- <a class="label label-success" href="{{ $view_url }}"> --}}
                         {{ $order->unique_order_id }}
@@ -231,9 +231,9 @@
         </table>
     </div>
 </div>
-<script src="{{URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}" type="text/javascript"></script>
-<script src="{{URL::asset('assets/global/plugins/counterup/jquery.waypoints.min.js')}}" type="text/javascript"></script>
-<script src="{{URL::asset('assets/global/plugins/counterup/jquery.counterup.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/counterup/jquery.waypoints.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/counterup/jquery.counterup.min.js')}}" type="text/javascript"></script>
 <script type="text/javascript">
     $(document ).ready(function() {
         // Navigation Highlight

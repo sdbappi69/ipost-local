@@ -33,7 +33,7 @@
                 <br><br>
 
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('merchant') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('merchant') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -56,7 +56,7 @@
                 <br><br>
 
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('store') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('store') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -78,7 +78,7 @@
                 <br><br>
 
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('hub') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('hub') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -100,7 +100,7 @@
                 <br><br>
 
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('order') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('order') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -126,7 +126,7 @@
 
             <div class="portlet-body util-btn-margin-bottom-5">
 
-                {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+                {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
                 <div class="col-md-6" style="margin-bottom:5px;">
                     <label class="control-label">Merchants</label>
@@ -219,7 +219,7 @@
                                 $getRequest .= '&to_date=' . $_GET['to_date'];
                         }
                         ?>
-                        <a href="{{ URL::to('/dashboard-export/pickup_all?'.$getRequest) }}">
+                        <a href="{{ secure_url('/dashboard-export/pickup_all?'.$getRequest) }}">
                             Total: {{ $home_info['total_pickup_req'] }}
                         </a>
                     </span>
@@ -317,7 +317,7 @@
                     <i class="icon-cursor font-dark hide"></i>
                     <span class="caption-subject font-dark bold uppercase">Delivery</span>
                     <span class="caption-helper">
-                        <a href="{{ URL::to('/dashboard-export/delivery_all?'.$getRequest) }}">
+                        <a href="{{ secure_url('/dashboard-export/delivery_all?'.$getRequest) }}">
                             Total: {{ $home_info['total_delivery_req'] }}
                         </a>
                     </span>
@@ -428,7 +428,7 @@
                     <i class="icon-cursor font-dark hide"></i>
                     <span class="caption-subject font-dark bold uppercase">Return</span>
                     <span class="caption-helper">
-                        <a href="{{ URL::to('/dashboard-export/return_all?'.$getRequest) }}">
+                        <a href="{{ secure_url('/dashboard-export/return_all?'.$getRequest) }}">
                             Total: {{ $home_info['total_return_req'] }}
                         </a>
                     </span>
@@ -531,7 +531,7 @@
                 <br><br>
 
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('merchant') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('merchant') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -553,7 +553,7 @@
                 <br><br>
 
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('order') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('order') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -596,18 +596,18 @@
     });
 </script>
 
-<script src="{{URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}" type="text/javascript"></script>
 
-<script src="{{URL::asset('assets/global/plugins/amcharts/amcharts/amcharts.js')}}" type="text/javascript"></script>
-<script src="{{URL::asset('assets/global/plugins/amcharts/amcharts/pie.js')}}" type="text/javascript"></script>
-<script src="{{URL::asset('assets/global/plugins/jquery-easypiechart/jquery.easypiechart.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/amcharts/amcharts/amcharts.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/amcharts/amcharts/pie.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/jquery-easypiechart/jquery.easypiechart.min.js')}}" type="text/javascript"></script>
 
-<script src="{{URL::asset('assets/global/plugins/counterup/jquery.waypoints.min.js')}}" type="text/javascript"></script>
-<script src="{{URL::asset('assets/global/plugins/counterup/jquery.counterup.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/counterup/jquery.waypoints.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/counterup/jquery.counterup.min.js')}}" type="text/javascript"></script>
 
 <!-- BEGIN PAGE LEVEL PLUGINS -->
-<script src="{{ URL::asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/pages/scripts/dashboard.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/pages/scripts/dashboard.js') }}" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 
 

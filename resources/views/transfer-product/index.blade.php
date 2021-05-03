@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('hub-order') }}">Orders</a>
+                <a href="{{ secure_url('hub-order') }}">Orders</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -29,7 +29,7 @@
     <div class="row">
 
         <div class="col-md-12">
-            {!! Form::open(array('url' => '/transfer-product/', 'method' => 'post')) !!}
+            {!! Form::open(array('url' => secure_url('') . '/transfer-product/', 'method' => 'post')) !!}
 
                 <div class="form-group col-md-10">
 
@@ -90,7 +90,7 @@
 
                                 <div class="row">
                                     <label class="control-label">Select Trip</label>
-                                    {!! Form::open(array('url' => '/transfer-product/'.$product->id, 'method' => 'put')) !!}
+                                    {!! Form::open(array('url' => secure_url('') . '/transfer-product/'.$product->id, 'method' => 'put')) !!}
                                         {!! Form::hidden('receive_hub_id', $product->hub_id, ['class' => 'form-control']) !!}
                                         <div class="form-group">
                                             <select name="trip_id" class="form-control js-example-basic-single js-country" required="required">
@@ -129,10 +129,10 @@
     </div>
 
     <div class="pagination pull-right">
-        {{ $products->render() }}
+        {{ $products->appends($_REQUEST)->render() }}
     </div>
 
-    <script src="{{ URL::asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
 
     <script type="text/javascript">
         $(document ).ready(function() {

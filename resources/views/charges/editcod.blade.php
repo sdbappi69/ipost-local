@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('charge') }}">COD</a>
+                <a href="{{ secure_url('charge') }}">COD</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -26,7 +26,7 @@
     <!-- END PAGE TITLE-->
     <!-- END PAGE HEADER-->
 
-    {!! Form::model($charge, array('url' => '/charge/'.$charge->id.'?overwrite='.$overwrite.'&store_id='.$store_id, 'method' => 'put')) !!}
+    {!! Form::model($charge, array('url' => secure_url('') . '/charge/'.$charge->id.'?overwrite='.$overwrite.'&store_id='.$store_id, 'method' => 'put')) !!}
 
         <div class="row">
 
@@ -95,7 +95,7 @@
 
         &nbsp;
         <div class="row padding-top-10">
-            <a href="{{ URL::to('charge') }}" class="btn default"> Cancel </a>
+            <a href="{{ secure_url('charge') }}" class="btn default"> Cancel </a>
             {!! Form::submit('Update', ['class' => 'btn green pull-right']) !!}
         </div>
 

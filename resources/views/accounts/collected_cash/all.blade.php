@@ -2,13 +2,13 @@
 
 @section('content')
 
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}"
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}"
       rel="stylesheet" type="text/css"/>
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -35,14 +35,14 @@
         </div>
 
         <div class="portlet-body util-btn-margin-bottom-5">
-            {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+            {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
             <?php if (!isset($_GET['sub_unique_id'])) {
                 $_GET['sub_unique_id'] = null;
             } ?>
             <div class="col-md-4">
-                <label class="control-label">Sub-Order ID</label>
+                <label class="control-label">AWB</label>
                 <input type="text" value="{{$_GET['sub_unique_id']}}" class="form-control" name="sub_unique_id"
-                       id="sub_unique_id" placeholder="Sub-Order ID">
+                       id="sub_unique_id" placeholder="AWB">
             </div>
 
             <?php if (!isset($_GET['product_name'])) {
@@ -73,7 +73,7 @@
 </div>
 
 <div class="col-md-12">
-{!! Form::open(array('url' => 'collected-cash-amount/accumulated', 'method' => 'post','id'=>'cash-transfer')) !!}
+{!! Form::open(array('url' => secure_url('') . '/collected-cash-amount/accumulated', 'method' => 'post','id'=>'cash-transfer')) !!}
 
 <!-- BEGIN BUTTONS PORTLET-->
     <div class="portlet light tasks-widget bordered">
@@ -90,7 +90,7 @@
             <table class="table table-bordered table-hover" id="example0">
                 <thead class="flip-content">
                 <th>{!!Form::checkbox('name', 'value', false,array('id'=>'select_all_chk')) !!}</th>
-                <th>Sub-Order ID</th>
+                <th>AWB</th>
                 <th>Product Name</th>
                 <th>Product Category</th>
                 <th>Seller</th>
@@ -100,7 +100,7 @@
                 <th>Pyment Type</th>
                 <th>Qty</th>
                 <th>Collected</th>
-                <th>Delivery Amount</th>
+{{--                <th>Delivery Amount</th>--}}
                 </thead>
                 <tbody>
                 @if(count($cash_collection) > 0 )
@@ -123,18 +123,32 @@
                                 {{$c->product->quantity}}
                                 <input type="hidden" name="total_quantity[]" value="{{ $c->product->quantity }}">
                             </td>
-                            <td>{{$c->product->delivery_paid_amount}}
+                            <td>
+                                @if($c->post_delivery_return == 1 || $c->return == 1 || $c->order->payment_type_id == 2)
+                                    0
+                                    <input type="hidden" name="total_collected_amount[]"
+                                           value="0">
+                                @else
+                                {{ number_format($c->product->delivery_paid_amount) }}
                                 <input type="hidden" name="total_collected_amount[]"
                                        value="{{ $c->product->delivery_paid_amount }}">
+                                @endif
                             </td>
-                            <td>{{$c->product->total_delivery_charge}}
-                                <input type="hidden" name="final_total_delivery_charge[]"
-                                       value="{{ $c->product->total_delivery_charge }}">
-                            </td>
+{{--                            <td>{{$c->product->total_delivery_charge}}--}}
+{{--                                <input type="hidden" name="final_total_delivery_charge[]"--}}
+{{--                                       value="{{ $c->product->total_delivery_charge }}">--}}
+{{--                            </td>--}}
+                            <input type="hidden" name="final_total_delivery_charge[]"
+                                   value="0">
                         </tr>
                         <?php
                         $total_quantity += $c->product->quantity;
-                        $total_collected_amount += $c->product->delivery_paid_amount;
+                        if($c->post_delivery_return == 1 || $c->return == 1 || $c->order->payment_type_id == 2){
+                            $total_collected_amount += 0;
+                        }else{
+                            $total_collected_amount += $c->product->delivery_paid_amount;
+                        }
+
                         $final_total_delivery_charge += $c->product->total_delivery_charge; ?>
                     @endforeach
                     <tr>
@@ -148,8 +162,8 @@
                         <td></td>
                         <td></td>
                         <td><b>{{ $total_quantity }}</b></td>
-                        <td><b>{{ $total_collected_amount }}</b></td>
-                        <td><b>{{ $final_total_delivery_charge }} </b>
+                        <td><b>{{ number_format($total_collected_amount) }}</b></td>
+{{--                        <td><b>{{ $final_total_delivery_charge }} </b>--}}
                         </td>
                     </tr>
                 @endif
@@ -195,8 +209,8 @@
     </div>
 </div>
 {!! Form::close() !!}
-<script src="{{ URL::asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"
+<script src="{{ secure_asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"
         type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -223,16 +237,16 @@
             return false;
         }
     });*/
-    
+
     $(".filter-btn").click(function(e){
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('collected-cash-amount') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('collected-cash-amount') }}").submit();
     });
 
     $(".export-btn").click(function(e){
         // alert(1);
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('collected-cash-amount-export/xls') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('collected-cash-amount-export/xls') }}").submit();
     });
 </script>
 @endsection

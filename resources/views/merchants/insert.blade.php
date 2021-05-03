@@ -1,17 +1,17 @@
 @extends('layouts.appinside')
 
 @section('content')
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="{{ URL::to('merchant') }}">Merchants</a>
+            <a href="{{ secure_url('merchant') }}">Merchants</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -46,7 +46,7 @@
         </div>
     </div>
 
-    {!! Form::open(array('url' => '/merchant', 'method' => 'post' ,'enctype' => 'multipart/form-data')) !!}
+    {!! Form::open(array('url' => secure_url('') . '/merchant', 'method' => 'post' ,'enctype' => 'multipart/form-data')) !!}
 
     <div class="row">
 
@@ -135,7 +135,7 @@
         <div class="form-group">
             <div class="fileinput fileinput-new" data-provides="fileinput">
                 <div class="fileinput-new thumbnail" style="width: 200px; height: auto;">
-                <img src="{{url('/uploads/merchants/no_image.jpg')}}" alt=""  id="img-thumb" />
+                <img src="{{secure_url('/uploads/merchants/no_image.jpg')}}" alt=""  id="img-thumb" />
                 </div>
                 <div>
                     <span class="btn default btn-file">
@@ -172,7 +172,7 @@
 
 </div>
 
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 
 <script type="text/javascript">
 

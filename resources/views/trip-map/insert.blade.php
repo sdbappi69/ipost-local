@@ -6,7 +6,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -34,7 +34,7 @@
 
         <div class="portlet-body util-btn-margin-bottom-5">
 
-            {!! Form::open(array('url' => '/trip-map', 'method' => 'post')) !!}
+            {!! Form::open(array('url' => secure_url('') . '/trip-map', 'method' => 'post')) !!}
 
                 <div class="col-md-4" style="margin-bottom:5px;">
                     <label class="control-label">Start hub</label>
@@ -71,7 +71,7 @@
 <!-- END PAGE TITLE-->
 <!-- END PAGE HEADER-->
 
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
     $(document ).ready(function() {
         // Navigation Highlight

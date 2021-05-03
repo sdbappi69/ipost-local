@@ -2,12 +2,12 @@
 
 @section('content')
 
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -106,7 +106,7 @@
                         <tr>
                             <td>
                                 @if(!is_null($t->invoice_no))
-                                <a target="_blank" title="Click to view pdf (invoice no : #{{$t->invoice_no}} )" class="btn btn-danger" href="{{url('/merchant-bill-invoice'.'/'.$t->invoice_no).'/'.$t->id}}">
+                                <a target="_blank" title="Click to view pdf (invoice no : #{{$t->invoice_no}} )" class="btn btn-danger" href="{{secure_url('/merchant-bill-invoice'.'/'.$t->invoice_no).'/'.$t->id}}">
                                     <i  class="fa fa-file-pdf-o"></i>
                                 </a>
                                 @endif
@@ -166,7 +166,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                 <h4 class="modal-title">Upload Bank Document</h4>
             </div>
-            {!! Form::open(array('url' => '/upload-bank-doc-merchant-bill', 'method' => 'post','enctype' => 'multipart/form-data')) !!}
+            {!! Form::open(array('url' => secure_url('') . '/upload-bank-doc-merchant-bill', 'method' => 'post','enctype' => 'multipart/form-data')) !!}
             <div class="modal-body">
                 <input type="hidden" name="bill_id" id="bill_id">
 
@@ -216,8 +216,8 @@
 </div>
 @endif
 
-<script src="{{ URL::asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 
 <script type="text/javascript">
     $(document ).ready(function() {

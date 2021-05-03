@@ -6,11 +6,11 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="{{ URL::to('merchant-order') }}">Orders</a>
+            <a href="{{ secure_url('merchant-order') }}">Orders</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -48,7 +48,7 @@
                                             <div class="col-md-3 mt-step-col first @if(iPostStatus($suborder->sub_order_status) >= 1) done @elseIf(iPostStatus($suborder->sub_order_status) == 1) active @endIf ">
                                                 <div class="mt-step-number bg-white">1</div>
                                                 <div class="mt-step-title uppercase font-grey-cascade">Order</div>
-                                                <div class="mt-step-content font-grey-cascade">Store: <a target="blank" href="{{ URL::to('store') }}/{{ $order->store->id }}">{{ $order->store->store_id }}</a></div>
+                                                <div class="mt-step-content font-grey-cascade">Store: <a target="blank" href="{{ secure_url('store') }}/{{ $order->store->id }}">{{ $order->store->store_id }}</a></div>
                                             </div>
                                             <div class="col-md-3 mt-step-col @if(iPostStatus($suborder->sub_order_status) >= 2) done @elseIf(iPostStatus($suborder->sub_order_status) == 2) active @endIf ">
                                                 <div class="mt-step-number bg-white">2</div>
@@ -167,7 +167,7 @@
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead class="flip-content">
-                                        <th>Unique Id</th>
+                                        <th>AWB</th>
                                         <th>Detail</th>
                                         <th>Status</th>
                                         <th>History</th>
@@ -189,11 +189,11 @@
                                                     <br>
                                                     <h4><u>Payment:</u></h4>
                                                     Unit Price: {{ $row2->unit_price }}<br>
-                                                    Total Product Charge: {{ $row2->sub_total or '' }}<br>
-                                                    Unit Delivery Charge: {{ $row2->unit_deivery_charge or '' }}<br>
-                                                    Total Delivery Charge: {{ $row2->total_delivery_charge or '' }}<br>
-                                                    Payable Amount: <b>{{ $row2->total_payable_amount or '' }}</b><br>
-                                                    Paid Amount: <b>{{ $row2->delivery_paid_amount or '' }}</b><br>
+                                                    Total Product Charge: {{ $row2->sub_total }}<br>
+                                                    Unit Delivery Charge: {{ $row2->unit_deivery_charge }}<br>
+                                                    Total Delivery Charge: {{ $row2->total_delivery_charge }}<br>
+                                                    Payable Amount: <b>{{ $row2->total_payable_amount }}</b><br>
+                                                    Paid Amount: <b>{{ $row2->delivery_paid_amount }}</b><br>
                                                     @endforeach
                                                 </td>
                                                 <td>

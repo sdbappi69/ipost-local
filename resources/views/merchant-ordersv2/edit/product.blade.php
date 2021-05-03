@@ -11,7 +11,7 @@
                 <div id="accordion3_new" class="panel-collapse collapse">
                     <div class="panel-body">
                         
-                    {!! Form::open(array('url' => '/product', 'method' => 'post')) !!}
+                    {!! Form::open(array('url' => secure_url('') . '/product', 'method' => 'post')) !!}
 
                         <div class="row">
 
@@ -26,7 +26,7 @@
 
                                 <!-- <div class="form-group"> -->
                                     <!-- <label class="control-label">Product URL</label> -->
-                                    {!! Form::hidden('url', null, ['class' => 'form-control', 'placeholder' => 'http://your-product-link']) !!}
+                                    {!! Form::hidden('url', null, ['class' => 'form-control', 'placeholder' => 'https://your-product-link']) !!}
                                 <!-- </div> -->
 
                                 <div class="form-group">
@@ -105,7 +105,7 @@
                             </a>
 
                             <!-- Delete -->
-                            {!! Form::open(array('url' => '/product/'.$row->id, 'method' => 'post')) !!}
+                            {!! Form::open(array('url' => secure_url('') . '/product/'.$row->id, 'method' => 'post')) !!}
                                 {{ method_field('DELETE') }}
                                 <button type="submit" id="delete-task-{{ $row->id }}" class="btn btn-danger btn-xs pull-right" style="margin-top:-20px;">
                                     <i class="fa fa-btn fa-trash"></i> Remove
@@ -117,7 +117,7 @@
                     <div id="accordion3_{{ $row->id }}" class="panel-collapse collapse">
                         <div class="panel-body">
                             
-                        {!! Form::model($row, array('url' => '/product/'.$row->id, 'method' => 'put')) !!}
+                        {!! Form::model($row, array('url' => secure_url('') . '/product/'.$row->id, 'method' => 'put')) !!}
                         {!! Form::hidden('order_id', $id, ['class' => 'form-control', 'required' => 'required']) !!}
                             <div class="row">
 
@@ -130,7 +130,7 @@
 
                                     <!-- <div class="form-group"> -->
                                         <!-- <label class="control-label">Product URL</label> -->
-                                        {!! Form::hidden('url', null, ['class' => 'form-control', 'placeholder' => 'http://your-product-link']) !!}
+                                        {!! Form::hidden('url', null, ['class' => 'form-control', 'placeholder' => 'https://your-product-link']) !!}
                                     <!-- </div> -->
 
                                     <div class="form-group">

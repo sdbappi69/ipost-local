@@ -2,17 +2,17 @@
 
 @section('content')
 
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="{{ URL::to('trip') }}">Trips</a>
+            <a href="{{ secure_url('trip') }}">Trips</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -41,12 +41,12 @@
 
     <div class="portlet-body util-btn-margin-bottom-5">
 
-      {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+      {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
         <?php if(!isset($_GET['sub_order_id'])){$_GET['sub_order_id'] = null;} ?>
         <div class="col-md-6" style="margin-bottom:5px;">
             <!-- <div class="row"> -->
-             <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control" name="sub_order_id" id="sub_order_id" placeholder="Sub-Order ID">
+             <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control" name="sub_order_id" id="sub_order_id" placeholder="AWB">
             <!-- </div> -->
         </div>
 
@@ -128,7 +128,7 @@
       {!! Form::close() !!}
 
 
-      {!! Form::open(array('url' => '/add-bulk-trip-cart', 'method' => 'post')) !!}
+      {!! Form::open(array('url' => secure_url('') . '/add-bulk-trip-cart', 'method' => 'post')) !!}
 
         <div class="col-md-12">
             <button type="submit" class="btn btn-primary add-to-cart pull-right"><i class="fa fa-shopping-cart"></i> Add to cart</button>
@@ -137,7 +137,7 @@
         <table class="table table-bordered table-hover" id="example0">
           <thead class="flip-content">
             <th>{!!Form::checkbox('name', 'value', false,array('id'=>'select_all_chk')) !!}</th>
-            <th>Unique ID</th>
+            <th>AWB</th>
             <th>Destination</th>
             <th>Products</th>
             <th>Invoice</th>
@@ -149,7 +149,8 @@
               <td>{!!Form::checkbox('unique_suborder_ids[]',$sub_order->unique_suborder_id, false) !!}</td>
               <td> {{ $sub_order->unique_suborder_id }}</td>
 
-              <td> {{ $sub_order->delivery_hub }}</td>
+                <td> {{ "Delivery Hub: " .$sub_order->delivery_hub }}<br/>
+                    {{ "Next Hub: " .$sub_order->next_hub_title }}</td>
 
               <td><h4 class="uppercase">Product</h4>
                 Title: <b>{{ $sub_order->product_title }}</b><br>
@@ -157,7 +158,7 @@
                 Product Category: <b>{{ $sub_order->product_category }}</b>
               </td>
               <td>
-                <a class="btn btn-info btn-xs" target="_blank" href="{{url('suborder-invoice/'.$sub_order->unique_suborder_id)}}">Invoice</a>
+                <a class="btn btn-info btn-xs" target="_blank" href="{{secure_url('suborder-invoice/'.$sub_order->unique_suborder_id)}}">Invoice</a>
               </td>
 
               <!-- <td><button type="button" value="{{ $sub_order->unique_suborder_id }}" class="print_modal"><i class="fa fa-folder-open-o" aria-hidden="true"></i></button></td> -->
@@ -189,10 +190,10 @@
 
     <div class="portlet-body util-btn-margin-bottom-5">
 
-      {!! Form::open(array('url' => 'add-trip-cart', 'method' => 'post')) !!}
+      {!! Form::open(array('url' => secure_url('') . '/add-trip-cart', 'method' => 'post')) !!}
 
         <div class="col-md-8" style="margin-bottom:5px;">
-            <input type="text" value="" class="form-control focus_it" name="unique_suborder_id" placeholder="Sub-Order ID" required="required">
+            <input type="text" value="" class="form-control focus_it" name="unique_suborder_id" placeholder="AWB" required="required">
         </div>
 
         <div class="col-md-4" style="margin-bottom:5px;">
@@ -209,7 +210,7 @@
 
                 @foreach(Session::get('trip_cart') AS $cart)
 
-                  <a href="{{ URL::to('remove-trip-cart/'.$cart) }}" class="btn btn-xs green">
+                  <a href="{{ secure_url('remove-trip-cart/'.$cart) }}" class="btn btn-xs green">
                     <i class="fa fa-times"></i> {{ $cart }} 
                   </a>
 
@@ -222,7 +223,7 @@
       @endIf
 
       <div class="tripconsignment update-tripconsignment">
-        {!! Form::open(array('url' => 'update-tripconsignments-trip-submit', 'method' => 'post')) !!}
+        {!! Form::open(array('url' => secure_url('') . '/update-tripconsignments-trip-submit', 'method' => 'post')) !!}
 
           <input type="hidden" value="{{ $trip->id }}" class="form-control" name="tripconsignment_id" id="tripconsignment_id">
 
@@ -238,7 +239,7 @@
 
             <table class="table table-bordered table-hover" id="example0">
               <thead class="flip-content">
-                <th>Unique ID</th>
+                <th>AWB</th>
                 <th>Destination</th>
                 <th>Products</th>
                 <th>Action</th>
@@ -261,8 +262,8 @@
 
 </div>
 
-<script src="{{ URL::asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 
 <script type="text/javascript">
 
@@ -281,7 +282,7 @@
 
               html_tbl = html_tbl+'<tr>';
               html_tbl = html_tbl+'<td>'+item.unique_suborder_id+'</td>';
-              html_tbl = html_tbl+'<td>'+item.delivery_hub+'</td>';
+              html_tbl = html_tbl+'<td>Delivery Hub: ' + item.delivery_hub + '<br/>Next Hub: ' + item.next_hub_title + '</td>';
               html_tbl = html_tbl+'<td><h4 class="uppercase">Product</h4>Title: <b>'+item.product_title+'</b><br>Quantity: <b>'+item.quantity+'</b><br>Product Category: <b>'+item.product_category+'</b></td>';
               html_tbl = html_tbl+'<td><a href="'+site_path+'remove-from-trip/'+item.trip_id+'/'+item.suborder_id+'" class="btn btn-xs red"><i class="fa fa-times"></i> Remove</a></td>';
               html_tbl = html_tbl+'</tr>';

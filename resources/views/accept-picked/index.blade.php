@@ -1,18 +1,18 @@
-@extends('layouts.appinside')
+@extends('layouts.appinside') 
 
 @section('content')
 
-    <link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('hub-order') }}">Orders</a>
+                <a href="{{ secure_url('hub-order') }}">Orders</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -42,12 +42,12 @@
 
             <div class="portlet-body util-btn-margin-bottom-5" style="overflow: hidden;">
 
-                {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+                {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
                     <?php if(!isset($_GET['sub_order_id'])){$_GET['sub_order_id'] = null;} ?>
                     <div class="col-md-4" style="margin-bottom:5px;">
                         <!-- <div class="row"> -->
-                         <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control" name="sub_order_id" id="sub_order_id" placeholder="Sub-Order ID">
+                         <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control" name="sub_order_id" id="sub_order_id" placeholder="AWB">
                         <!-- </div> -->
                     </div>
 
@@ -155,10 +155,10 @@
 
     <div class="col-md-12">
 
-        {!! Form::open(array('url' => '/accept-picked/', 'method' => 'post')) !!}
+        {!! Form::open(array('url' => secure_url('') . '/accept-picked/', 'method' => 'post')) !!}
 
             <div class="col-md-12" style="margin-bottom:5px; margin-top:10px;">
-                {!! Form::text('unique_suborder_id', null, ['class' => 'form-control focus_it', 'id' => 'remarks', 'placeholder' => 'Enter Sub-Order ID']) !!}
+                {!! Form::text('unique_suborder_id', null, ['class' => 'form-control focus_it', 'id' => 'remarks', 'placeholder' => 'Enter AWB']) !!}
             </div>
 
             <div class="form-group col-md-12">
@@ -177,7 +177,7 @@
                         <thead class="flip-content">
                             <!-- <th>Order ID</th> -->
                             <th>{!!Form::checkbox('mother_checkbox', 'value', false,array('id'=>'select_all_chk')) !!}</th>
-                            <th>Unique ID</th>
+                            <th>AWB</th>
                             <th>Picker</th>
                             <th>Picking Time</th>
                             <th>Picking Address</th>
@@ -223,7 +223,7 @@
         {!! Form::close() !!}
     </div>
 
-    <script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 
     <script type="text/javascript">
         $(document ).ready(function() {

@@ -1,4 +1,4 @@
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 <div class="row">
     <br>
 
@@ -25,7 +25,7 @@
                     @if(count($order->cart_products) == 0)
                     No Product Added Yet.
                     @endif
-                    {!! Form::model($order, array('url' => '/merchant-order/'.$order->id.'?step=complete', 'method' => 'put')) !!}
+                    {!! Form::model($order, array('url' => secure_url('') . '/merchant-order/'.$order->id.'?step=complete', 'method' => 'put')) !!}
 
                         {!! Form::hidden('as_package', null, ['class' => 'as_package']) !!}
 
@@ -124,7 +124,7 @@
 
                         &nbsp;
                         <div class="row padding-top-10">
-                            <a href="{{ URL::to('merchant-order/'.$id.'/edit?step=2') }}" class="btn default"> Back </a>
+                            <a href="{{ secure_url('merchant-order/'.$id.'/edit?step=2') }}" class="btn default"> Back </a>
                              @if(count($order->cart_products) > 0)
                             {!! Form::submit('Confirm', ['class' => 'btn green pull-right']) !!}
                             @endif
@@ -136,7 +136,7 @@
 
                 <div class="table-responsive order_products">
 
-                    {!! Form::model($order, array('url' => '/merchant-order/'.$order->id.'?step=complete', 'method' => 'put')) !!}
+                    {!! Form::model($order, array('url' => secure_url('') . '/merchant-order/'.$order->id.'?step=complete', 'method' => 'put')) !!}
 
                         {!! Form::hidden('as_package', null, ['class' => 'as_package']) !!}
                         @if(count($order->cart_products) > 0)
@@ -229,7 +229,7 @@
                         @endif
                         &nbsp;
                         <div class="row padding-top-10">
-                            <a href="{{ URL::to('merchant-order/'.$id.'/edit?step=2') }}" class="btn default"> Back </a>
+                            <a href="{{ secure_url('merchant-order/'.$id.'/edit?step=2') }}" class="btn default"> Back </a>
                             @if(count($order->cart_products) > 0)
                             {!! Form::submit('Confirm', ['class' => 'btn green pull-right']) !!}
                             @endif
@@ -243,12 +243,12 @@
         </div>
     </div>
 
-    <script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
-    <script src="{{ URL::asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
-    <script src="{{ URL::asset('assets/pages/scripts/components-date-time-pickers.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/pages/scripts/components-date-time-pickers.min.js') }}" type="text/javascript"></script>
 
-    <script src="{{ URL::asset('custom/js/date-time.js') }}" type="text/javascript"></script>
-    <script src="{{ URL::asset('custom/js/charge.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('custom/js/date-time.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('custom/js/charge.js') }}" type="text/javascript"></script>
 
     <script type="text/javascript">
 

@@ -2,13 +2,13 @@
 
 @section('content')
 
-    <link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}"
+    <link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}"
           rel="stylesheet" type="text/css"/>
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -36,7 +36,7 @@
 
             <div class="portlet-body util-btn-margin-bottom-5">
 
-                {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+                {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
                 <?php if (!isset($_GET['c_unique_id'])) {
                     $_GET['c_unique_id'] = null;
@@ -166,6 +166,7 @@
                                         $pickingQuantity += $task->quantity;
                                         break;
                                     case 2:
+                                    case 6:
                                         $deliveryQuantity += $task->quantity;
                                         break;
                                     case 4:
@@ -179,8 +180,8 @@
                             <tr>
                                 <td>{{ $consignment->consignment_unique_id or '' }}</td>
                                 <td>{{ $consignment->rider->name or '' }}</td>
-                                <td>{{ $amount_to_collect }}</td>
-                                <td>{{ $amount_collected }}</td>
+                                <td>{{ number_format($amount_to_collect) }}</td>
+                                <td>{{ number_format($amount_collected) }}</td>
                                 <td>{{ $pickingQuantity }}</td>
                                 <td>{{ $deliveryQuantity }}</td>
                                 <td>{{ $returnQuantity }}</td>
@@ -202,15 +203,15 @@
 
                                 <td>
                                     <a class="btn btn-primary btn-xs" target="_blank"
-                                       href="{{url('consignments/'.$consignment->id)}}">View</a>
+                                       href="{{secure_url('consignments/'.$consignment->id)}}">View</a>
 
                                     <?php $count = count($consignment->task); ?>
 
                                     @if($count <= 15)
                                         <a class="btn btn-info btn-xs" target="_blank"
-                                           href="{{url('common-awb-multi/'.$consignment->id)}}">All AWB</a>
+                                           href="{{secure_url('common-awb-multi/'.$consignment->id)}}">All AWB</a>
                                         <a class="btn btn-success btn-xs" target="_blank"
-                                           href="{{url('common-invoice-multi/'.$consignment->id)}}">All Invoice</a>
+                                           href="{{secure_url('common-invoice-multi/'.$consignment->id)}}">All Invoice</a>
                                     @else
 
                                         <div class="btn-group">
@@ -226,7 +227,7 @@
 
                                                 @for($i = 1; $i <= $pages; $i++)
                                                     <li><a target="_blank"
-                                                           href="{{url('common-awb-multi/'.$consignment->id.'?page='.$i)}}">
+                                                           href="{{secure_url('common-awb-multi/'.$consignment->id.'?page='.$i)}}">
                                                             Page {{ $i }} </a></li>
                                                 @endfor
 
@@ -245,7 +246,7 @@
 
                                                 @for($i = 1; $i <= $pages; $i++)
                                                     <li><a target="_blank"
-                                                           href="{{url('common-invoice-multi/'.$consignment->id.'?page='.$i)}}">
+                                                           href="{{secure_url('common-invoice-multi/'.$consignment->id.'?page='.$i)}}">
                                                             Page {{ $i }} </a></li>
                                                 @endfor
 
@@ -256,16 +257,16 @@
 
 
                                     <a class="btn btn-warning btn-xs" target="_blank"
-                                       href="{{url('v2consignment/'.$consignment->id)}}">Follow Up</a>
+                                       href="{{secure_url('v2consignment/'.$consignment->id)}}">Follow Up</a>
                                     @if ($consignment->status < 2)
-                                        {{-- <a class="btn btn-default btn-xs"  href="{{url('consignments-edit/'.$c->id)}}">Edit</a> --}}
-                                        <a class="btn btn-success btn-xs" href="{{url('consignments-start/'.$consignment->id)}}">Start</a>
+                                        {{-- <a class="btn btn-default btn-xs"  href="{{secure_url('consignments-edit/'.$c->id)}}">Edit</a> --}}
+                                        <a class="btn btn-success btn-xs" href="{{secure_url('consignments-start/'.$consignment->id)}}">Start</a>
                                         <a class="btn btn-danger btn-xs"
-                                           href="{{url('consignments-cancel/'.$consignment->id)}}">Cancel</a>
+                                           href="{{secure_url('consignments-cancel/'.$consignment->id)}}">Cancel</a>
                                     @endif
                                     @if ($consignment->status == 3)
                                         <a class="btn btn-danger btn-xs"
-                                           href="{{url('v2consignment/reconciliation/'.$consignment->id)}}">Reconciliation</a>
+                                           href="{{secure_url('v2consignment/reconciliation/'.$consignment->id)}}">Reconciliation</a>
                                     @endif
                                 </td>
 
@@ -285,8 +286,8 @@
     </div>
     </div>
 
-    <script src="{{ URL::asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
-    <script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"
+    <script src="{{ secure_asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"
             type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -300,12 +301,12 @@
 
         $(".filter-btn").click(function (e) {
             e.preventDefault();
-            $('#filter-form').attr('action', "{{ URL::to('v2consignment') }}").submit();
+            $('#filter-form').attr('action', "{{ secure_url('v2consignment') }}").submit();
         });
 
         $(".export-btn").click(function (e) {
             e.preventDefault();
-            $('#filter-form').attr('action', "{{ URL::to('v2consignment/export/xls') }}").submit();
+            $('#filter-form').attr('action', "{{ secure_url('v2consignment/export/xls') }}").submit();
         });
 
     </script>

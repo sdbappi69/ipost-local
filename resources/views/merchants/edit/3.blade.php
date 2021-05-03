@@ -14,7 +14,7 @@
             <div id="accordion3_new" class="panel-collapse collapse">
                 <div class="panel-body">
 
-                    {!! Form::open(array('url' => '/store', 'method' => 'post')) !!}
+                    {!! Form::open(array('url' => secure_url('') . '/store', 'method' => 'post')) !!}
                     <input type="hidden" name="merchant_id" value="{{$merchant->id}}">
                     <input type="hidden" name="step" value="3">
                     <input type="hidden" name="merchant_end" value="merchant">
@@ -40,10 +40,10 @@
                                 {!! Form::select('status', array('1' => 'Active','0' => 'Inactive'), null, ['class' => 'form-control js-example-basic-single', 'required' => 'required']) !!}
                             </div>
 
-                            <div class="form-group">
+<!--                            <div class="form-group">
                                 <label class="control-label">Billing Address</label>
                                 {!! Form::textarea('billing_address', null, ['class' => 'form-control', 'placeholder' => 'Type billing address', 'required' => 'required']) !!}
-                            </div>
+                            </div>-->
 
                         </div>
 
@@ -59,7 +59,7 @@
                                 {!! Form::select('store_type_id',$storetypes, null, ['class' => 'form-control js-example-basic-single', 'required' => 'required']) !!}
                             </div>
 
-                            <div class="form-group">
+<!--                            <div class="form-group">
 
                                 {!! Form::checkbox('account_synq_cod', '1', false, ['id' => 'account_synq_cod']) !!} Synq COD Charge with billing
 
@@ -82,7 +82,7 @@
                                 <label class="control-label">VAT Percentage</label>
                                 {!! Form::text('vat_percentage', 15, ['class' => 'form-control', 'placeholder' => 'VAT Percentage', 'required' => 'required', 'id' => 'vat_percentage_new']) !!}
 
-                            </div>
+                            </div>-->
 
                         </div>
 
@@ -107,7 +107,7 @@
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a class="icon-btn icon-btn-customized accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#accordion3_{{ $s->id }}">
-                            Store Id : {{ $s->store_id }} ({{ $s->title }}) <a target="_blank" class="btn btn-xs btn-success" href="{{url('/store/'.$s->id.'/edit?step=2')}}">Change Cost</a>
+                            Store Id : {{ $s->store_id }} ({{ $s->title }}) <a target="_blank" class="btn btn-xs btn-success" href="{{secure_url('/store/'.$s->id.'/edit?step=2')}}">Change Cost</a>
                             {{-- <span class="badge badge-success"> {{ $u->id }} </span> --}}
                         </a>
 
@@ -119,7 +119,7 @@
                     <div class="panel-body">
 
                        
-                        {!! Form::model($s, array('url' => '/store/'.$s->id.'?step=2', 'method' => 'put')) !!}
+                        {!! Form::model($s, array('url' => secure_url('') . '/store/'.$s->id.'?step=2', 'method' => 'put')) !!}
 
                         <input type="hidden" name="merchant_id" value="{{$merchant->id}}">
                     <input type="hidden" name="step" value="complete">
@@ -145,10 +145,10 @@
                                 {!! Form::select('status', array('1' => 'Active','0' => 'Inactive'), null, ['class' => 'form-control js-example-basic-single', 'required' => 'required']) !!}
                             </div>
 
-                            <div class="form-group">
+<!--                            <div class="form-group">
                                 <label class="control-label">Billing Address</label>
                                 {!! Form::textarea('billing_address', null, ['class' => 'form-control', 'placeholder' => 'Type billing address', 'required' => 'required']) !!}
-                            </div>
+                            </div>-->
 
                         </div>
 
@@ -164,7 +164,7 @@
                                 {!! Form::select('store_type_id',$storetypes, null, ['class' => 'form-control js-example-basic-single', 'required' => 'required']) !!}
                             </div>
 
-                            <div class="form-group">
+<!--                            <div class="form-group">
 
                                 @if($s->account_synq_cod == 0)
                                     {!! Form::checkbox('account_synq_cod', '1', false, ['id' => 'account_synq_cod']) !!} Synq COD Charge with billing
@@ -199,7 +199,7 @@
                                 <label class="control-label">VAT Percentage</label>
                                 {!! Form::text('vat_percentage', null, ['class' => 'form-control', 'placeholder' => 'VAT Percentage', 'required' => 'required', 'disabled', 'id' => 'vat_percentage']) !!}
 
-                            </div>
+                            </div>-->
 
                         </div>
 
@@ -220,8 +220,8 @@
 
             </div>
 
-            <a href="{{ URL::to('merchant') }}/{{ $merchant->id }}/edit" class="btn default"> Back </a>
-            <a href="{{ URL::to('merchant') }}" class="btn green pull-right">Complete</a>
+            <a href="{{ secure_url('merchant') }}/{{ $merchant->id }}/edit" class="btn default"> Back </a>
+            <a href="{{ secure_url('merchant') }}" class="btn green pull-right">Complete</a>
 
         </div>
 

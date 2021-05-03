@@ -6,7 +6,7 @@
 
 @section('select2JS')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
-    <script src="{!! asset('js/locations.dropdown.js') !!}"></script>
+    <script src="{!! secure_asset('js/locations.dropdown.js') !!}"></script>
 @endsection
 
 @section('content')
@@ -15,7 +15,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -38,7 +38,7 @@
                     <i class="fa fa-plus"></i> Add New Zone
                 </div>
                 <div class="panel-body collapse" id="addZone">
-                    {!! Form::open(['url' => '/zone', 'class' => 'form-horizontal']) !!}
+                    {!! Form::open(['url' => secure_url('') . '/zone', 'class' => 'form-horizontal']) !!}
 
                     <div class="form-group">
                         {!! Form::label('country_id', 'Country*', ['class' => 'col-sm-3']) !!}
@@ -97,6 +97,7 @@
                         </div>
                     </div>
 
+                    <script src="https://maps.googleapis.com/maps/api/js"></script>
                     {{-- <input type="text" id="map-search" style="margin-top: 10px; height: 25px; width: 400px;"> --}}
                     <div id="map_canvas" class="col-md-12" style="height: 450px; margin: 0.6em;"></div>
 
@@ -121,7 +122,7 @@
                 </div>
                 <div class="panel-body">
 
-                    {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+                    {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
                         <?php if(!isset($_GET['filter_name'])){$_GET['filter_name'] = null;} ?>
                         <div class="col-md-4" style="margin-bottom:5px;">
@@ -164,17 +165,17 @@
                             @foreach($zones as $zone)
                                 <tr>
                                     <td>{!! $zone->name !!}</td>
-                                    <td class="text-warning">{!! $zone->city->name !!}</td>
-                                    <td class="text-primary">{!! $zone->city->state->name !!}</td>
-                                    <td class="text-danger">{!! $zone->city->state->country->name !!}</td>
+                                    <td class="text-warning">{!! $zone->city->name ?? '' !!}</td>
+                                    <td class="text-primary">{!! $zone->city->state->name ?? '' !!}</td>
+                                    <td class="text-danger">{!! $zone->city->state->country->name ?? '' !!}</td>
                                     <td>
                                         {!! ($zone->status) ? '<span class="label label-success">Active</span>' : '<span class="label label-default">Inactive</span>' !!}
                                     </td>
                                     <td>
-                                        <a href="{!! route('zone.edit', $zone->id) !!}" class="btn btn-sm btn-info">
+                                        <a href="{!! secure_url('') . "/zone/$zone->id/edit" !!}" class="btn btn-sm btn-info">
                                             <i class="fa fa-pencil"></i> Edit
                                         </a>
-                                        <a href="{!! route('zone.show', $zone->id) !!}" class="btn btn-sm btn-info">
+                                        <a href="{!! secure_url('') . "/zone/$zone->id" !!}" class="btn btn-sm btn-info">
                                             <i class="fa fa-eye"></i> view
                                         </a>
                                     </td>
@@ -184,7 +185,7 @@
                         </tbody>
                     </table>
                     <div class="pagination">
-                        {!! $zones->render() !!}
+                        {{ $zones->appends($_REQUEST)->render() }}
                     </div>
                 </div>
             </div>
@@ -198,46 +199,79 @@
         });
     </script>
 
-{{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM&libraries=drawing&callback=initMap&language=en&sensor=true" --}}
-
-
     <script>
-        function initMap() {
-          var map = new google.maps.Map(document.getElementById('map_canvas'), {
-            center: {lat: 36.1911401, lng: 44.0090357},
-            zoom: 8,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-          });
+        var bounds = new google.maps.LatLngBounds();
 
-          var drawingManager = new google.maps.drawing.DrawingManager({
+        var geocoder;
+        var map;
+        var polygons = [];
+
+        function initialize() {
+            map = new google.maps.Map(document.getElementById('map_canvas'), {
+                center: {lat: 36.1911401, lng: 44.0090357},
+                zoom: 8,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+            });
+
+            var drawingManager = new google.maps.drawing.DrawingManager({
                 polygonOptions: {
-                  fillOpacity: 0.2,
-                  strokeWeight: 3,
-                  editable: true,
-                  draggable: true,
-                  zIndex: 1
+                    fillOpacity: 0.2,
+                    strokeWeight: 3,
+                    strokeColor: '#FF0000',
+                    editable: true,
+                    draggable: true,
+                    zIndex: 1
                 },
                 map: map,
                 drawingControl: false,
-              });
-
-          drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
-
-          google.maps.event.addListener(drawingManager, 'overlaycomplete', function (event) {
-            // When draw mode is set to null you can edit the polygon you just drawed
-            getCoordinates(event.overlay.getPath());
-            drawingManager.setDrawingMode(null);
-            google.maps.event.addListener(event.overlay.getPath(), 'remove_at', function(){
-              getCoordinates(event.overlay.getPath());
             });
-            google.maps.event.addListener(event.overlay.getPath(), 'set_at', function(){
-              getCoordinates(event.overlay.getPath());
+            drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+            google.maps.event.addListener(drawingManager, 'overlaycomplete', function (event) {
+                // When draw mode is set to null you can edit the polygon you just drawed
+                getCoordinates(event.overlay.getPath());
+                drawingManager.setDrawingMode(null);
+                google.maps.event.addListener(event.overlay.getPath(), 'remove_at', function () {
+                    getCoordinates(event.overlay.getPath());
+                });
+                google.maps.event.addListener(event.overlay.getPath(), 'set_at', function () {
+                    getCoordinates(event.overlay.getPath());
+                });
+                google.maps.event.addListener(event.overlay.getPath(), 'insert_at', function () {
+                    getCoordinates(event.overlay.getPath());
+                });
             });
-            google.maps.event.addListener(event.overlay.getPath(), 'insert_at', function(){
-              getCoordinates(event.overlay.getPath());
-            });                
-          });
+
+            // start multi polygon
+                    @if(count($activeZones))
+                    @foreach($activeZones as $index => $activeZone)
+                <?php
+                $coordinates = explode(",",$activeZone->map->coordinates);
+                ?>
+            var active_zone_{{$index}} = [
+                        @foreach($coordinates as $coid => $coordinate)
+                        new google.maps.LatLng({{str_replace(" ",", ",$coordinate)}}) <?php if($coid < (count($coordinates) - 1)){echo ',';} ?>
+                        @endforeach
+                ];
+            polygons.push(new google.maps.Polygon({
+                path: active_zone_{{$index}},
+                geodesic: false,
+                strokeColor: '#2F4F4F',
+                strokeOpacity: 1.0,
+                strokeWeight: 1,
+                map: map
+            }));
+            @endforeach
+            @endif
+            // end multi polygon
+            for (var j = 0; j < polygons.length; j++) {
+                for (var i = 0; i < polygons[j].getPath().getLength(); i++) {
+                    bounds.extend(polygons[j].getPath().getAt(i));
+                }
+            }
+
+            map.fitBounds(bounds);
         }
+        google.maps.event.addDomListener(window, "load", initialize);
 
         function getCoordinates(vertices){
           // var vertices = drawingManager.overlay.getPath();
@@ -262,6 +296,6 @@
         }
     </script>
 
-    <script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&libraries=drawing&callback=initMap&language=en&sensor=true&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
+    <script src="https://maps.google.com/maps/api/js?libraries=places&region=uk&libraries=drawing&callback=initMap&language=en&sensor=true&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
 
 @endsection

@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('trip') }}">Trips</a>
+                <a href="{{ secure_url('trip') }}">Trips</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -26,7 +26,7 @@
     <!-- END PAGE TITLE-->
     <!-- END PAGE HEADER-->
 
-            {!! Form::open(array('url' => '/trip', 'method' => 'post')) !!}
+            {!! Form::open(array('url' => secure_url('') . '/trip', 'method' => 'post')) !!}
 
                 <div class="row">
 
@@ -77,7 +77,7 @@
 
     </div>
 
-    <script src="{{ URL::asset('custom/js/vehicle-list.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('custom/js/vehicle-list.js') }}" type="text/javascript"></script>
 
     <script type="text/javascript">
 

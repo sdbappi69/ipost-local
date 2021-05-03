@@ -119,7 +119,7 @@
                         <li>
                             <a href="#">
                                 <span class="photo">
-                                    <img src="{{URL::asset('assetslayouts/layout3/img/avatar2.jpg')}}" class="img-circle" alt=""> </span>
+                                    <img src="{{secure_asset('assetslayouts/layout3/img/avatar2.jpg')}}" class="img-circle" alt=""> </span>
                                 <span class="subject">
                                     <span class="from"> Lisa Wong </span>
                                     <span class="time">Just Now </span>
@@ -130,7 +130,7 @@
                         <li>
                             <a href="#">
                                 <span class="photo">
-                                    <img src="{{URL::asset('assetslayouts/layout3/img/avatar3.jpg')}}" class="img-circle" alt=""> </span>
+                                    <img src="{{secure_asset('assetslayouts/layout3/img/avatar3.jpg')}}" class="img-circle" alt=""> </span>
                                 <span class="subject">
                                     <span class="from"> Richard Doe </span>
                                     <span class="time">16 mins </span>
@@ -141,7 +141,7 @@
                         <li>
                             <a href="#">
                                 <span class="photo">
-                                    <img src="{{URL::asset('assetslayouts/layout3/img/avatar1.jpg')}}" class="img-circle" alt=""> </span>
+                                    <img src="{{secure_asset('assetslayouts/layout3/img/avatar1.jpg')}}" class="img-circle" alt=""> </span>
                                 <span class="subject">
                                     <span class="from"> Bob Nilson </span>
                                     <span class="time">2 hrs </span>
@@ -152,7 +152,7 @@
                         <li>
                             <a href="#">
                                 <span class="photo">
-                                    <img src="{{URL::asset('assetslayouts/layout3/img/avatar2.jpg')}}" class="img-circle" alt=""> </span>
+                                    <img src="{{secure_asset('assetslayouts/layout3/img/avatar2.jpg')}}" class="img-circle" alt=""> </span>
                                 <span class="subject">
                                     <span class="from"> Lisa Wong </span>
                                     <span class="time">40 mins </span>
@@ -163,7 +163,7 @@
                         <li>
                             <a href="#">
                                 <span class="photo">
-                                    <img src="{{URL::asset('assetslayouts/layout3/img/avatar3.jpg')}}" class="img-circle" alt=""> </span>
+                                    <img src="{{secure_asset('assetslayouts/layout3/img/avatar3.jpg')}}" class="img-circle" alt=""> </span>
                                 <span class="subject">
                                     <span class="from"> Richard Doe </span>
                                     <span class="time">46 mins </span>
@@ -297,12 +297,12 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-default">
                 <li>
-                    <a href="{{ URL::to('profile') }}">
+                    <a href="{{ secure_url('profile') }}">
                         <i class="icon-user"></i> My Profile </a>
                 </li>
                 <li class="divider"> </li>
                 <li>
-                    <a href="{{ URL::to('logout') }}">
+                    <a href="{{ secure_url('logout') }}">
                         <i class="icon-key"></i> Sign Out </a>
                 </li>
             </ul>
@@ -311,7 +311,7 @@
         <!-- BEGIN QUICK SIDEBAR TOGGLER -->
         <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
         <li class="dropdown dropdown-quick-sidebar-toggler">
-            <a href="{{ URL::to('logout') }}" class="dropdown-toggle">
+            <a href="{{ secure_url('logout') }}" class="dropdown-toggle">
                 <i class="icon-logout"></i>
             </a>
         </li>

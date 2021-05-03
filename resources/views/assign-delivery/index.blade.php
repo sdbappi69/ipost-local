@@ -6,7 +6,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -25,7 +25,7 @@
     <div class="row">
 
         <div class="col-md-12">
-            {!! Form::open(array('url' => '/assign-delivery/', 'method' => 'post')) !!}
+            {!! Form::open(array('url' => secure_url('') . '/assign-delivery/', 'method' => 'post')) !!}
 
                 <div class="form-group col-md-10">
 
@@ -99,7 +99,7 @@
                                 <br>
                             </div>
 
-                            {!! Form::open(array('url' => '/assign-delivery/'.$sub_order->id, 'method' => 'put')) !!}
+                            {!! Form::open(array('url' => secure_url('') . '/assign-delivery/'.$sub_order->id, 'method' => 'put')) !!}
                                 {!! Form::hidden('sub_order_id', $sub_order->id, ['class' => 'form-control', 'required' => 'required']) !!}
                                 {!! Form::hidden('order_id', $sub_order->order->id, ['class' => 'form-control', 'required' => 'required']) !!}
                                 <div class="form-group">
@@ -134,7 +134,7 @@
                             <div class="modal-body">
                                 <div style="padding: 15px;width: 2.5in; margin: 0 auto;" id="{{ $sub_order->unique_suborder_id }}">
                                   <div style='text-align: center;'>
-                                    <img src="{{URL::asset('assets/pages/img/login/login-invert.png')}}">
+                                    <img src="{{secure_asset('assets/pages/img/login/login-invert.png')}}">
                                     <br>300/5/A Hatirpool, Dhaka
                                     <br>Website: www.biddyut.com
                                     <br><br>
@@ -301,10 +301,10 @@
     </div>
 
     <div class="pagination pull-right">
-        {{ $sub_orders->render() }}
+        {{ $sub_orders->appends($_REQUEST)->render() }}
     </div>
 
-    <script src="{{ URL::asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
 
     <script type="text/javascript">
         $(document ).ready(function() {

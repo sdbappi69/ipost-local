@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('hub-order') }}">Orders</a>
+                <a href="{{ secure_url('hub-order') }}">Orders</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>

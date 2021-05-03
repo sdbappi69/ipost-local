@@ -41,7 +41,7 @@
                 <!-- </li> -->
 
                 <li class="nav-item start dashboard">
-                    <a href="{{ URL::to('home') }}">
+                    <a href="{{ secure_url('home') }}">
                         <i class="icon-home"></i>
                         <span class="title">Dashboard</span>
                         <!-- <span class="selected"></span> -->
@@ -61,7 +61,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item verify-orders">
-                        <a href="{{ URL::to('verify-order') }}" class="nav-link ">
+                        <a href="{{ secure_url('verify-order') }}" class="nav-link ">
                             <span class="title">Verify Orders</span>
                         </a>
                     </li>
@@ -69,7 +69,7 @@
             </li> -->
 
             <li class="nav-item start orders">
-                <a href="{{ URL::to('order') }}">
+                <a href="{{ secure_url('order') }}">
                     <i class="fa fa-cube"></i>
                     <span class="title">Orders</span>
                 </a>
@@ -80,19 +80,19 @@
             </li>
 
             <li class="nav-item product-category">
-                <a href="{{ URL::to('product-category') }}" class="nav-link nav-toggle">
+                <a href="{{ secure_url('product-category') }}" class="nav-link nav-toggle">
                     <i class="fa fa-square"></i>
                     <span class="title">Product Categories</span>
                     <!-- <span class="arrow"></span> -->
                 </a>
                 <!-- <ul class="sub-menu">
                     <li class="nav-item product-category-add">
-                        <a href="{{ URL::to('product-category/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('product-category/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
                     <li class="nav-item product-category-manage">
-                        <a href="{{ URL::to('product-category') }}" class="nav-link ">
+                        <a href="{{ secure_url('product-category') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
@@ -104,14 +104,14 @@
             </li>
 
             <li class="nav-item start merchants merchant-manage">
-                <a href="{{ URL::to('merchant') }}">
+                <a href="{{ secure_url('merchant') }}">
                     <i class="fa fa-child"></i>
                     <span class="title">Merchants</span>
                 </a>
             </li>
 
             <li class="nav-item start stores store-manage">
-                <a href="{{ URL::to('store') }}">
+                <a href="{{ secure_url('store') }}">
                     <i class="fa fa-shopping-cart"></i>
                     <span class="title">Stores</span>
                 </a>
@@ -122,14 +122,14 @@
             </li>
 
             <li class="nav-item start vehicles vehicle">
-                <a href="{{ URL::to('vehicle') }}">
+                <a href="{{ secure_url('vehicle') }}">
                     <i class="fa fa-truck"></i>
                     <span class="title">Vehicles</span>
                 </a>
             </li>
 
             <li class="nav-item drivers">
-                <a href="{{ URL::to('driver') }}">
+                <a href="{{ secure_url('driver') }}">
                     <i class="fa fa-hand-rock-o"></i>
                     <span class="title">Drivers</span>
                 </a>
@@ -140,7 +140,7 @@
             </li>
 
             <li class="nav-item hubs hub-manage">
-                <a href="{{ URL::to('hub') }}">
+                <a href="{{ secure_url('hub') }}">
                     <i class="fa fa-square"></i>
                     <span class="title">Hubs</span>
                 </a>
@@ -151,14 +151,14 @@
             </li>
 
             <li class="nav-item picking-times picking-times-manage">
-                <a href="{{ URL::to('picking-time') }}">
+                <a href="{{ secure_url('picking-time') }}">
                     <i class="fa fa-clock-o"></i>
                     <span class="title">Picking Times</span>
                 </a>
             </li>
 
             <li class="nav-item charge-model">
-                <a href="{{ URL::to('charge-model') }}">
+                <a href="{{ secure_url('charge-model') }}">
                     <i class="fa fa-balance-scale"></i>
                     <span class="title">Charge Models</span>
                 </a>

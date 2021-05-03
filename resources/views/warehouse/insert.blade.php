@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('warehouse') }}">Pick-up location</a>
+                <a href="{{ secure_url('warehouse') }}">Pick-up location</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -28,7 +28,7 @@
 
     <div class="mt-element-step">
 
-            {!! Form::open(array('url' => '/warehouse', 'method' => 'post')) !!}
+            {!! Form::open(array('url' => secure_url('') . '/warehouse', 'method' => 'post')) !!}
 
                 <div class="row">
 
@@ -74,7 +74,7 @@
  --}}
                         <div class="form-group">
                             <label class="control-label">Select Zone</label>
-                            {!! Form::select('zone_id', array(''=>'Select Zone'), null, ['class' => 'form-control js-example-basic-single js-country', 'required' => 'required', 'id' => 'zone_id']) !!}
+                            {!! Form::select('zone_id', array(''=>'Select Zone')+$zones, null, ['class' => 'form-control js-example-basic-single js-country', 'required' => 'required', 'id' => 'zone_id']) !!}
                         </div>
 
                         <div class="form-group">
@@ -129,8 +129,8 @@
 
 {{--     <script src="
 https://maps.google.com/maps/api/js?key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM&callback=initMap&sensor=false" type="text/javascript"></script>
-    <script src="{{ URL::asset('assets/global/plugins/gmaps/gmaps.min.js') }}" type="text/javascript"></script>
-    <script src="{{ URL::asset('custom/js/maps-google-geo.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/plugins/gmaps/gmaps.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('custom/js/maps-google-geo.js') }}" type="text/javascript"></script>
  --}}
     <script type="text/javascript">
 
@@ -181,10 +181,10 @@ https://maps.google.com/maps/api/js?key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM&
         // });
 
     </script>
-<script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
+<script src="https://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
 <script>
     $(function () {
-      var image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
+      var image = 'https://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
           bounds = new google.maps.LatLngBounds();
           mapOptions = {
             mapTypeId: google.maps.MapTypeId.ROADMAP,

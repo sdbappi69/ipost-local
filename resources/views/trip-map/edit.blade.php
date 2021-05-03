@@ -15,7 +15,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -71,7 +71,7 @@
                                             <i class="fa fa-angle-up"></i>
                                         </a>
                                     @else
-                                        {!! Form::model($trip_map, array('url' => '/trip-map/'.$trip_map->id, 'method' => 'put')) !!}
+                                        {!! Form::model($trip_map, array('url' => secure_url('') . '/trip-map/'.$trip_map->id, 'method' => 'put')) !!}
                                             {!! Form::hidden('hub_priority', 'up', ['required' => 'required']) !!}
                                             <button type="submit" class="btn btn-icon-only blue">
                                                 <i class="fa fa-angle-up"></i>
@@ -83,7 +83,7 @@
                                             <i class="fa fa-angle-down"></i>
                                         </a>
                                     @else
-                                        {!! Form::model($trip_map, array('url' => '/trip-map/'.$trip_map->id, 'method' => 'put')) !!}
+                                        {!! Form::model($trip_map, array('url' => secure_url('') . '/trip-map/'.$trip_map->id, 'method' => 'put')) !!}
                                             {!! Form::hidden('hub_priority', 'down', ['required' => 'required']) !!}
                                             <button type="submit" class="btn btn-icon-only blue">
                                                 <i class="fa fa-angle-down"></i>
@@ -91,7 +91,7 @@
                                         {{ Form::close() }}
                                     @endIf
 
-                                    {{ Form::open(array('url' => 'trip-map/'.$trip_map->id)) }}
+                                    {{ Form::open(array('url' => secure_url('') . '/trip-map/'.$trip_map->id)) }}
                                         {{ Form::hidden('_method', 'DELETE') }}
                                         <button type="submit" class="btn btn-icon-only red" data-toggle="confirmation" data-original-title="Are you sure ?"><i class="fa fa-times"></i></button>
                                     {{ Form::close() }}
@@ -114,7 +114,7 @@
                                 <i class="fa fa-plus"></i>
                             </a>
                             <div id="add-panel">
-                                {!! Form::open(array('url' => '/trip-map', 'method' => 'post')) !!}
+                                {!! Form::open(array('url' => secure_url('') . '/trip-map', 'method' => 'post')) !!}
                                     <div class="col-md-12" style="margin-bottom:5px;">
 
                                         {!! Form::hidden('start_hub_id', $start_hub->id, ['required' => 'required']) !!}

@@ -6,14 +6,14 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
             @if(isset($_GET['store_id'])&&$_GET['store_id'] != '')
-            <a href="{{ URL::to('store/'.$_GET['store_id'].'/edit?step=2') }}">Category</a>
+            <a href="{{ secure_url('store/'.$_GET['store_id'].'/edit?step=2') }}">Category</a>
             @else
-            <a href="{{ URL::to('product-category') }}">Category</a>
+            <a href="{{ secure_url('product-category') }}">Category</a>
             @endIf
             <i class="fa fa-circle"></i>
         </li>

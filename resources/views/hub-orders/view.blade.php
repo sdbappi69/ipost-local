@@ -6,11 +6,11 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="{{ URL::to('hub-order') }}">Orders</a>
+            <a href="{{ secure_url('hub-order') }}">Orders</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -31,7 +31,7 @@
         <div class="col-md-3 mt-step-col first @if($order->order_status >= 1) done @elseIf($order->order_status == 1) active @endIf ">
             <div class="mt-step-number bg-white">1</div>
             <div class="mt-step-title uppercase font-grey-cascade">Order</div>
-            <div class="mt-step-content font-grey-cascade">Store: <a target="blank" href="{{ URL::to('store') }}/{{ $order->store->id }}">{{ $order->store->store_id }}</a></div>
+            <div class="mt-step-content font-grey-cascade">Store: <a target="blank" href="{{ secure_url('store') }}/{{ $order->store->id }}">{{ $order->store->store_id }}</a></div>
         </div>
         <div class="col-md-3 mt-step-col @if($order->order_status >= 2) done @elseIf($order->order_status == 2) active @endIf ">
             <div class="mt-step-number bg-white">2</div>
@@ -40,7 +40,7 @@
                 @if($order->hub_id == null)                
                 A rider is assigned
                 @else
-                Responsible hub: <a target="blank" href="{{ URL::to('hub') }}/{{ $order->hub->id }}">{{ $order->hub->title }}</a>
+                Responsible hub: <a target="blank" href="{{ secure_url('hub') }}/{{ $order->hub->id }}">{{ $order->hub->title }}</a>
                 @endIf
             </div>
         </div>
@@ -51,7 +51,7 @@
                 @if($order->hub_id == null)
                 Rider On The Way
                 @else
-                Responsible hub: <a target="blank" href="{{ URL::to('hub') }}/{{ $order->hub->id }}">{{ $order->hub->title }}</a>
+                Responsible hub: <a target="blank" href="{{ secure_url('hub') }}/{{ $order->hub->id }}">{{ $order->hub->title }}</a>
                 @endIf
             </div>
         </div>
@@ -93,7 +93,7 @@
             <div class="mt-step-title uppercase font-grey-cascade">Destination</div>
             <div class="mt-step-content font-grey-cascade">
                 @if($order->order_status >= 7)
-                Responsible hub: <a target="blank" href="{{ URL::to('hub') }}/{{ $order->delivery_zone->hub->id }}">{{ $order->delivery_zone->hub->title }}</a>
+                Responsible hub: <a target="blank" href="{{ secure_url('hub') }}/{{ $order->delivery_zone->hub->id }}">{{ $order->delivery_zone->hub->title }}</a>
                 @else
                 Received at destination hub
                 @endIf
@@ -104,7 +104,7 @@
             <div class="mt-step-title uppercase font-grey-cascade">Assign Delivery</div>
             <div class="mt-step-content font-grey-cascade">
                 @if($order->order_status >= 8)
-                Responsible hub: <a target="blank" href="{{ URL::to('hub') }}/{{ $order->delivery_zone->hub->id }}">{{ $order->delivery_zone->hub->title }}</a>
+                Responsible hub: <a target="blank" href="{{ secure_url('hub') }}/{{ $order->delivery_zone->hub->id }}">{{ $order->delivery_zone->hub->title }}</a>
                 @else
                 Delivery-man assigned
                 @endIf
@@ -115,7 +115,7 @@
             <div class="mt-step-title uppercase font-grey-cascade">Rider Confirmed</div>
             <div class="mt-step-content font-grey-cascade">
                 @if($order->order_status >= 9)
-                Responsible hub: <a target="blank" href="{{ URL::to('hub') }}/{{ $order->delivery_zone->hub->id }}">{{ $order->delivery_zone->hub->title }}</a>
+                Responsible hub: <a target="blank" href="{{ secure_url('hub') }}/{{ $order->delivery_zone->hub->id }}">{{ $order->delivery_zone->hub->title }}</a>
                 @else
                 Rider On The Way
                 @endIf
@@ -126,7 +126,7 @@
             <div class="mt-step-title uppercase font-grey-cascade">Complete</div>
             <div class="mt-step-content font-grey-cascade">
                 @if($order->order_status >= 9)
-                Responsible hub: <a target="blank" href="{{ URL::to('hub') }}/{{ $order->delivery_zone->hub->id }}">{{ $order->delivery_zone->hub->title }}</a>
+                Responsible hub: <a target="blank" href="{{ secure_url('hub') }}/{{ $order->delivery_zone->hub->id }}">{{ $order->delivery_zone->hub->title }}</a>
                 @else
                 Process Complete
                 @endIf
@@ -188,7 +188,7 @@
                     <div class="table-responsive">
                         <table class="table">
                             <thead class="flip-content">
-                                <th>Unique Id</th>
+                                <th>AWB</th>
                                 <th>Detail</th>
                                 <th>Status</th>
                                 <th>History</th>
@@ -462,10 +462,10 @@
                                                                                     <td>Location</td>
                                                                                     <td>
                                                                                     @if($row->product->pTask->start_lat != null && $row->product->pTask->start_long != null)
-                                                                                            <a target="_blank" class="btn default" href="{{url('maps/'.$row->product->pTask->start_lat.'/'.$row->product->pTask->start_long)}}">Here</a> to
+                                                                                            <a target="_blank" class="btn default" href="{{secure_url('maps/'.$row->product->pTask->start_lat.'/'.$row->product->pTask->start_long)}}">Here</a> to
                                                                                         @endIf
                                                                                         @if($row->product->pTask->end_lat != null && $row->product->pTask->end_long != null)
-                                                                                            <a target="_blank" class="btn default" href="{{url('maps/'.$row->product->pTask->end_lat.'/'.$row->product->pTask->end_long)}}">Here</a>
+                                                                                            <a target="_blank" class="btn default" href="{{secure_url('maps/'.$row->product->pTask->end_lat.'/'.$row->product->pTask->end_long)}}">Here</a>
                                                                                         @endIf
                                                                                     </td>
                                                                                 </tr>
@@ -590,10 +590,10 @@
                                                                                 <td>Location</td>
                                                                                 <td>
                                                                                 @if($row->dTask->start_lat != null && $row->dTask->start_long != null)
-                                                                                        <a target="_blank" class="btn default" href="{{url('maps/'.$row->dTask->start_lat.'/'.$row->dTask->start_long)}}">Here</a> to
+                                                                                        <a target="_blank" class="btn default" href="{{secure_url('maps/'.$row->dTask->start_lat.'/'.$row->dTask->start_long)}}">Here</a> to
                                                                                     @endIf
                                                                                     @if($row->dTask->end_lat != null && $row->dTask->end_long != null)
-                                                                                        <a target="_blank" class="btn default" href="{{url('maps/'.$row->dTask->end_lat.'/'.$row->dTask->end_long)}}">Here</a>
+                                                                                        <a target="_blank" class="btn default" href="{{secure_url('maps/'.$row->dTask->end_lat.'/'.$row->dTask->end_long)}}">Here</a>
                                                                                     @endIf
                                                                                 </td>
                                                                             </tr>
@@ -718,10 +718,10 @@
                                                                                     <td>Location</td>
                                                                                     <td>
                                                                                     @if($row->product->pTask->start_lat != null && $row->product->pTask->start_long != null)
-                                                                                            <a target="_blank" class="btn default" href="{{url('maps/'.$row->product->pTask->start_lat.'/'.$row->product->pTask->start_long)}}">Here</a> to
+                                                                                            <a target="_blank" class="btn default" href="{{secure_url('maps/'.$row->product->pTask->start_lat.'/'.$row->product->pTask->start_long)}}">Here</a> to
                                                                                         @endIf
                                                                                         @if($row->product->pTask->end_lat != null && $row->product->pTask->end_long != null)
-                                                                                            <a target="_blank" class="btn default" href="{{url('maps/'.$row->product->pTask->end_lat.'/'.$row->product->pTask->end_long)}}">Here</a>
+                                                                                            <a target="_blank" class="btn default" href="{{secure_url('maps/'.$row->product->pTask->end_lat.'/'.$row->product->pTask->end_long)}}">Here</a>
                                                                                         @endIf
                                                                                     </td>
                                                                                 </tr>

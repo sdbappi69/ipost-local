@@ -16,42 +16,42 @@
     <meta content="" name="R&D, SSL Wireless" />
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
-    <link href="{{ URL::asset('assets/global/plugins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ URL::asset('assets/global/plugins/simple-line-icons/simple-line-icons.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ URL::asset('assets/global/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ URL::asset('assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/simple-line-icons/simple-line-icons.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- END GLOBAL MANDATORY STYLES -->
     <!-- BEGIN PAGE LEVEL PLUGINS -->
-    <link href="{{ URL::asset('assets/global/plugins/datatables/datatables.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ URL::asset('assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/datatables/datatables.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css') }}" rel="stylesheet" type="text/css" />
 
-    <link href="{{ URL::asset('assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ URL::asset('assets/global/plugins/morris/morris.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ URL::asset('assets/global/plugins/bootstrap-toastr/toastr.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/morris/morris.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/bootstrap-toastr/toastr.min.css') }}" rel="stylesheet" type="text/css" />
 
-    <link href="{{ URL::asset('assets/global/plugins/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- END PAGE LEVEL PLUGINS -->
     <!-- BEGIN THEME GLOBAL STYLES -->
-    <link href="{{ URL::asset('assets/global/css/components.min.css') }}" rel="stylesheet" id="style_components" type="text/css" />
-    <link href="{{ URL::asset('assets/global/css/plugins.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/css/components.min.css') }}" rel="stylesheet" id="style_components" type="text/css" />
+    <link href="{{ secure_asset('assets/global/css/plugins.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- END THEME GLOBAL STYLES -->
     <!-- BEGIN THEME LAYOUT STYLES -->
-    <link href="{{ URL::asset('assets/layouts/layout/css/layout.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ URL::asset('assets/layouts/layout/css/themes/darkblue.min.css') }}" rel="stylesheet" type="text/css" id="style_color" />
-    <link href="{{ URL::asset('assets/layouts/layout/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/layouts/layout/css/layout.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/layouts/layout/css/themes/darkblue.min.css') }}" rel="stylesheet" type="text/css" id="style_color" />
+    <link href="{{ secure_asset('assets/layouts/layout/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- END THEME LAYOUT STYLES -->
     <link rel="shortcut icon" href="favicon.ico" />
 
     <!-- Custom CSS -->
-    <!-- <link href="{{ URL::asset('custom/css/theming_biddyut.css') }}" rel="stylesheet" type="text/css" /> -->
-    <link href="{{ URL::asset('custom/css/animate.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ URL::asset('custom/css/common.css') }}" rel="stylesheet" type="text/css" />
+    <!-- <link href="{{ secure_asset('custom/css/theming_biddyut.css') }}" rel="stylesheet" type="text/css" /> -->
+    <link href="{{ secure_asset('custom/css/animate.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('custom/css/common.css') }}" rel="stylesheet" type="text/css" />
 
     @yield('select2CSS')
 
     <!-- jQuery on Top -->
-    <script src="{{ URL::asset('assets/global/plugins/jquery.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/plugins/jquery.min.js') }}" type="text/javascript"></script>
 </head>
 <!-- END HEAD -->
 
@@ -63,8 +63,8 @@
             <div class="page-header-inner ">
                 <!-- BEGIN LOGO -->
                 <div class="page-logo">
-                    <a href="{{ URL::to('home') }}">
-                        <img src="{{URL::asset('assets/layouts/layout/img/logo.png')}}" alt="logo" class="logo-default" /> </a>
+                    <a href="{{ secure_url('home') }}">
+                        <img src="{{secure_asset('assets/layouts/layout/img/logo.png')}}" alt="logo" class="logo-default" /> </a>
                         <div class="menu-toggler sidebar-toggler">
                             <span></span>
                         </div>
@@ -200,58 +200,58 @@
             <!-- END FOOTER -->
         </div>
         <!--[if lt IE 9]>
-<script src="{{ URL::asset('assets/global/plugins/respond.min.js') }}"></script>
-<script src="{{ URL::asset('assets/global/plugins/excanvas.min.js') }}"></script>
+<script src="{{ secure_asset('assets/global/plugins/respond.min.js') }}"></script>
+<script src="{{ secure_asset('assets/global/plugins/excanvas.min.js') }}"></script>
 <![endif]-->
 <!-- BEGIN CORE PLUGINS -->
-<script src="{{ URL::asset('assets/global/plugins/bootstrap/js/bootstrap.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/js.cookie.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/jquery.blockui.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap/js/bootstrap.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/js.cookie.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/jquery.blockui.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}" type="text/javascript"></script>
 <!-- END CORE PLUGINS -->
 <!-- BEGIN PAGE LEVEL PLUGINS -->
-<script src="{{ URL::asset('assets/global/plugins/moment.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/morris/morris.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/moment.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/morris/morris.min.js') }}" type="text/javascript"></script>
 
-<script src="{{ URL::asset('assets/global/plugins/bootbox/bootbox.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootbox/bootbox.min.js') }}" type="text/javascript"></script>
 
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-toastr/toastr.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-toastr/toastr.min.js') }}" type="text/javascript"></script>
 
-<script src="{{ URL::asset('assets/global/scripts/datatable.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/datatables/datatables.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/pages/scripts/table-datatables-responsive.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/scripts/datatable.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/datatables/datatables.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/pages/scripts/table-datatables-responsive.min.js') }}" type="text/javascript"></script>
 
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-confirmation/bootstrap-confirmation.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-confirmation/bootstrap-confirmation.min.js') }}" type="text/javascript"></script>
 
-<script src="{{ URL::asset('assets/global/plugins/select2/js/select2.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/select2/js/select2.min.js') }}" type="text/javascript"></script>
 
 <!-- BEGIN PAGE LEVEL PLUGINS -->
-<script src="{{ URL::asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
-{{-- <script src="{{ URL::asset('assets/pages/scripts/dashboard.min.js') }}" type="text/javascript"></script> --}}
+<script src="{{ secure_asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
+{{-- <script src="{{ secure_asset('assets/pages/scripts/dashboard.min.js') }}" type="text/javascript"></script> --}}
 <!-- END PAGE LEVEL SCRIPTS -->
 <!-- BEGIN THEME LAYOUT SCRIPTS -->
-<script src="{{ URL::asset('assets/layouts/layout/scripts/layout.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/layouts/layout/scripts/demo.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/layouts/global/scripts/quick-sidebar.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/layouts/layout/scripts/layout.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/layouts/layout/scripts/demo.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/layouts/global/scripts/quick-sidebar.min.js') }}" type="text/javascript"></script>
 <!-- END THEME LAYOUT SCRIPTS -->
 
 <!-- BEGIN PAGE LEVEL PLUGINS -->
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}" type="text/javascript"></script>
 
-<script src="{{ URL::asset('assets/pages/scripts/components-date-time-pickers.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/pages/scripts/components-date-time-pickers.min.js') }}" type="text/javascript"></script>
 
-<script src="{{ URL::asset('assets/pages/scripts/ui-modals.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/pages/scripts/ui-modals.min.js') }}" type="text/javascript"></script>
 
 <!-- Custom JS -->
 <script type="text/javascript">
-    var site_path = "{{ url('/') }}"+"/";
+    var site_path = "{{ secure_url('/') }}"+"/";
 </script>
-<script src="{{ URL::asset('custom/js/highlight-nav.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('custom/js/location-list.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('custom/js/highlight-nav.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('custom/js/location-list.js') }}" type="text/javascript"></script>
 
 @if (Session::has('inventory'))
 <script type="text/javascript">

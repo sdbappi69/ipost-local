@@ -6,11 +6,11 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="{{ URL::to('hub') }}">Merchant bank Accounts</a>
+            <a href="{{ secure_url('hub') }}">Merchant bank Accounts</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -27,7 +27,7 @@
 <!-- END PAGE HEADER-->
 
 
-{!! Form::model($merchant_bank_account, array('url' => '/merchant-bank-accounts/'.$merchant_bank_account->id, 'method' => 'put')) !!}
+{!! Form::model($merchant_bank_account, array('url' => secure_url('') . '/merchant-bank-accounts/'.$merchant_bank_account->id, 'method' => 'put')) !!}
 <div class="row">
 
     @include('partials.errors')
@@ -75,7 +75,7 @@ event.preventDefault();
         var merchant_id =  $("#merchant_id").val();
 
         if(merchant_id != ''){
-           $.get('{{ url('get-store-for-merchant-bank-accounts') }}?merchant_id='+merchant_id,function(data) {
+           $.get('{{ secure_url('get-store-for-merchant-bank-accounts') }}?merchant_id='+merchant_id,function(data) {
 
             $('#store_id').empty();
             $('#store_id').append($('<option>').text('Select Store').attr('value',''));

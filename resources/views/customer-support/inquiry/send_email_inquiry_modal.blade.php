@@ -2,7 +2,7 @@
 <div id="send_email_inquiry_{{$inquiry->id}}" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
-    {{Form::model($inquiry,['url' => 'inquiry-send-email/'.$inquiry->id, 'method' => 'post'])}}
+    {{Form::model($inquiry,['url' => secure_url('') . '/inquiry-send-email/'.$inquiry->id, 'method' => 'post'])}}
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>

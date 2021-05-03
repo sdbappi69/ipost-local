@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('hub-order') }}">Orders</a>
+                <a href="{{ secure_url('hub-order') }}">Orders</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -78,7 +78,7 @@
 
                                 <div class="row">
                                     <label class="control-label">Select Picker</label>
-                                    {!! Form::open(array('url' => '/assign-pickup/'.$product->id, 'method' => 'put')) !!}
+                                    {!! Form::open(array('url' => secure_url('') . '/assign-pickup/'.$product->id, 'method' => 'put')) !!}
                                         {!! Form::hidden('status', '3', ['class' => 'form-control', 'required' => 'required']) !!}
                                         <div class="form-group">
                                             <select name="picker_id" class="form-control js-example-basic-single js-country" required="required">
@@ -105,7 +105,7 @@
                                             <div class="modal-body">
                                                 <div style="padding: 15px;width: 2.5in; margin: 0 auto;" id="{{ $product->product_unique_id }}">
                                                   <div style='text-align: center;'>
-                                                    <img style="width:2in" src="{{URL::asset('assets/pages/img/login/login-invert.png')}}">
+                                                    <img style="width:2in" src="{{secure_asset('assets/pages/img/login/login-invert.png')}}">
                                                     <br>300/5/A Hatirpool, Dhaka
                                                     <br>Website: www.biddyut.com
                                                     <br>
@@ -259,10 +259,10 @@
     </div>
 
     <div class="pagination pull-right">
-        {{ $products->render() }}
+        {{ $products->appends($_REQUEST)->render() }}
     </div>
 
-    <script src="{{ URL::asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
 
     <script type="text/javascript">
         $(document ).ready(function() {

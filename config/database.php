@@ -122,8 +122,8 @@ return [
         'client' => 'predis',
 
         'default' => [
-            'host' => env('REDIS_HOST', 'ipost-prod-cache.hgsl3l.ng.0001.euc1.cache.amazonaws.com'),
-            'password' => env('REDIS_PASSWORD', null),
+            'host' => env('REDIS_HOST'),
+            'password' => env('REDIS_PASSWORD'),
             'port' => env('REDIS_PORT', 6379),
             'database' => 0,
         ],

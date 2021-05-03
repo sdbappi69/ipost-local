@@ -128,7 +128,9 @@
         </tr>
 
     </table>
-    <br>
+    <br><br><br>
+    <br><br><br>
+    <br><br><br>
     <table width="100%" style="margin-top: 20px;">
         <tr>
             <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">#</td>
@@ -163,7 +165,7 @@
                 <td style="border: 1px solid #000000; padding:2px; text-align: center; width: 160px;"><?php
 //                    echo '<img src="data:image/png;base64,' . DNS1D::getBarcodePNG($task->suborder->unique_suborder_id, "C128B", 1, 33) . '" alt="barcode"   /><br>';
                     ?>
-                    <br/><br/><img src="http://chart.googleapis.com/chart?chs=100x100&cht=qr&chl={{$task->suborder->unique_suborder_id}}" style="padding-top:5px">
+                    <br/><br/><img src="https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl={{$task->suborder->unique_suborder_id}}" style="padding-top:5px">
                     {{ $task->suborder->unique_suborder_id }}</td>
                 <td style="border: 1px solid #000000; padding:2px;">
                     <?php $amount_to_collect = 0; ?>
@@ -186,8 +188,12 @@
                         Product : {{ $product->product_title }}<br>
                         Qty : {{ $product->quantity }}<br>
 
-                        <?php $amount_to_collect += $product->total_payable_amount; ?>
-                        <?php $amount_paid += $product->delivery_paid_amount; ?>
+                        <?php
+                            if($task->suborder->order->paymentMethod->id == 1){
+                                $amount_to_collect += $product->total_payable_amount;
+                                $amount_paid += $product->delivery_paid_amount;
+                            }
+                        ?>
                     @endforeach
                     @endif
                 </td>
@@ -222,9 +228,9 @@
                     Mobile: {{ $task->suborder->order->delivery_msisdn  }}
                     , {{ $task->suborder->order->delivery_alt_msisdn  }}
                 </td>
-                <td style="border: 1px solid #000000; padding:2px;"></td>
-                <td style="border: 1px solid #000000; padding:2px;">{{$amount_to_collect}}</td>
-                <td style="border: 1px solid #000000; padding:2px;">{{$amount_paid}}</td>
+                <td style="border: 1px solid #000000; padding:2px;">{{ $task->suborder->order->paymentMethod->name or '' }}@if($task->suborder->order->paymentMethod->id == 2)<img src="{{public_path()}}/fastpay.png" alt="fastpay" width="50" height="12">@endif</td>
+                <td style="border: 1px solid #000000; padding:2px;">{{number_format($amount_to_collect)}}</td>
+                <td style="border: 1px solid #000000; padding:2px;">{{number_format($amount_paid)}}</td>
                 {{-- <td style="border: 1px solid #000000; padding:2px;"></td>
                 <td style="border: 1px solid #000000; padding:2px;"></td> --}}
                 <td style="border: 1px solid #000000; padding:2px;"></td>
@@ -235,14 +241,14 @@
         @endforeach
         <tr>
             <td style="border: 1px solid #000000; padding:2px; font-weight: bold;" colspan="8"> Total :</td>
-            <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">{{$total_amount_to_collect}}</td>
-            <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">{{$total_amount_paid}}</td>
+            <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">{{number_format($total_amount_to_collect)}}</td>
+            <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">{{number_format($total_amount_paid)}}</td>
             <td style="border: 1px solid #000000; padding:2px;" colspan=""></td>
         </tr>
         </tbody>
     </table>
 
-    <br><br><br><br><br>
+    <br><br><br><br>
     <p>Signature</p>
 
 </div>

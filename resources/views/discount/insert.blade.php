@@ -2,14 +2,14 @@
 
 @section('content')
 
-    <link href="{{ URL::asset('assets/global/plugins/typeahead/typeahead.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ URL::asset('assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/typeahead/typeahead.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -41,7 +41,7 @@
 
               <div class="portlet-body util-btn-margin-bottom-5" style="overflow: hidden;">
 
-                  {!! Form::open(array('method' => 'post', 'url' => '/discount', 'style' => 'overflow: hidden;')) !!}
+                  {!! Form::open(array('method' => 'post', 'url' => secure_url('') . '/discount', 'style' => 'overflow: hidden;')) !!}
 
                       <?php if(!isset($_GET['discount_title'])){$_GET['discount_title'] = null;} ?>
                       <div class="col-md-6" style="margin-bottom:5px;">

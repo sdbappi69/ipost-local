@@ -2,13 +2,13 @@
 
 @section('content')
 
-    <link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -38,12 +38,12 @@
 
             <div class="portlet-body util-btn-margin-bottom-5">
 
-                {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+                {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
                     <?php if(!isset($_GET['sub_order_id'])){$_GET['sub_order_id'] = null;} ?>
                     <div class="col-md-4" style="margin-bottom:5px;">
                         <!-- <div class="row"> -->
-                         <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control focus_it" name="sub_order_id" id="sub_order_id" placeholder="Sub-Order ID">
+                         <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control focus_it" name="sub_order_id" id="sub_order_id" placeholder="AWB">
                         <!-- </div> -->
                     </div>
 
@@ -141,7 +141,7 @@
             <div class="portlet-body util-btn-margin-bottom-5">
                 <table class="table table-bordered table-hover" id="example0">
                     <thead class="flip-content">
-                        <th>Unique ID</th>
+                        <th>AWB</th>
                         <th>Delivery to</th>
                         <th>Product</th>
                         <th>Invoice</th>
@@ -160,7 +160,7 @@
                                     Qty: {{ $sub_order->quantity }}
                                   </td>
                                   <td>
-                                      <a class="btn btn-info btn-xs" target="_blank" href="{{url('suborder-invoice/'.$sub_order->unique_suborder_id)}}">Invoice</a>
+                                      <a class="btn btn-info btn-xs" target="_blank" href="{{secure_url('suborder-invoice/'.$sub_order->unique_suborder_id)}}">Invoice</a>
                                   </td>
                               </tr>
                       @endforeach
@@ -172,9 +172,9 @@
         </div>
     </div>
 
-    <script src="{{ URL::asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
 
-    <script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 
     <script type="text/javascript">
         $(document ).ready(function() {

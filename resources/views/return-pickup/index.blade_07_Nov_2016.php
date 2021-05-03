@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('hub-order') }}">Orders</a>
+                <a href="{{ secure_url('hub-order') }}">Orders</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -36,7 +36,7 @@
 
                     <div class="mt-element-ribbon bg-grey-steel">
 
-                        <!-- <a href="{{ URL::to('product').'/'.$product->id.'/edit' }}" class="ribbon ribbon-right ribbon-vertical-right ribbon-shadow ribbon-border-dash-vert ribbon-color-default uppercase" product_id = "{{ $product->product_unique_id }}">
+                        <!-- <a href="{{ secure_url('product').'/'.$product->id.'/edit' }}" class="ribbon ribbon-right ribbon-vertical-right ribbon-shadow ribbon-border-dash-vert ribbon-color-default uppercase" product_id = "{{ $product->product_unique_id }}">
                             <div class="ribbon-sub ribbon-bookmark"></div>
                             <i class="fa fa-pencil"></i>
                         </a> -->
@@ -74,12 +74,12 @@
                                     <br>
                                 </div>
 
-                                <a href="{{ URL::to('receive-picked').'/'.$product->id.'/edit' }}" class="btn green-sharp btn-md col-md-12 col-lg-12 col-xs-12">
+                                <a href="{{ secure_url('receive-picked').'/'.$product->id.'/edit' }}" class="btn green-sharp btn-md col-md-12 col-lg-12 col-xs-12">
                                     <i class="fa fa-check"></i>Receive
                                 </a>
 
                                 <!-- <label class="control-label">Select Outbound manager </label>
-                                {!! Form::open(array('url' => '/assign-pickup/'.$product->id, 'method' => 'put')) !!}
+                                {!! Form::open(array('url' => secure_url('') . '/assign-pickup/'.$product->id, 'method' => 'put')) !!}
                                     {!! Form::hidden('status', '3', ['class' => 'form-control', 'required' => 'required']) !!}
                                     <div class="form-group">
                                         <select name="picker_id" class="form-control js-example-basic-single js-country" required="required">

@@ -2,12 +2,12 @@
 
 @section('content')
 
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
   <ul class="page-breadcrumb">
     <li>
-      <a href="{{ URL::to('home') }}">Home</a>
+      <a href="{{ secure_url('home') }}">Home</a>
       <i class="fa fa-circle"></i>
   </li>
   <li>
@@ -190,7 +190,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
             <h4 class="modal-title">Upload Bank Document</h4>
         </div>
-        {!! Form::open(array('url' => '/upload-bank-doc', 'method' => 'post','enctype' => 'multipart/form-data')) !!}
+        {!! Form::open(array('url' => secure_url('') . '/upload-bank-doc', 'method' => 'post','enctype' => 'multipart/form-data')) !!}
         <div class="modal-body">
             <input type="hidden" name="checkout_id" id="checkout_id">
             <div class="form-group">
@@ -224,7 +224,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                 <h4 class="modal-title">Bank Transaction ID</h4>
             </div>
-            {!! Form::open(array('url' => '/set-bank-transaction-id', 'method' => 'post')) !!}
+            {!! Form::open(array('url' => secure_url('') . '/set-bank-transaction-id', 'method' => 'post')) !!}
             <div class="modal-body">
                 <input type="hidden" name="checkout_transaction_id" id="checkout_transaction_id">
                 <div class="form-group">
@@ -260,8 +260,8 @@
     </div>
 </div>
 <!-- /.modal-dialog -->
-<script src="{{ URL::asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
     $(document ).ready(function() {
             // Navigation Highlight
@@ -294,18 +294,18 @@
     function cancelTransaction(id){
         var ans = confirm('Are you sure?');
         if(ans) {
-            /*$.get('{{ url('cancel-checkout') }}?id=' + id, function(data) {
+            /*$.get('{{ secure_url('cancel-checkout') }}?id=' + id, function(data) {
                 console.log('var');
             });*/
             $.ajax({
-                url : "{{ url('cancel-checkout') }}",
+                url : "{{ secure_url('cancel-checkout') }}",
                 type : "GET",
                 cache : false,
                 data: {
                     id:id,
                 },
                 success : function(result) {
-                    window.location.href = "{{ url('manage-checkout-accounts') }}";
+                    window.location.href = "{{ secure_url('manage-checkout-accounts') }}";
                 }
             });
         }

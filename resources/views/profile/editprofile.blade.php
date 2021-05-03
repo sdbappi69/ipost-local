@@ -2,13 +2,13 @@
 
 @section('content')
 
-    <link href="{{ URL::asset('assets/pages/css/profile.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/pages/css/profile.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -95,7 +95,7 @@
                                 <div class="tab-content">
                                     <!-- PERSONAL INFO TAB -->
                                     <div class="tab-pane active" id="info">
-                                        {!! Form::model($user, array('url' => '/profile/'.$user->id, 'method' => 'put')) !!}
+                                        {!! Form::model($user, array('url' => secure_url('') . '/profile/'.$user->id, 'method' => 'put')) !!}
 
                                             @include('partials.errors')
 
@@ -138,7 +138,7 @@
                                     <!-- END PERSONAL INFO TAB -->
                                     <!-- CHANGE AVATAR TAB -->
                                     <div class="tab-pane" id="avatar">
-                                        {!! Form::open(array('url' => '/profile-photo/'.$user->id, 'method' => 'post', 'files' => true)) !!}
+                                        {!! Form::open(array('url' => secure_url('') . '/profile-photo/'.$user->id, 'method' => 'post', 'files' => true)) !!}
 
                                             @include('partials.errors')
 
@@ -169,7 +169,7 @@
                                     <!-- END CHANGE AVATAR TAB -->
                                     <!-- CHANGE PASSWORD TAB -->
                                     <div class="tab-pane" id="password">
-                                        {!! Form::open(array('url' => '/change-password/'.$user->id, 'method' => 'post')) !!}
+                                        {!! Form::open(array('url' => secure_url('') . '/change-password/'.$user->id, 'method' => 'post')) !!}
 
                                             @include('partials.errors')
 

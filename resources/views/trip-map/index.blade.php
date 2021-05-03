@@ -6,7 +6,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -34,7 +34,7 @@
 
         <div class="portlet-body util-btn-margin-bottom-5">
 
-            {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+            {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
                 <div class="col-md-4" style="margin-bottom:5px;">
                     <label class="control-label">Start hub</label>
@@ -89,7 +89,7 @@
                         @foreach($trip_maps as $trip_map)
                         <tr>
                             <td>
-                                <a class="label label-success" href="{{ URL::to('trip-map').'/'.$trip_map->start_hub_id.'/'.$trip_map->end_hub_id }}">
+                                <a class="label label-success" href="{{ secure_url('trip-map').'/'.$trip_map->start_hub_id.'/'.$trip_map->end_hub_id }}">
                                     <i class="fa fa-pencil"></i> View/Update
                                 </a>
                             </td>
@@ -109,7 +109,7 @@
 
 @endIf
 
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
     $(document ).ready(function() {
         // Navigation Highlight

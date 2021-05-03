@@ -1,12 +1,12 @@
 @extends('layouts.appinside')
 
 @section('content')
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -21,7 +21,7 @@
 </h1>
 <div class="col-md-12">
   <div class="table-filtter">
-  {!! Form::open(array('url' => 'reconciliation', 'method' => 'post')) !!}
+  {!! Form::open(array('url' => secure_url('') . '/reconciliation', 'method' => 'post')) !!}
 
      <div class="col-md-2">
         <div class="row">

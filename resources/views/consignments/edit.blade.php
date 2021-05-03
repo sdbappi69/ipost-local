@@ -1,12 +1,12 @@
 @extends('layouts.appinside')
 
 @section('content')
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
   <ul class="page-breadcrumb">
     <li>
-      <a href="{{ URL::to('home') }}">Home</a>
+      <a href="{{ secure_url('home') }}">Home</a>
       <i class="fa fa-circle"></i>
     </li>
     <li>
@@ -21,7 +21,7 @@
 </h1>
 <div class="col-md-12">
   <div class="table-filtter">
-   {!! Form::open(array('method' => 'get')) !!}
+   {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
    <?php if(!isset($_GET['c_unique_id'])){$_GET['c_unique_id'] = null;} ?>
    <div class="col-md-2">
     <div class="row">
@@ -126,11 +126,11 @@
             </td>
             
             <td>
-            <a class="btn btn-primary btn-xs" target="_blank" href="{{url('consignments/'.$c->id.'/'.$c->type)}}">View</a>
-            <a class="btn btn-info btn-xs" target="_blank" href="{{url('consignments-all-invoice/'.$c->id.'/'.$c->type)}}">All Invoice</a>
+            <a class="btn btn-primary btn-xs" target="_blank" href="{{secure_url('consignments/'.$c->id.'/'.$c->type)}}">View</a>
+            <a class="btn btn-info btn-xs" target="_blank" href="{{secure_url('consignments-all-invoice/'.$c->id.'/'.$c->type)}}">All Invoice</a>
             @if ($c->status != 2)
-            <a class="btn btn-success btn-xs"  href="{{url('consignments-start/'.$c->id)}}">Start</a>
-            <a class="btn btn-danger btn-xs"  href="{{url('consignments-cancel/'.$c->id.'/'.$c->type)}}">Cancel</a>
+            <a class="btn btn-success btn-xs"  href="{{secure_url('consignments-start/'.$c->id)}}">Start</a>
+            <a class="btn btn-danger btn-xs"  href="{{secure_url('consignments-cancel/'.$c->id.'/'.$c->type)}}">Cancel</a>
             @endif
             </td>
 
@@ -143,15 +143,15 @@
       </tbody>
     </table>
     <div class="pagination pull-right">
-      {{ $consignments->render() }}
+      {{ $consignments->appends($_REQUEST)->render() }}
     </div>
 
   </div>
 </div>
 </div>
 
-<script src="{{ URL::asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
   $(document ).ready(function() {
             // Navigation Highlight

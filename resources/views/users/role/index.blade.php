@@ -6,7 +6,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -50,7 +50,7 @@
                             @endif
                           </td>
                           <td>
-                            <a href="{{ URL::route('role.edit', $role->id) }}">
+                            <a href="{{ secure_url("role/$role->id/edit") }}">
                               <i class="fa falist fa-edit"></i> Edit
                             </a>
                           </td>

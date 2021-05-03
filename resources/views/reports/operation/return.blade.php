@@ -6,7 +6,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -33,7 +33,7 @@
 
         <div class="portlet-body util-btn-margin-bottom-5" style="overflow: hidden;">
 
-            {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+            {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
             <div class="col-md-6" style="margin-bottom:5px;">
                 <label class="control-label">Merchants</label>
@@ -150,10 +150,10 @@
 </div>
 @endIf
 
-<script src="{{URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}" type="text/javascript"></script>
 
-<script src="{{ URL::asset('assets/global/plugins/typeahead/handlebars.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/typeahead/typeahead.bundle.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/typeahead/handlebars.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/typeahead/typeahead.bundle.min.js') }}" type="text/javascript"></script>
 
 <script type="text/javascript">
     $(document ).ready(function() {
@@ -172,12 +172,12 @@
     $(".export-btn").click(function(e){
         // alert(1);
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('operation/failed-returnexport/xls') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('operation/failed-returnexport/xls') }}").submit();
     });
     $(".filter-btn").click(function(e){
         // alert(1);
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('operation/failed-return') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('operation/failed-return') }}").submit();
     });
 
 

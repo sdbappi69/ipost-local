@@ -2,7 +2,7 @@
 
 @section('content')
         <div class="col-md-6 login-container bs-reset">
-            <img class="login-logo login-6" style="height:100px;" src="{{asset('assets/pages/img/login/login-invert.png') }}" />
+            <img class="login-logo login-6" style="height:100px;" src="{{secure_asset('assets/pages/img/login/login-invert.png') }}" />
             <div class="login-content">
                 <h1>Login to System</h1>
                 <!-- <p> BIDDYUT TAKES THE COMPLICATION OUT OF LOCAL DELIVERY </p> -->

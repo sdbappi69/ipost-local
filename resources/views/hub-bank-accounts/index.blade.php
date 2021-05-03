@@ -6,7 +6,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -80,7 +80,7 @@
                         <td>{{ $hub_bank_account->account->bank->name or "N/A" }}</td>
                         <td>{{ $hub_bank_account->notification_time or "N/A" }}</td>
                         <td>
-                            <a href="{{url('/hub-bank-accounts/'.$hub_bank_account->id.'/edit')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
+                            <a href="{{secure_url('/hub-bank-accounts/'.$hub_bank_account->id.'/edit')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
                         </td>
 
                     </tr>

@@ -2,13 +2,13 @@
 
 @section('content')
 
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -38,12 +38,12 @@
 
             <div class="portlet-body util-btn-margin-bottom-5">
 
-                {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+                {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
                     <?php if(!isset($_GET['unique_trip_id'])){$_GET['unique_trip_id'] = null;} ?>
                     <div class="col-md-4" style="margin-bottom:5px;">
                         <!-- <div class="row"> -->
-                         <input type="text" value="{{$_GET['unique_trip_id']}}" class="form-control focus_it" name="unique_trip_id" id="unique_trip_id" placeholder="Sub-Order ID">
+                         <input type="text" value="{{$_GET['unique_trip_id']}}" class="form-control focus_it" name="unique_trip_id" id="unique_trip_id" placeholder="AWB">
                         <!-- </div> -->
                     </div>
 
@@ -155,7 +155,7 @@
                                     <td>{{ $trip->source_hub->title or '' }}</td>
                                     <td>{{ $trip->destination_hub->title or '' }}</td>
                                     <td>
-                                        <!-- <a target="_blank" href="{{ URL::to('user') }}/{{ $trip->responsible_user->id }}"> -->
+                                        <!-- <a target="_blank" href="{{ secure_url('user') }}/{{ $trip->responsible_user->id }}"> -->
                                             {{ $trip->responsible_user->name or '' }}
                                         <!-- </a> -->
                                     </td>
@@ -168,27 +168,27 @@
                                         @elseIf($trip->trip_status == 2)
                                             In Transit
                                         @elseIf($trip->trip_status == 3)
-                                            Reched
+                                            Reached
                                         @endIf
                                     </td>
                                     <td>{{ $trip->created_at }}</td>
                                     <td>
-                                        <a target="_blank" class="btn btn-info btn-xs" target="_blank" href="{{url('triprunsheet/'.$trip->id)}}">Run Sheet</a>
+                                        <a target="_blank" class="btn btn-info btn-xs" target="_blank" href="{{secure_url('triprunsheet/'.$trip->id)}}">Run Sheet</a>
 
-                                        <a target="_blank" class="btn green btn-xs" href="{{ URL::to('trip') }}/{{ $trip->id }}">View</a>
+                                        <a target="_blank" class="btn green btn-xs" href="{{ secure_url('trip') }}/{{ $trip->id }}">View</a>
 
                                         @if(auth()->user()->reference_id == $trip->source_hub_id && $trip->trip_status == 1)
 
-                                            <a class="btn btn-primary btn-xs" href="{{ URL::to('trip') }}/{{ $trip->id }}/edit">Load</a>
+                                            <a class="btn btn-primary btn-xs" href="{{ secure_url('trip') }}/{{ $trip->id }}/edit">Load</a>
 
-                                            <a class="btn yellow btn-xs" href="{{ URL::to('trip_start') }}/{{ $trip->id }}">Start</a>
+                                            <a class="btn yellow btn-xs" href="{{ secure_url('trip_start') }}/{{ $trip->id }}">Start</a>
 
-                                            <a class="btn red btn-xs" href="{{ URL::to('trip_cancel') }}/{{ $trip->id }}">Cancel</a>
+                                            <a class="btn red btn-xs" href="{{ secure_url('trip_cancel') }}/{{ $trip->id }}">Cancel</a>
 
                                         @endIf
 
                                         @if(auth()->user()->reference_id == $trip->destination_hub_id && $trip->trip_status == 2)
-                                            <a class="btn red btn-xs" href="{{ URL::to('trip_end') }}/{{ $trip->id }}">End</a>
+                                            <a class="btn red btn-xs" href="{{ secure_url('trip_end') }}/{{ $trip->id }}">End</a>
                                         @endIf
 
                                     </td>
@@ -198,14 +198,14 @@
                     </table>
 
                     <div class="pagination pull-right">
-                        {{ $trips->render() }}
+                        {{ $trips->appends($_REQUEST)->render() }}
                     </div>
                 </div>
             </div>
         </div>
     @endIf
 
-    <script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 
     <script type="text/javascript">
         $(document ).ready(function() {

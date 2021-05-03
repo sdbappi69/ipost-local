@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('trip') }}">Trip</a>
+                <a href="{{ secure_url('trip') }}">Trip</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -32,7 +32,7 @@
         
             <div class="col-md-12">
 
-                {!! Form::open(array('url' => '/trip_load/'.$id, 'method' => 'post')) !!}
+                {!! Form::open(array('url' => secure_url('') . '/trip_load/'.$id, 'method' => 'post')) !!}
 
                     <div class="form-group col-md-10">
 
@@ -47,7 +47,7 @@
                         </span>
 
                         @if($start == 1)
-                            <a href="{{ URL::to('trip_start') }}/{{ $id }}" type="button" class="btn blue">Start trip</a>
+                            <a href="{{ secure_url('trip_start') }}/{{ $id }}" type="button" class="btn blue">Start trip</a>
                         @endif
 
                     </div>
@@ -56,7 +56,7 @@
 
             </div>
         @elseIf($end == 1)
-            <div class="col-md-12"><a href="{{ URL::to('trip_end') }}/{{ $id }}" type="button" class="btn blue pull-right">End trip</a></div>
+            <div class="col-md-12"><a href="{{ secure_url('trip_end') }}/{{ $id }}" type="button" class="btn blue pull-right">End trip</a></div>
         @endif
 
         <!-- <div class="col-md-12">

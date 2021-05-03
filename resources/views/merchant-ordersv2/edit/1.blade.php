@@ -1,4 +1,4 @@
-{!! Form::model($order, array('url' => '/merchant-orderv2/'.$order->id.'?step=3', 'method' => 'put')) !!}
+{!! Form::model($order, array('url' => secure_url('') . '/merchant-orderv2/'.$order->id.'?step=3', 'method' => 'put')) !!}
 
     <div class="row col-md-8" style="padding-left: 0px; padding-right: 0px;">
 
@@ -66,7 +66,7 @@
 
         @include('merchant-ordersv2.edit.product')
 
-        <a href="{{ URL::to('merchant-orderv2/'.$order->id.'/edit?step=3') }}" class="btn blue btn-block btn-lg m-icon-big animated bounceInUp">
+        <a href="{{ secure_url('merchant-orderv2/'.$order->id.'/edit?step=3') }}" class="btn blue btn-block btn-lg m-icon-big animated bounceInUp">
             Next
             <i class="m-icon-big-swapright m-icon-white"></i>
         </a>
@@ -74,19 +74,19 @@
     </div>
 
 
-<script src="{{ URL::asset('assets/global/plugins/fuelux/js/spinner.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/pages/scripts/components-bootstrap-touchspin.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/fuelux/js/spinner.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/pages/scripts/components-bootstrap-touchspin.min.js') }}" type="text/javascript"></script>
 
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/pages/scripts/components-date-time-pickers.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/pages/scripts/components-date-time-pickers.min.js') }}" type="text/javascript"></script>
 
-<script src="{{ URL::asset('custom/js/date-time.js') }}" type="text/javascript"></script>
-<script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
+<script src="{{ secure_asset('custom/js/date-time.js') }}" type="text/javascript"></script>
+<script src="https://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
 <script>
     $(function () {
-        var image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
+        var image = 'https://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
             bounds = new google.maps.LatLngBounds();
         mapOptions = {
             mapTypeId: google.maps.MapTypeId.ROADMAP,

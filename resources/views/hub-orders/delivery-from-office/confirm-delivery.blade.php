@@ -1,17 +1,17 @@
 @extends('layouts.appinside')
 
 @section('content')
-    <link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}"
+    <link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}"
           rel="stylesheet" type="text/css"/>
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('office-delivery-list') }}">Delivery From Office</a>
+                <a href="{{ secure_url('office-delivery-list') }}">Delivery From Office</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -108,7 +108,7 @@
                                                     $filled_quantity = $deliveryProduct->quantity;
                                                     ?>
 
-                                                    {!! Form::open(['url' => url('confirm-office-delivery')."/$deliveryProduct->suborder_id", 'method' => 'post','files' => false,'class' => '','id' => '']) !!}
+                                                    {!! Form::open(['url' => secure_url('confirm-office-delivery')."/$deliveryProduct->suborder_id", 'method' => 'post','files' => false,'class' => '','id' => '']) !!}
 
                                                     {!! Form::text('filled_quantity',$filled_quantity,['class' => 'form-control','id' => 'filled_quantity_task_id','placeholder' => 'Success Quantity','required' => '','readonly' => 'readonly']) !!}
 
@@ -182,13 +182,13 @@
 
     @endIf
 
-    <script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"
+    <script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"
             type="text/javascript"></script>
-    <script src="{{ URL::asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
-    <script src="{{ URL::asset('assets/pages/scripts/components-date-time-pickers.min.js') }}"
+    <script src="{{ secure_asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/pages/scripts/components-date-time-pickers.min.js') }}"
             type="text/javascript"></script>
 
-    <script src="{{ URL::asset('custom/js/date-time.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('custom/js/date-time.js') }}" type="text/javascript"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {

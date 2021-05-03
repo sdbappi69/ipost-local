@@ -1,4 +1,4 @@
-<link href="{{ URL::asset('assets/global/plugins/typeahead/typeahead.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/typeahead/typeahead.css') }}" rel="stylesheet" type="text/css" />
 
 <div class="row">
     <br>
@@ -16,7 +16,7 @@
 
             <div class="portlet-body util-btn-margin-bottom-5" style="overflow: hidden;">
 
-                {!! Form::open(array('method' => 'get', 'style' => 'overflow: hidden;')) !!}
+                {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'style' => 'overflow: hidden;')) !!}
 
                     <input type="hidden" name="step" value="2">
 
@@ -64,11 +64,11 @@
 
                         @if(Auth::user()->hasRole('superadministrator')||Auth::user()->hasRole('systemadministrator'))
                             @if($cod->store_id == "")
-                                <a target="_blank" href="{{ URL::to('chargecod/create') }}?clone={{ $cod->id }}&store={{ $id }}" class="btn btn-warning btn-xs" style="position: absolute; right: 35px;">
+                                <a target="_blank" href="{{ secure_url('chargecod/create') }}?clone={{ $cod->id }}&store={{ $id }}" class="btn btn-warning btn-xs" style="position: absolute; right: 35px;">
                                     <i class="fa fa-money"></i> Change COD Amount 
                                 </a>
                             @else
-                                <a target="_blank" href="{{ URL::to('chargecod') }}/{{ $cod->id }}/edit?overwrite={{ $cod->id }}&store_id={{ $id }}" class="btn btn-warning btn-xs" style="position: absolute; right: 35px;"> 
+                                <a target="_blank" href="{{ secure_url('chargecod') }}/{{ $cod->id }}/edit?overwrite={{ $cod->id }}&store_id={{ $id }}" class="btn btn-warning btn-xs" style="position: absolute; right: 35px;"> 
                                     <i class="fa fa-money"></i> Change COD Amount
                                 </a>
                             @endif
@@ -99,7 +99,7 @@
                                         @endIf
                                     </td>
                                     <td>
-                                        <a class="label label-success" href="{{ URL::to('product-category-charge/v2/'.$category->id.'?store_id='.$id) }}">
+                                        <a class="label label-success" href="{{ secure_url('product-category-charge/v2/'.$category->id.'?store_id='.$id) }}">
                                             <i class="fa fa-money"></i> Change
                                         </a>
                                     </td>
@@ -126,8 +126,8 @@
 
 </div>
 
-<script src="{{ URL::asset('assets/global/plugins/typeahead/handlebars.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/typeahead/typeahead.bundle.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/typeahead/handlebars.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/typeahead/typeahead.bundle.min.js') }}" type="text/javascript"></script>
 
     <script type="text/javascript">
         $(document ).ready(function() {

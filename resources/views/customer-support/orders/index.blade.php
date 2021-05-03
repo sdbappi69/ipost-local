@@ -6,7 +6,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -33,12 +33,12 @@
         </div>
 
         <div class="portlet-body util-btn-margin-bottom-5">
-            {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+            {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
             <?php if(!isset($_GET['sub_order_id'])){$_GET['sub_order_id'] = null;} ?>
             <div class="col-md-4" style="margin-bottom:5px;">
-                <label class="control-label">Sub-Order ID</label>
-                <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control focus_it" name="sub_order_id" id="sub_order_id" placeholder="Sub-Order ID">
+                <label class="control-label">AWB</label>
+                <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control focus_it" name="sub_order_id" id="sub_order_id" placeholder="AWB">
             </div>
 
             <?php if(!isset($_GET['order_id'])){$_GET['order_id'] = null;} ?>
@@ -171,7 +171,7 @@
                     <th>Action</th>
                     @endpermission
                     <th>Order Id</th>
-                    <th>Sub-Order Id</th>
+                    <th>AWB</th>
                     <th>Type</th>
                     <th>Merchant Order Id</th>
                     <th>Current Status</th>
@@ -221,13 +221,13 @@
                             </button>
                             @if($sub_order->allComplains)
                             <br>
-                            <a href="{{url('complain?sub_order_id_s='.$sub_order->suborder_id)}}" class="btn btn-info btn-xs">
+                            <a href="{{secure_url('complain?sub_order_id_s='.$sub_order->suborder_id)}}" class="btn btn-info btn-xs">
                                 <i class="fa fa-list"></i>
                                 All Complain ({{$sub_order->allComplains->count()}})
                             </a>
                             @endif
                             @if($sub_order->feedback)
-                            <a href="{{url('feedback?sub_order_unique_id='.$sub_order->unique_suborder_id)}}" class="btn btn-danger btn-xs">
+                            <a href="{{secure_url('feedback?sub_order_unique_id='.$sub_order->unique_suborder_id)}}" class="btn btn-danger btn-xs">
                                 <i class="fa fa-list"></i>
                                 Feedback ({{$sub_order->allFeedback->count()}})
                             </a>
@@ -237,7 +237,7 @@
                         @endpermission
                         <td>
                             <!-- <b>Order:</b> -->
-                            <a class="label label-success" href="{{ URL::to('order').'/'.$sub_order->order_id }}">
+                            <a class="label label-success" href="{{ secure_url('order').'/'.$sub_order->order_id }}">
                                 {{ $sub_order->unique_order_id }}
                             </a>
                         </td>
@@ -307,7 +307,7 @@
 
 @endIf
 
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
     $(document ).ready(function() {
         // Navigation Highlight
@@ -354,13 +354,13 @@
 
     $(".filter-btn").click(function(e){
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('order-cs') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('order-cs') }}").submit();
     });
 
     $(".export-btn").click(function(e){
         // alert(1);
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('order-cs/xls') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('order-cs/xls') }}").submit();
     });
 
 </script>

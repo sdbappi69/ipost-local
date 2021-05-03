@@ -2,12 +2,12 @@
 
 @section('content')
 
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
   <ul class="page-breadcrumb">
     <li>
-      <a href="{{ URL::to('home') }}">Home</a>
+      <a href="{{ secure_url('home') }}">Home</a>
       <i class="fa fa-circle"></i>
   </li>
   <li>
@@ -77,7 +77,7 @@
 </div>
 
 <div class="col-md-12">
- {!! Form::open(array('url' => 'merchant-checkout-submit', 'method' => 'post')) !!}
+ {!! Form::open(array('url' => secure_url('') . '/merchant-checkout-submit', 'method' => 'post')) !!}
  @if(isset($_GET['merchant_id']) and !empty($_GET['merchant_id']))
 
  <input type="hidden" name="merchant_id" value="{{$_GET['merchant_id']}}">
@@ -102,7 +102,7 @@
                     <th scope="col">{!!Form::checkbox('name', 'value', false,array('id'=>'select_all_chk')) !!}</th>
                     @endif
                     @endif
-                    <th scope="col">Sub-Order ID</th>
+                    <th scope="col">AWB</th>
                     <th scope="col">Order ID</th>
                     <th scope="col">Merchant</th>
                     <th scope="col">Store</th>
@@ -176,7 +176,7 @@
 
     @if(!isset($_GET['merchant_id']) or empty($_GET['merchant_id']) )
     <div class="pagination pull-right">
-      {{$merchant_checkout->render()}}
+      {{$merchant_checkout->appends($_REQUEST)->render()}}
   </div>
 
   @endif
@@ -192,8 +192,8 @@
 </div>
 </div>
 {!! Form::close() !!}
-<script src="{{ URL::asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
   $(document ).ready(function() {
             // Navigation Highlight
@@ -243,7 +243,7 @@
         });
         
         if(store_id != 'all'){
-          $.get('{{ url('get-merchant-account') }}?merchant_id=' + merchant_id + '&store_id=' + store_id, function(data) {
+          $.get('{{ secure_url('get-merchant-account') }}?merchant_id=' + merchant_id + '&store_id=' + store_id, function(data) {
 
             $('#account_id').empty();
             $.each(data, function(index,subCatObj){
@@ -255,7 +255,7 @@
         });
       }
       else{
-          $.get('{{ url('get-merchant-account') }}?all=all&merchant_id='+merchant_id,function(data) {
+          $.get('{{ secure_url('get-merchant-account') }}?all=all&merchant_id='+merchant_id,function(data) {
 
             $('#account_id').empty();
             $.each(data, function(index,subCatObj){

@@ -6,11 +6,11 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="{{ URL::to('hub-order') }}">Orders</a>
+            <a href="{{ secure_url('hub-order') }}">Orders</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -26,7 +26,7 @@
 <!-- END PAGE TITLE-->
 <!-- END PAGE HEADER-->
 <div>
-    <div class="profile-content"> 
+    <div class="profile-content">
         <div class="row">
             <div class="col-md-12">
                 <div class="portlet light ">
@@ -38,7 +38,7 @@
                                     <a class="nav-link" data-toggle="tab" href="#kt_tabs_{{$i}}" role="tab" {{ $i == 0 ? "aria-expanded=true" : '' }}>{{ $suborder->unique_suborder_id }}</a>
                                 </li>
                                 @endforeach
-                            </ul>                        
+                            </ul>
                             <div class="tab-content">
                                 @foreach($order->suborders as $i => $suborder)
                                 <div class="tab-pane" id="kt_tabs_{{$i}}" role="tabpanel">
@@ -47,7 +47,7 @@
                                             <div class="col-md-3 mt-step-col first @if(iPostStatus($suborder->sub_order_status) >= 1) done @elseIf(iPostStatus($suborder->sub_order_status) == 1) active @endIf ">
                                                 <div class="mt-step-number bg-white">1</div>
                                                 <div class="mt-step-title uppercase font-grey-cascade">Order</div>
-                                                <div class="mt-step-content font-grey-cascade">Store: <a target="blank" href="{{ URL::to('store') }}/{{ $order->store->id }}">{{ $order->store->store_id }}</a></div>
+                                                <div class="mt-step-content font-grey-cascade">Store: <a target="blank" href="{{ secure_url('store') }}/{{ $order->store->id }}">{{ $order->store->store_id }}</a></div>
                                             </div>
                                             <div class="col-md-3 mt-step-col @if(iPostStatus($suborder->sub_order_status) >= 2) done @elseIf(iPostStatus($suborder->sub_order_status) == 2) active @endIf ">
                                                 <div class="mt-step-number bg-white">2</div>
@@ -108,7 +108,7 @@
                                             <div class="col-md-3 mt-step-col @if(iPostStatus($suborder->sub_order_status) >= 10) done @elseIf(iPostStatus($suborder->sub_order_status) == 10) active @endIf ">
                                                 <div class="mt-step-number bg-white">10</div>
                                                 <div class="mt-step-title uppercase font-grey-cascade">Complete</div>
-                                                <div class="mt-step-content font-grey-cascade">                                                   
+                                                <div class="mt-step-content font-grey-cascade">
                                                     Process Complete
                                                 </div>
                                             </div>
@@ -129,7 +129,7 @@
                                     </div>
                                 </div>
                                 @endforeach
-                            </div>      
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -180,7 +180,7 @@
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead class="flip-content">
-                                        <th>Unique Id</th>
+                                        <th>AWB</th>
                                         <th>Detail</th>
                                         <th>Status</th>
                                         <th>History</th>
@@ -202,23 +202,38 @@
                                                     Quantity: <b>{{ $row2->quantity }}</b><br>
                                                     Type: <b>@if($row->return == 1) Return
                                                         @else Delivery @endIf</b>
-                                                    <br>
+                                                    <br>                                                    
+                                                    @if($row->return == 0)
                                                     <h4><u>Pickup Location:</u></h4>
                                                     Name: {{ $row2->pickup_location->title }}
                                                     <br>
                                                     Phone: {{ $row2->pickup_location->msisdn }}, {{ $row2->pickup_location->alt_msisdn }}
                                                     <br>
                                                     Address: {{ $row2->pickup_location->address1 }}, {{ $row2->pickup_location->zone->name }}, {{ $row2->pickup_location->zone->city->name }}, {{ $row2->pickup_location->zone->city->state->name }}
+                                                    @else
+                                                    <h4><u>Pickup Location:</u></h4>
+                                                    Name: {{ $row->order->delivery_name }}
+                                                    <br>
+                                                    Phone: {{ $row->order->delivery_msisdn }}, {{ $row->order->delivery_alt_msisdn }}
+                                                    <br>
+                                                    Address: {{ $row->order->delivery_address1 }}, {{ $row->order->delivery_zone->name }}, {{ $row->order->delivery_zone->city->name }}
+                                                    @endif                                                    
                                                     <br>
                                                     <h4><u>Payment:</u></h4>
-                                                    Unit Price: {{ $row2->unit_price }}<br>
-                                                    Total Product Charge: {{ $row2->sub_total }}<br>
-                                                    Unit Delivery Charge: {{ $row2->unit_deivery_charge }}<br>
-                                                    Total Delivery Charge: {{ $row2->total_delivery_charge }}<br>
-                                                    Payable Amount: <b>{{ $row2->total_payable_amount }}</b><br>
-                                                    Paid Amount: <b>{{ $row2->delivery_paid_amount }}</b>
+                                                    Unit Price: {{ number_format($row2->unit_price) }}<br>
+                                                    Total Product Charge: {{ number_format($row2->sub_total) }}<br>
+{{--                                                    Unit Delivery Charge: {{ $row2->unit_deivery_charge }}<br>--}}
+{{--                                                    Total Delivery Charge: {{ $row2->total_delivery_charge }}<br>--}}
+                                                        @if($row->post_delivery_return == 1 || $row->return == 1 || $order->payment_type_id == 2)
+                                                            Payable Amount: <b>0</b><br>
+                                                            Paid Amount: <b>0</b>
+                                                        @else
+                                                        Payable Amount: <b>{{ number_format($row2->total_payable_amount) }}</b><br>
+                                                        Paid Amount: <b>{{ number_format($row2->delivery_paid_amount) }}</b>
+                                                        @endif
                                                     <br>
-                                                    @if($row2->charge_details)
+{{--                                                    @if($row2->charge_details)--}}
+                                                    @if(false)
                                                     <h4><u>Delivery Charge Details:</u></h4>
                                                     <?php
                                                     $charge = json_decode($row2->charge_details);
@@ -248,7 +263,7 @@
                                                     @endforeach
                                                 </td>
                                                 <td>
-                                                    <b>                                                        
+                                                    <b>
                                                         {{ $row->suborder_status->title }}
                                                     </b>
                                                 </td>
@@ -277,38 +292,25 @@
                                                                         <tr>
                                                                             <?php
                                                                             $status_id = $row->sub_order_status;
-                                                                            $pickingArray = array(3, 4, 5, 6, 7, 8);
-                                                                            $deliveryArray = array(28, 29, 30, 31, 32, 33);
                                                                             ?>
 
                                                                             <td>
-                                                                                @if(in_array($status_id, $pickingArray))
-
-                                                                                {{$val->sub_order->unique_suborder_id}}: {{$val->text}}
-
-                                                                                @if($val->text == 'Pick up failed' || $val->text == 'Products Delivery Failed' || $val->text == 'Product return failed')
-
-                                                                                @if(isset($val->sub_order->product->pTask->reason->reason))
-                                                                                <br><b>Reason:</b> {{ $val->sub_order->product->pTask->reason->reason }}
-                                                                                @endIf
-
-                                                                                @endIf
-
-                                                                                @elseIf(in_array($status_id, $deliveryArray))
-
-                                                                                {{$val->sub_order->unique_suborder_id}}: {{$val->text}}
-
-                                                                                @if($val->text == 'Pick up failed' || $val->text == 'Products Delivery Failed' || $val->text == 'Product return failed')
-
-                                                                                @if(isset($val->sub_order->dTask->reason->reason))
-                                                                                <br><b>Reason:</b> {{ $val->sub_order->dTask->reason->reason }}
-                                                                                @endIf
-
-                                                                                @endIf
-
-                                                                                @else
-                                                                                {{$val->sub_order->unique_suborder_id}}: {{$val->text}} ({{$val->user->name}})
-                                                                                @endIf
+                                                                              {{$val->sub_order->unique_suborder_id}}: {{$val->text}} ({{$val->user->name}})
+                                                                                <?php
+                                                                                  switch($val->sub_order_status){
+                                                                                    case 6:
+                                                                                        if($child_sub_order->picking_task && $child_sub_order->picking_task->reason){
+                                                                                            echo "<br><b>Reason:</b>" . $child_sub_order->picking_task->reason->reason;
+                                                                                        }
+                                                                                      break;
+                                                                                    case 33:
+                                                                                    case 40:
+                                                                                        if($child_sub_order->deliveryTask && $child_sub_order->deliveryTask->reason){
+                                                                                            echo "<br><b>Reason:</b>" . $child_sub_order->deliveryTask->reason->reason;
+                                                                                        }
+                                                                                      break;
+                                                                                  }
+                                                                                ?>
                                                                             </td>
                                                                             <td>
                                                                                 {{ date("D, d M Y, h:i:s A", strtotime($val->created_at))}}
@@ -330,38 +332,25 @@
                                                                         <tr>
                                                                             <?php
                                                                             $status_id = $row->sub_order_status;
-                                                                            $pickingArray = array(3, 4, 5, 6, 7, 8);
-                                                                            $deliveryArray = array(28, 29, 30, 31, 32, 33);
                                                                             ?>
 
                                                                             <td>
-                                                                                @if(in_array($status_id, $pickingArray))
-
-                                                                                {{$val->sub_order->unique_suborder_id}}: {{$val->text}}
-
-                                                                                @if($val->text == 'Pick up failed' || $val->text == 'Products Delivery Failed' || $val->text == 'Product return failed')
-
-                                                                                @if(isset($val->sub_order->product->pTask->reason->reason))
-                                                                                <br><b>Reason:</b> {{ $val->sub_order->product->pTask->reason->reason }}
-                                                                                @endIf
-
-                                                                                @endIf
-
-                                                                                @elseIf(in_array($status_id, $deliveryArray))
-
-                                                                                {{$val->sub_order->unique_suborder_id}}: {{$val->text}}
-
-                                                                                @if($val->text == 'Pick up failed' || $val->text == 'Products Delivery Failed' || $val->text == 'Product return failed')
-
-                                                                                @if(isset($val->sub_order->dTask->reason->reason))
-                                                                                <br><b>Reason:</b> {{ $val->sub_order->dTask->reason->reason }}
-                                                                                @endIf
-
-                                                                                @endIf
-
-                                                                                @else
-                                                                                {{$val->sub_order->unique_suborder_id}}: {{$val->text}} ({{$val->user->name}})
-                                                                                @endIf
+                                                                              {{$val->sub_order->unique_suborder_id}}: {{$val->text}} ({{$val->user->name}})
+                                                                                <?php
+                                                                                  switch($val->sub_order_status){
+                                                                                    case 6:
+                                                                                        if($row->picking_task && $row->picking_task->reason){
+                                                                                            echo "<br><b>Reason: </b>" . $row->picking_task->reason->reason;
+                                                                                        }
+                                                                                      break;
+                                                                                    case 33:
+                                                                                    case 40:
+                                                                                        if($row->deliveryTask && $row->deliveryTask->reason){
+                                                                                            echo "<br><b>Reason: </b>" . $row->deliveryTask->reason->reason;
+                                                                                        }
+                                                                                        break;
+                                                                                  }
+                                                                                ?>
                                                                             </td>
                                                                             <td>
                                                                                 {{ date("D, d M Y, h:i:s A", strtotime($val->created_at))}}

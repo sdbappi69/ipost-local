@@ -183,8 +183,8 @@
                 </td>
 
                 <td style="border: 1px solid #000000; padding:2px;"></td>
-                <td style="border: 1px solid #000000; padding:2px;">{{$amount_to_collect}}</td>
-                <td style="border: 1px solid #000000; padding:2px;">{{$amount_paid}}</td>
+                <td style="border: 1px solid #000000; padding:2px;">{{ number_format($amount_to_collect) }}</td>
+                <td style="border: 1px solid #000000; padding:2px;">{{ number_format($amount_paid) }}</td>
                 {{-- <td style="border: 1px solid #000000; padding:2px;"></td>
                 <td style="border: 1px solid #000000; padding:2px;"></td> --}}
                 <td style="border: 1px solid #000000; padding:2px;"></td>
@@ -195,8 +195,8 @@
         @endforeach
         <tr>
             <td style="border: 1px solid #000000; padding:2px; font-weight: bold;" colspan="7"> Total :</td>
-            <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">{{$total_amount_to_collect}}</td>
-            <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">{{$total_amount_paid}}</td>
+            <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">{{ number_format($total_amount_to_collect) }}</td>
+            <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">{{ number_format($total_amount_paid) }}</td>
             <td style="border: 1px solid #000000; padding:2px;" colspan="4"></td>
         </tr>
         </tbody>

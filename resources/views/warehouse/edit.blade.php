@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('warehouse') }}">Pick-up location</a>
+                <a href="{{ secure_url('warehouse') }}">Pick-up location</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -28,7 +28,7 @@
 
     <div class="mt-element-step">
 
-            {!! Form::model($warehouse, array('url' => '/warehouse/'.$warehouse->id, 'method' => 'put')) !!}
+            {!! Form::model($warehouse, array('url' => secure_url('') . '/warehouse/'.$warehouse->id, 'method' => 'put')) !!}
 
                 <div class="row">
 
@@ -126,8 +126,8 @@
 
 {{--     <script src="
 https://maps.google.com/maps/api/js?key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM&callback=initMap&sensor=false" type="text/javascript"></script>
-    <script src="{{ URL::asset('assets/global/plugins/gmaps/gmaps.min.js') }}" type="text/javascript"></script>
-    <script src="{{ URL::asset('custom/js/maps-google-geo.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/plugins/gmaps/gmaps.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('custom/js/maps-google-geo.js') }}" type="text/javascript"></script>
  --}}
     <script type="text/javascript">
 
@@ -185,10 +185,10 @@ https://maps.google.com/maps/api/js?key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM&
         //     $("#gmap_geocoding_btn").trigger("click");
         // });
     </script>
-    <script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
+    <script src="https://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
     <script>
         $(function () {
-          var image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
+          var image = 'https://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
               bounds = new google.maps.LatLngBounds();
               mapOptions = {
                 mapTypeId: google.maps.MapTypeId.ROADMAP,

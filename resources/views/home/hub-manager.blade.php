@@ -12,7 +12,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         {{-- <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
 <i class="fa fa-circle"></i>
         </li> --}}
         <li>
@@ -20,7 +20,7 @@
         </li>
     </ul>
 
-    {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+    {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
     <div class="form-group col-md-5 pull-right" style="padding-top: 5px; margin-bottom: 5px;"> 
         <div class="col-md-10">
@@ -350,7 +350,7 @@
                 <br><br>
 
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('receive-prodcut') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('receive-prodcut') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -372,7 +372,7 @@
                 <br><br>
 
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('v2consignment') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('v2consignment') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -394,7 +394,7 @@
                 <br><br>
 
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('trip/create') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('trip/create') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -423,18 +423,18 @@
 
 </div>
 
-<script src="{{URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}" type="text/javascript"></script>
 
-<script src="{{URL::asset('assets/global/plugins/amcharts/amcharts/amcharts.js')}}" type="text/javascript"></script>
-<script src="{{URL::asset('assets/global/plugins/amcharts/amcharts/pie.js')}}" type="text/javascript"></script>
-<script src="{{URL::asset('assets/global/plugins/jquery-easypiechart/jquery.easypiechart.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/amcharts/amcharts/amcharts.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/amcharts/amcharts/pie.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/jquery-easypiechart/jquery.easypiechart.min.js')}}" type="text/javascript"></script>
 
-<script src="{{URL::asset('assets/global/plugins/counterup/jquery.waypoints.min.js')}}" type="text/javascript"></script>
-<script src="{{URL::asset('assets/global/plugins/counterup/jquery.counterup.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/counterup/jquery.waypoints.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/counterup/jquery.counterup.min.js')}}" type="text/javascript"></script>
 
 <!-- BEGIN PAGE LEVEL PLUGINS -->
-<script src="{{ URL::asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/pages/scripts/dashboard.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/pages/scripts/dashboard.js') }}" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 
 

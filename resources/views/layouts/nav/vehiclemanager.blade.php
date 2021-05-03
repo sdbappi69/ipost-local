@@ -41,7 +41,7 @@
             <!-- </li> -->
 
             <li class="nav-item start dashboard">
-                <a href="{{ URL::to('home') }}">
+                <a href="{{ secure_url('home') }}">
                     <i class="icon-home"></i>
                     <span class="title">Dashboard</span>
                     <!-- <span class="selected"></span> -->
@@ -61,17 +61,17 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item delivery_consignments">
-                        <a href="{{ URL::to('consignments-delivery') }}" class="nav-link ">
+                        <a href="{{ secure_url('consignments-delivery') }}" class="nav-link ">
                             <span class="title">Delivery</span>
                         </a>
                     </li>
                     <!-- <li class="nav-item all_consignments">
-                        <a href="{{ URL::to('consignments-all') }}" class="nav-link ">
+                        <a href="{{ secure_url('consignments-all') }}" class="nav-link ">
                             <span class="title">Consignments</span>
                         </a>
                     </li> -->
                     <li class="nav-item consignmentsv2">
-                        <a href="{{ URL::to('v2consignment') }}" class="nav-link ">
+                        <a href="{{ secure_url('v2consignment') }}" class="nav-link ">
                             <span class="title">Consignments</span>
                         </a>
                     </li>
@@ -85,22 +85,22 @@
                 </a>
                 <ul class="sub-menu">
                     <!-- <li class="nav-item queued-picked">
-                        <a href="{{ URL::to('queued-picked') }}" class="nav-link ">
+                        <a href="{{ secure_url('queued-picked') }}" class="nav-link ">
                             <span class="title">Picked to transfer</span>
                         </a>
                     </li> -->
                     <li class="nav-item queued-shipping">
-                        <a href="{{ URL::to('queued-shipping') }}" class="nav-link ">
+                        <a href="{{ secure_url('queued-shipping') }}" class="nav-link ">
                             <span class="title">Orders to transfer</span>
                         </a>
                     </li>
                     <li class="nav-item accept-suborder">
-                        <a href="{{ URL::to('accept-suborder') }}" class="nav-link ">
+                        <a href="{{ secure_url('accept-suborder') }}" class="nav-link ">
                             <span class="title">Receive transferd Orders</span>
                         </a>
                     </li>
                     <li class="nav-item transfer">
-                        <a href="{{ URL::to('transfer') }}" class="nav-link ">
+                        <a href="{{ secure_url('transfer') }}" class="nav-link ">
                             <span class="title">Change delivery address</span>
                         </a>
                     </li>
@@ -108,7 +108,7 @@
             </li>
 
             <li class="nav-item start orders">
-                <a href="{{ URL::to('hub-order') }}">
+                <a href="{{ secure_url('hub-order') }}">
                     <i class="fa fa-cube"></i>
                     <span class="title">Orders</span>
                 </a>
@@ -122,12 +122,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item trip-create">
-                        <a href="{{ URL::to('trip/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('trip/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
                     <li class="nav-item trip-manage">
-                        <a href="{{ URL::to('trip') }}" class="nav-link ">
+                        <a href="{{ secure_url('trip') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>

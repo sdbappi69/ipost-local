@@ -1,13 +1,13 @@
 @extends('layouts.appinside')
 
 @section('content')
-    <link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}"
+    <link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}"
           rel="stylesheet" type="text/css"/>
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -35,16 +35,16 @@
 
             <div class="portlet-body util-btn-margin-bottom-5">
 
-                {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+                {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
                 <?php if (!isset($_GET['sub_order_id'])) {
                     $_GET['sub_order_id'] = null;
                 } ?>
                 <div class="col-md-4" style="margin-bottom:5px;">
-                    <label class="control-label">Sub-Order ID</label>
+                    <label class="control-label">AWB</label>
                     <!-- <div class="row"> -->
                     <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control focus_it"
-                           name="sub_order_id" id="sub_order_id" placeholder="Sub-Order ID">
+                           name="sub_order_id" id="sub_order_id" placeholder="AWB">
                     <!-- </div> -->
                 </div>
 
@@ -182,7 +182,7 @@
                            id="example0">
                         <thead>
                         <th>Order Id</th>
-                        <th>Sub-Order Id</th>
+                        <th>AWB</th>
                         <th>Action</th>
                         <th>Type</th>
                         <th>Merchant Order Id</th>
@@ -227,12 +227,12 @@
                                 <td>
                                     <!-- <b>Order:</b> -->
                                     <a class="label label-success"
-                                       href="{{ URL::to('hub-order').'/'.$sub_order->order_id }}">
+                                       href="{{ secure_url('hub-order').'/'.$sub_order->order_id }}">
                                         {{ $sub_order->unique_order_id }}
                                     </a>
                                 </td>
                                 <td>{{ $sub_order->unique_suborder_id }}</td>
-                                <td><a href="{{ URL::to('delivery-from-office').'/'.$sub_order->suborder_id }}" class="btn btn-success">Delivery Confirmation</a></td>
+                                <td><a href="{{ secure_url('delivery-from-office').'/'.$sub_order->suborder_id }}" class="btn btn-success">Delivery Confirmation</a></td>
                                 <td>
                                     @if($sub_order->return == 1)
                                         Return
@@ -296,7 +296,7 @@
 
     @endIf
 
-    <script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"
+    <script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"
             type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -345,7 +345,7 @@
 
         $(".filter-btn").click(function (e) {
             e.preventDefault();
-            $('#filter-form').attr('action', "{{ URL::to('office-delivery-list') }}").submit();
+            $('#filter-form').attr('action', "{{ secure_url('office-delivery-list') }}").submit();
         });
     </script>
 

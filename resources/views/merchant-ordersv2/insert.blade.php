@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('merchant-order') }}">Orders</a>
+                <a href="{{ secure_url('merchant-order') }}">Orders</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -43,7 +43,7 @@
         <div class="portlet light tasks-widget bordered">
             <div class="portlet-body util-btn-margin-bottom-5">
 
-                {!! Form::open(array('url' => '/merchant-orderv2', 'method' => 'post')) !!}
+                {!! Form::open(array('url' => secure_url('') . '/merchant-orderv2', 'method' => 'post')) !!}
 
                 <div class="row">
 
@@ -129,10 +129,10 @@
         });
 
     </script>
-    <script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
+    <script src="https://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
     <script>
         $(function () {
-            var image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
+            var image = 'https://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
                 bounds = new google.maps.LatLngBounds();
             mapOptions = {
                 mapTypeId: google.maps.MapTypeId.ROADMAP,

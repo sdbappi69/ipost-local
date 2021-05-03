@@ -1,7 +1,7 @@
 @extends('layouts.appinside')
 
 @section('content')
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}"
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}"
       rel="stylesheet" type="text/css"/>
 
 <style type="text/css">
@@ -18,7 +18,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -144,7 +144,7 @@
             </div>
             @if($dueCount == 0)
             <div class="pull-right">
-                <a href="{{ url('v2consignment/reconciliation/done/'.$consignment->id) }}"
+                <a href="{{ secure_url('v2consignment/reconciliation/done/'.$consignment->id) }}"
                    class="btn btn-primary sign" style="margin-top: 68px;">Complete Reconciliation</a>
             </div>
             @endIf
@@ -192,7 +192,7 @@
                                 <table width="100%">
                                     <thead>
                                         <tr>
-                                            <th>Unique Suborder Id</th>
+                                            <th>AWB</th>
                                             <th>Task Type</th>
                                             <th>Product</th>
                                             <th>Status</th>
@@ -222,8 +222,11 @@
                                                 case 5:
                                                     $type = 'Return Pick';
                                                     break;
-                                                case 5:
+                                                case 6:
                                                     $type = 'Return to Buyer';
+                                                    break;
+                                                case 7:
+                                                    $type = 'Delivery to Return';
                                                     break;
                                                 default:
                                                     $type = '';
@@ -261,14 +264,14 @@
                                             @endif
                                             <td>
                                                 <a target="_blank" class="btn default"
-                                                   href="{{url('maps/'.$task->start_lat.'/'.$task->start_long)}}">Start</a>
+                                                   href="{{secure_url('maps/'.$task->start_lat.'/'.$task->start_long)}}">Start</a>
                                                 <a target="_blank" class="btn default"
-                                                   href="{{url('maps/'.$task->end_lat.'/'.$task->end_long)}}">End</a>
+                                                   href="{{secure_url('maps/'.$task->end_lat.'/'.$task->end_long)}}">End</a>
                                             </td>
                                             @if($task->reconcile == 0)
                                             @if($task->status != 2)
                                             <td><a data-target="#mi-modal-{{ $index }}" data-toggle="modal" class="btn btn-primary" id="MainNavHelp" 
-                                                   href="#mi-modal-{{ $index }}">Reconsile</a></td>
+                                                   href="#mi-modal-{{ $index }}">Reconcile</a></td>
                                             @else
                                             <td>N/A</td>
                                             @endif
@@ -317,7 +320,7 @@
 
                 {!! Form::hidden('required_quantity',$task->quantity,['class' => 'form-control','id' => 'required_quantity_'.$task->id,'placeholder' => 'Requested Quantity','required' => '','readonly' => 'readonly']) !!}
 
-                {!! Form::open(['url' => url('v2consignment/reconcile'), 'method' => 'post','files' => true,'class' => '','id' => '']) !!}
+                {!! Form::open(['url' => secure_url('v2consignment/reconcile'), 'method' => 'post','files' => true,'class' => '','id' => '']) !!}
 
                 {!! Form::hidden('view',$i,['class' => 'form-control']) !!}
 
@@ -377,13 +380,13 @@
 @endforeach
 @endIf
 
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"
 type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/pages/scripts/components-date-time-pickers.min.js') }}"
+<script src="{{ secure_asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/pages/scripts/components-date-time-pickers.min.js') }}"
 type="text/javascript"></script>
 
-<script src="{{ URL::asset('custom/js/date-time.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('custom/js/date-time.js') }}" type="text/javascript"></script>
 
 <script type="text/javascript">
 $(document).ready(function () {

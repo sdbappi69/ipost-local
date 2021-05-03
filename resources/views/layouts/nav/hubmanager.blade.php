@@ -41,7 +41,7 @@
             <!-- </li> -->
 
             <li class="nav-item start dashboard">
-                <a href="{{ URL::to('home') }}">
+                <a href="{{ secure_url('home') }}">
                     <i class="icon-home"></i>
                     <span class="title">Dashboard</span>
                     <!-- <span class="selected"></span> -->
@@ -64,30 +64,30 @@
 
                 <ul class="sub-menu">
                     <li class="nav-item delivery_consignments">
-                        <a href="{{ URL::to('consignments-delivery') }}" class="nav-link ">
+                        <a href="{{ secure_url('consignments-delivery') }}" class="nav-link ">
                             <span class="title">Delivery</span>
                             <span class="badge badge-success" id="consignment_delivery_nav">0</span>
                         </a>
                     </li>
                     <li class="nav-item pick_up_consignments">
-                        <a href="{{ URL::to('consignments-pick-up') }}" class="nav-link ">
+                        <a href="{{ secure_url('consignments-pick-up') }}" class="nav-link ">
                             <span class="title">Pick Up</span>
                             <span class="badge badge-success" id="consignment_pickup_nav">0</span>
                         </a>
                     </li>
                     <li class="nav-item return_consignments">
-                        <a href="{{ URL::to('consignments-return') }}" class="nav-link ">
+                        <a href="{{ secure_url('consignments-return') }}" class="nav-link ">
                             <span class="title">Return</span>
                             <span class="badge badge-success" id="consignment_return_nav">0</span>
                         </a>
                     </li>
                     <!-- <li class="nav-item all_consignments">
-                        <a href="{{ URL::to('consignments-all') }}" class="nav-link ">
+                        <a href="{{ secure_url('consignments-all') }}" class="nav-link ">
                             <span class="title">Consignments</span>
                         </a>
                     </li> -->
                     <li class="nav-item consignmentsv2">
-                        <a href="{{ URL::to('v2consignment') }}" class="nav-link ">
+                        <a href="{{ secure_url('v2consignment') }}" class="nav-link ">
                             <span class="title">Consignments</span>
                             <span class="badge badge-success" id="consignment_nav">0</span>
                         </a>
@@ -104,38 +104,11 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item receive-prodcut">
-                        <a href="{{ URL::to('receive-prodcut') }}" class="nav-link ">
+                        <a href="{{ secure_url('receive-prodcut') }}" class="nav-link ">
                             <span class="title">Product Receive & Verify</span>
                             <span class="badge badge-success" id="receive_prodcut">0</span>
                         </a>
                     </li>
-<!--                    <li class="nav-item accept-picked">
-                        <a href="{{ URL::to('accept-picked') }}" class="nav-link ">
-                            <span class="title">Receive from rider</span>
-                            <span class="badge badge-success" id="accept_picked_nav">0</span>
-                        </a>
-                    </li>-->
-                    <!-- <li class="nav-item return-pickup">
-                        <a href="{{ URL::to('return-pickup') }}" class="nav-link ">
-                            <span class="title">Pickup failed or pertial</span>
-                        </a>
-                    </li> -->
-                    <!-- <li class="nav-item receive-transferd">
-                        <a href="{{ URL::to('receive-transferd') }}" class="nav-link ">
-                            <span class="title">Receive transferd picking</span>
-                        </a>
-                    </li> -->
-<!--                    <li class="nav-item receive-picked">
-                        <a href="{{ URL::to('receive-picked') }}" class="nav-link ">
-                            <span class="title">Verify Product</span>
-                            <span class="badge badge-success" id="receive_picked_nav">0</span>
-                        </a>
-                    </li>-->
-                    <!-- <li class="nav-item return-delivery">
-                        <a href="{{ URL::to('return-delivery') }}" class="nav-link ">
-                            <span class="title">Failed or pertial Delivery</span>
-                        </a>
-                    </li> -->
                 </ul>
             </li>
 
@@ -148,154 +121,65 @@
                 </a>
                 <ul class="sub-menu">
                     <!-- <li class="nav-item queued-picked">
-                        <a href="{{ URL::to('queued-picked') }}" class="nav-link ">
+                        <a href="{{ secure_url('queued-picked') }}" class="nav-link ">
                             <span class="title">Picked to transfer</span>
                         </a>
                     </li> -->
                     <li class="nav-item delivery-from-office">
-                        <a href="{{ URL::to('office-delivery-list') }}" class="nav-link ">
+                        <a href="{{ secure_url('office-delivery-list') }}" class="nav-link ">
                             <span class="title">Delivery From Office</span>
                             <span class="badge badge-success" id="office_delivery_nav">0</span>
                         </a>
                     </li>
                     <!--                    <li class="nav-item queued-shipping">
-                                            <a href="{{ URL::to('queued-shipping') }}" class="nav-link ">
+                                            <a href="{{ secure_url('queued-shipping') }}" class="nav-link ">
                                                 <span class="title">Orders to transfer</span>
                                             </a>
                                         </li>-->
                     <li class="nav-item accept-suborder">
-                        <a href="{{ URL::to('accept-suborder') }}" class="nav-link ">
+                        <a href="{{ secure_url('accept-suborder') }}" class="nav-link ">
                             <span class="title">Receive transferd Orders</span>
                             <span class="badge badge-success" id="accept_suborder_nav">0</span>
                         </a>
                     </li>
                     <li class="nav-item transfer">
-                        <a href="{{ URL::to('transfer') }}" class="nav-link ">
+                        <a href="{{ secure_url('transfer') }}" class="nav-link ">
                             <span class="title">Change delivery address</span>
                         </a>
                     </li>
                 </ul>
             </li>
 
-            <!-- <li class="nav-item tasks">
-                <a href="javascript:;" class="nav-link nav-toggle">
-                    <i class="fa fa-check"></i>
-                    <span class="title">Tasks</span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub-menu">
-                    <li class="nav-item assign-pickup">
-                        <a href="{{ URL::to('assign-pickup') }}" class="nav-link ">
-                            <span class="title">Assign Picker</span>
-                        </a>
-                    </li>
-                    <li class="nav-item accept-picked">
-                        <a href="{{ URL::to('accept-picked') }}" class="nav-link ">
-                            <span class="title">Receive Picked</span>
-                        </a>
-                    </li>
-                    <li class="nav-item return-pickup">
-                        <a href="{{ URL::to('return-pickup') }}" class="nav-link ">
-                            <span class="title">Return Pickup</span>
-                        </a>
-                    </li>
-                    <li class="nav-item receive-picked">
-                        <a href="{{ URL::to('receive-picked') }}" class="nav-link ">
-                            <span class="title">Verify Picked</span>
-                        </a>
-                    </li>
-                    <li class="nav-item receive-transferd">
-                        <a href="{{ URL::to('receive-transferd') }}" class="nav-link ">
-                            <span class="title">Receive Transferred</span>
-                        </a>
-                    </li>
-                <li class="nav-item transfer-product">
-                    <a href="{{ URL::to('transfer-product') }}" class="nav-link ">
-                        <span class="title">Transfer Product</span>
-                    </a>
-                </li> -->
-            <!-- <li class="nav-item transfer-suborder">
-                <a href="{{ URL::to('transfer-suborder') }}" class="nav-link ">
-                    <span class="title">Transfer Sub-Order</span>
-                </a>
-            </li> -->
-            <!-- <li class="nav-item queued-shipping">
-                <a href="{{ URL::to('queued-shipping') }}" class="nav-link ">
-                    <span class="title">Queued Sub-Orders</span>
-                </a>
-            </li>
-            <li class="nav-item accept-suborder">
-                <a href="{{ URL::to('accept-suborder') }}" class="nav-link ">
-                    <span class="title">Receive Sub-Order</span>
-                </a>
-            </li>
-            <li class="nav-item assign-delivery">
-                <a href="{{ URL::to('assign-delivery') }}" class="nav-link ">
-                    <span class="title">Assign Delivery</span>
-                </a>
-            </li>
-            <li class="nav-item return-delivery">
-                <a href="{{ URL::to('return-delivery') }}" class="nav-link ">
-                    <span class="title">Return Delivery</span>
-                </a>
-            </li> -->
-            <!-- <li class="nav-item assign-delivery">
-                <a href="{{ URL::to('assign-delivery') }}" class="nav-link ">
-                    <span class="title">Assign Delivery</span>
-                </a>
-            </li> -->
-            <!-- </ul>
-        </li> -->
-
             <li class="nav-item start orders">
-                <a href="{{ URL::to('hub-order') }}">
+                <a href="{{ secure_url('hub-order') }}">
                     <i class="fa fa-cube"></i>
                     <span class="title">Orders</span>
                 </a>
             </li>
-
+            <li class="heading">
+                <h3 class="uppercase">Users Management</h3>
+            </li>
+            <li class="nav-item users">
+                <a href="javascript:;" class="nav-link nav-toggle">
+                    <i class="icon-users"></i>
+                    <span class="title">Riders</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item user-add">
+                        <a href="{{ secure_url('rider-user/create') }}" class="nav-link ">
+                            <span class="title">Add Rider</span>
+                        </a>
+                    </li>
+                    <li class="nav-item user-manage">
+                        <a href="{{ secure_url('rider-user') }}" class="nav-link ">
+                            <span class="title">Manage Rider</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             <li class="heading">
                 <h3 class="uppercase">Warehouse Management</h3>
-            </li>
-
-            <li class="nav-item shelfs">
-                <a href="javascript:;" class="nav-link nav-toggle">
-                    <i class="fa fa-object-group"></i>
-                    <span class="title">Shelfs</span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub-menu">
-                    <li class="nav-item warehouse-add">
-                        <a href="{{ URL::to('shelf/create') }}" class="nav-link ">
-                            <span class="title">Add</span>
-                        </a>
-                    </li>
-                    <li class="nav-item warehouse-manage">
-                        <a href="{{ URL::to('shelf') }}" class="nav-link ">
-                            <span class="title">Manage</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="nav-item racks">
-                <a href="javascript:;" class="nav-link nav-toggle">
-                    <i class="fa fa-sitemap"></i>
-                    <span class="title">Racks</span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub-menu">
-                    <li class="nav-item rack-add">
-                        <a href="{{ URL::to('rack/create') }}" class="nav-link ">
-                            <span class="title">Add</span>
-                        </a>
-                    </li>
-                    <li class="nav-item rack-manage">
-                        <a href="{{ URL::to('rack') }}" class="nav-link ">
-                            <span class="title">Manage</span>
-                        </a>
-                    </li>
-                </ul>
             </li>
 
             <li class="nav-item start trips">
@@ -307,13 +191,13 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item trip-create">
-                        <a href="{{ URL::to('trip/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('trip/create') }}" class="nav-link ">
                             <span class="title">Add</span>                            
                             <span class="badge badge-success trip_nav" id="trip_nav">0</span>
                         </a>
                     </li>
                     <li class="nav-item trip-manage">
-                        <a href="{{ URL::to('trip') }}" class="nav-link ">
+                        <a href="{{ secure_url('trip') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
@@ -329,65 +213,65 @@
 
                 <ul class="sub-menu">
                     <li class="nav-item cash_collection">
-                        <a href="{{ URL::to('collected-cash-amount') }}" class="nav-link ">
+                        <a href="{{ secure_url('collected-cash-amount') }}" class="nav-link ">
                             <span class="title">Cash Collection</span>
                             <span class="badge badge-success" id="cash_collection">0</span>
 
                         </a>
                     </li>
                    <li class="nav-item cash_transfer">
-                        <a href="{{ URL::to('accumulated-collected-cash') }}" class="nav-link ">
+                        <a href="{{ secure_url('accumulated-collected-cash') }}" class="nav-link ">
                             <span class="title">Cash Transfer</span>
                             <span class="badge badge-success" id="cash_transfer">0</span>
                         </a>
                     </li>
                     {{-- <li class="nav-item cash_collection">
-                        <a href="{{ URL::to('cash-collection') }}" class="nav-link ">
+                        <a href="{{ secure_url('cash-collection') }}" class="nav-link ">
                             <span class="title">Cash Collection</span>
                         </a>
                     </li>
                     <li class="nav-item transfer_to_vault">
-                        <a href="{{ URL::to('transfer-to-vault') }}" class="nav-link ">
+                        <a href="{{ secure_url('transfer-to-vault') }}" class="nav-link ">
                             <span class="title">Transfer To Vault</span>
                         </a>
                     </li>
                     <li class="nav-item vault_list">
-                        <a href="{{ URL::to('vault-list') }}" class="nav-link ">
+                        <a href="{{ secure_url('vault-list') }}" class="nav-link ">
                             <span class="title">Vault Approvals</span>
                         </a>
                     </li>
                     <li class="nav-item manage_vault">
-                        <a href="{{ URL::to('manage-vault') }}" class="nav-link ">
+                        <a href="{{ secure_url('manage-vault') }}" class="nav-link ">
                             <span class="title">Manage Vault</span>
                         </a>
                     </li>
                     <li class="nav-item transfer_to_bank">
-                        <a href="{{ URL::to('transfer-to-bank') }}" class="nav-link ">
+                        <a href="{{ secure_url('transfer-to-bank') }}" class="nav-link ">
                             <span class="title">Transfer To Bank</span>
                         </a>
                     </li>
                     <li class="nav-item bank_list">
-                        <a href="{{ URL::to('bank-list') }}" class="nav-link ">
+                        <a href="{{ secure_url('bank-list') }}" class="nav-link ">
                             <span class="title">Bank Transfer Approvals</span>
                         </a>
                     </li>
                     <li class="nav-item bank_canceled">
-                        <a href="{{ URL::to('bank-canceled') }}" class="nav-link ">
+                        <a href="{{ secure_url('bank-canceled') }}" class="nav-link ">
                             <span class="title">Bank Transfer Canceled</span>
                         </a>
                     </li>
                     <li class="nav-item manage_checkout">
-                        <a href="{{ URL::to('manage-checkout') }}" class="nav-link ">
+                        <a href="{{ secure_url('manage-checkout') }}" class="nav-link ">
                             <span class="title">Manage Hub Checkout</span>
                         </a>
                     </li>--}}
                     <!-- <li class="nav-item create_merchant_checkout">
-                        <a href="{{ URL::to('create-merchant-checkout') }}" class="nav-link ">
+                        <a href="{{ secure_url('create-merchant-checkout') }}" class="nav-link ">
                             <span class="title">Create Merchant Checkout</span>
                         </a>
                     </li>
                     <li class="nav-item manage_merchant_checkout">
-                        <a href="{{ URL::to('manage-merchant-checkout') }}" class="nav-link ">
+                        <a href="{{ secure_url('manage-merchant-checkout') }}" class="nav-link ">
                             <span class="title">Manage Merchant Checkout</span>
                         </a>
                     </li> -->
@@ -414,7 +298,7 @@
 
         function hubManagerNav() {
             $.ajax({
-                url: "{{url('hub-manager-nav')}}",
+                url: "{{secure_url('hub-manager-nav')}}",
                 type: "get",
                 data: {},
                 success: function (data) {

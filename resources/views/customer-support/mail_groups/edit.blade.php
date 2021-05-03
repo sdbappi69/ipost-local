@@ -2,7 +2,7 @@
 <div id="update_mail_group_{{$mail_group->id}}" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
-    {{Form::model($mail_group,['url' => 'mail-groups/'.$mail_group->id, 'method' => 'put'])}}
+    {{Form::model($mail_group,['url' => secure_url('') . '/mail-groups/'.$mail_group->id, 'method' => 'put'])}}
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>

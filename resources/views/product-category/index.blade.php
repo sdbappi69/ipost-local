@@ -2,13 +2,13 @@
 
 @section('content')
 
-    <link href="{{ URL::asset('assets/global/plugins/typeahead/typeahead.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/typeahead/typeahead.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -38,7 +38,7 @@
 
             <div class="portlet-body util-btn-margin-bottom-5" style="overflow: hidden;">
 
-                {!! Form::open(array('method' => 'get', 'style' => 'overflow: hidden;')) !!}
+                {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'style' => 'overflow: hidden;')) !!}
 
                     <?php if(!isset($_GET['name'])){$_GET['name'] = null;} ?>
                     <div class="col-md-6" style="margin-bottom:5px;">
@@ -142,8 +142,8 @@
        </div>
     @endIf
 
-    <script src="{{ URL::asset('assets/global/plugins/typeahead/handlebars.min.js') }}" type="text/javascript"></script>
-    <script src="{{ URL::asset('assets/global/plugins/typeahead/typeahead.bundle.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/plugins/typeahead/handlebars.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/plugins/typeahead/typeahead.bundle.min.js') }}" type="text/javascript"></script>
 
     <script type="text/javascript">
         $(document ).ready(function() {

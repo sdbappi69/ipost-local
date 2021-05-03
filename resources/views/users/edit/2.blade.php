@@ -1,6 +1,6 @@
-<script src="{{ URL::asset('custom/js/reference-list.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('custom/js/reference-list.js') }}" type="text/javascript"></script>
 
-{!! Form::model($user, array('url' => '/user/'.$user->id.'?step=3', 'method' => 'put')) !!}
+{!! Form::model($user, array('url' => secure_url('') . '/user/'.$user->id.'?step=3', 'method' => 'put')) !!}
 
 <div class="row">
 
@@ -67,7 +67,7 @@
 
 &nbsp;
 <div class="row padding-top-10">
-    <a href="{{ URL::to('user/'.$id.'/edit?step=1') }}" class="btn default"> Back </a>
+    <a href="{{ secure_url('user/'.$id.'/edit?step=1') }}" class="btn default"> Back </a>
     {!! Form::submit('Next', ['class' => 'btn green pull-right']) !!}
 </div>
 

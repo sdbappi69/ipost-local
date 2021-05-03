@@ -6,11 +6,11 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="{{ URL::to('trip') }}">Trips</a>
+            <a href="{{ secure_url('trip') }}">Trips</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -39,7 +39,7 @@
 
     <table class="table table-bordered table-hover" id="example0">
       <thead class="flip-content">
-        <th>Unique ID</th>
+        <th>AWB</th>
         <th>Destination</th>
         <th>Products</th>
         <th>Status</th>
@@ -60,6 +60,7 @@
             <td>
               @if($sub_order->sub_order_trip_status == 1)
                 On Trip
+{{--              @elseif($sub_order->sub_order_trip_status == 2)--}}
               @else
                 Reached
               @endIf

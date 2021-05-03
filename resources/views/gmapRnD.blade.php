@@ -10,8 +10,8 @@
 	<input type="text" id="map-search" style="margin-top: 10px; height: 25px; width: 400px;">
 	<div id="map_canvas" class="col-md-12" style="height: 450px; margin: 0.6em;"></div>
 	
-<script src="http://localhost/ipost/public/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
-<script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
+<script src="https://localhost/ipost/public/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="https://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
 <script>
   $(function () {
     var coords = "23.847904593975734,90.27253100444796,23.84931763363798,90.28102824260714,23.845078468436682,90.28102824260714,23.84429342262976,90.2800841050339,23.842958833847405,90.28034159709932,23.84272331675373,90.27871081401827,23.843429866751162,90.27776667644503,23.842487799232217,90.27338931133272";
@@ -23,7 +23,7 @@
       paths.push({lat: parseFloat(points[i++]), lng: parseFloat(points[i])});
     }
 
-    var image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
+    var image = 'https://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
         bounds = new google.maps.LatLngBounds();
         mapOptions = {
           mapTypeId: google.maps.MapTypeId.ROADMAP,

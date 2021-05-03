@@ -6,11 +6,11 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="{{ URL::to('vault') }}">Vault</a>
+            <a href="{{ secure_url('vault') }}">Vault</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -27,7 +27,7 @@
 <!-- END PAGE HEADER-->
 @include('partials.errors')
 
-{!! Form::model($vault, array('url' => '/vault/'.$vault->id, 'method' => 'put')) !!}
+{!! Form::model($vault, array('url' => secure_url('') . '/vault/'.$vault->id, 'method' => 'put')) !!}
 
 <div class="row">
 

@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://ipost.publicdemo.xyz/'),
+    'url' => env('APP_URL', 'https://ipost.fastbazzar.com/'),
 
     /*
     |--------------------------------------------------------------------------
@@ -170,7 +170,8 @@ return [
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Arcanedev\LogViewer\LogViewerServiceProvider::class,
-
+        
+        Aws\Laravel\AwsServiceProvider::class,
     ],
 
     /*
@@ -241,7 +242,10 @@ return [
 
 
     # Task Config
-    'max_attempt' => 3,
-    'attempt_expire' => 60 #Sec
+    'max_attempt' => 5,
+    'attempt_expire' => 60, #Sec
+
+    'fastbazzar_url' => env('FASTBAZZAR_URL'),
+    'fib_url' => env('FIB_URL')
 
 ];

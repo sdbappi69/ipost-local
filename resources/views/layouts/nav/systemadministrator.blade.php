@@ -41,7 +41,7 @@
             <!-- </li> -->
 
             <li class="nav-item start dashboard">
-                <a href="{{ URL::to('home') }}">
+                <a href="{{ secure_url('home') }}">
                     <i class="icon-home"></i>
                     <span class="title">Dashboard</span>
                     <!-- <span class="selected"></span> -->
@@ -61,7 +61,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item verify-orders">
-                        <a href="{{ URL::to('verify-order') }}" class="nav-link ">
+                        <a href="{{ secure_url('verify-order') }}" class="nav-link ">
                             <span class="title">Verify Orders</span>
                         </a>
                     </li>
@@ -76,12 +76,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item manage-orders">
-                        <a href="{{ URL::to('order') }}" class="nav-link ">
+                        <a href="{{ secure_url('order') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
                     <li class="nav-item order-draft">
-                        <a href="{{ URL::to('order-draftv2') }}" class="nav-link ">
+                        <a href="{{ secure_url('order-draftv2') }}" class="nav-link ">
                             <span class="title">Draft</span>
                         </a>
                     </li>
@@ -100,17 +100,17 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item product-category-add">
-                        <a href="{{ URL::to('product-category/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('product-category/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
                     <li class="nav-item product-category-manage">
-                        <a href="{{ URL::to('product-category') }}" class="nav-link ">
+                        <a href="{{ secure_url('product-category') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
                     <li class="nav-item product-category-charge-approve">
-                        <a href="{{ URL::to('product-category-charge-approval/v2') }}" class="nav-link ">
+                        <a href="{{ secure_url('product-category-charge-approval/v2') }}" class="nav-link ">
                             <span class="title">Approve Charges</span>
                         </a>
                     </li>
@@ -129,12 +129,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item merchant-add">
-                        <a href="{{ URL::to('merchant/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('merchant/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
                     <li class="nav-item merchant-manage">
-                        <a href="{{ URL::to('merchant') }}" class="nav-link ">
+                        <a href="{{ secure_url('merchant') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
@@ -149,12 +149,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item store-add">
-                        <a href="{{ URL::to('store/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('store/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
                     <li class="nav-item store-manage">
-                        <a href="{{ URL::to('store') }}" class="nav-link ">
+                        <a href="{{ secure_url('store') }}" class="nav-link ">
                             <span class="title">Store</span>
                         </a>
                     </li>
@@ -173,12 +173,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item vehicle-type">
-                        <a href="{{ URL::to('vehicle-type') }}" class="nav-link ">
+                        <a href="{{ secure_url('vehicle-type') }}" class="nav-link ">
                             <span class="title">Types</span>
                         </a>
                     </li>
                     <li class="nav-item vehicle">
-                        <a href="{{ URL::to('vehicle') }}" class="nav-link ">
+                        <a href="{{ secure_url('vehicle') }}" class="nav-link ">
                             <span class="title">Vehicles</span>
                         </a>
                     </li>
@@ -186,7 +186,7 @@
             </li>
 
 <!--            <li class="nav-item drivers">
-                <a href="{{ URL::to('driver') }}">
+                <a href="{{ secure_url('driver') }}">
                     <i class="fa fa-hand-rock-o"></i>
                     <span class="title">Drivers</span>
                 </a>
@@ -204,12 +204,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item hub-add">
-                        <a href="{{ URL::to('hub/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('hub/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
                     <li class="nav-item hub-manage">
-                        <a href="{{ URL::to('hub') }}" class="nav-link ">
+                        <a href="{{ secure_url('hub') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
@@ -224,19 +224,19 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item trip-map-add">
-                        <a href="{{ URL::to('trip-map/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('trip-map/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
                     <li class="nav-item trip-map-manage">
-                        <a href="{{ URL::to('trip-map') }}" class="nav-link ">
+                        <a href="{{ secure_url('trip-map') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
                 </ul>
             </li>
 
-            <li class="heading">
+<!--            <li class="heading">
                <h3 class="uppercase">Warehouse Management</h3>
             </li>
 
@@ -248,12 +248,12 @@
                </a>
                <ul class="sub-menu">
                     <li class="nav-item warehouse-add">
-                        <a href="{{ URL::to('shelf/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('shelf/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
                     <li class="nav-item warehouse-manage">
-                        <a href="{{ URL::to('shelf') }}" class="nav-link ">
+                        <a href="{{ secure_url('shelf') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
@@ -268,17 +268,17 @@
                </a>
                <ul class="sub-menu">
                     <li class="nav-item rack-add">
-                        <a href="{{ URL::to('rack/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('rack/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
                     <li class="nav-item rack-manage">
-                        <a href="{{ URL::to('rack') }}" class="nav-link ">
+                        <a href="{{ secure_url('rack') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
                </ul>
-            </li>
+            </li>-->
 
             <li class="heading">
                 <h3 class="uppercase">Users Management</h3>
@@ -292,22 +292,22 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item user-add">
-                        <a href="{{ URL::to('user/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('user/create') }}" class="nav-link ">
                             <span class="title">Add User</span>
                         </a>
                     </li>
                     <li class="nav-item user-manage">
-                        <a href="{{ URL::to('user') }}" class="nav-link ">
+                        <a href="{{ secure_url('user') }}" class="nav-link ">
                             <span class="title">Manage User</span>
                         </a>
                     </li>
                     <li class="nav-item rider-manage">
-                        <a href="{{ URL::to('rider') }}" class="nav-link ">
+                        <a href="{{ secure_url('rider') }}" class="nav-link ">
                             <span class="title">Manage New Rider</span>
                         </a>
                     </li>
                     <li class="nav-item profile-update-request">
-                        <a href="{{ URL::to('rider-profile-update-request') }}" class="nav-link ">
+                        <a href="{{ secure_url('rider-profile-update-request') }}" class="nav-link ">
                             <span class="title">Rider Info Update Request</span>
                         </a>
                     </li>
@@ -326,22 +326,22 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item country">
-                        <a href="{{ URL::to('country') }}" class="nav-link ">
+                        <a href="{{ secure_url('country') }}" class="nav-link ">
                             <span class="title">Countries</span>
                         </a>
                     </li>
                     <li class="nav-item state">
-                        <a href="{{ URL::to('state') }}" class="nav-link ">
+                        <a href="{{ secure_url('state') }}" class="nav-link ">
                             <span class="title">States</span>
                         </a>
                     </li>
                     <li class="nav-item city">
-                        <a href="{{ URL::to('city') }}" class="nav-link ">
+                        <a href="{{ secure_url('city') }}" class="nav-link ">
                             <span class="title">Cities</span>
                         </a>
                     </li>
                     <li class="nav-item zone">
-                        <a href="{{ URL::to('zone') }}" class="nav-link ">
+                        <a href="{{ secure_url('zone') }}" class="nav-link ">
                             <span class="title">Zones</span>
                         </a>
                     </li>
@@ -353,7 +353,7 @@
             </li>
 
             <li class="nav-item cod">
-                <a href="{{ URL::to('charge/1') }}">
+                <a href="{{ secure_url('charge/1') }}">
                     <i class="fa fa-hand-lizard-o"></i>
                     <span class="title">Cash on Delivery</span>
                 </a>
@@ -367,12 +367,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item discount-add">
-                        <a href="{{ URL::to('discount/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('discount/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
                     <li class="nav-item discount-manage">
-                        <a href="{{ URL::to('discount') }}" class="nav-link ">
+                        <a href="{{ secure_url('discount') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
@@ -391,12 +391,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item picking-times-add">
-                        <a href="{{ URL::to('picking-time/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('picking-time/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
                     <li class="nav-item picking-times-manage">
-                        <a href="{{ URL::to('picking-time') }}" class="nav-link ">
+                        <a href="{{ secure_url('picking-time') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
@@ -404,7 +404,7 @@
             </li>
 
             <li class="nav-item charge-model">
-                <a href="{{ URL::to('charge-model') }}">
+                <a href="{{ secure_url('charge-model') }}">
                     <i class="fa fa-balance-scale"></i>
                     <span class="title">Charge Models</span>
                 </a>

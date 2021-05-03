@@ -2,17 +2,17 @@
 
 @section('content')
 
-    <link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('hub-order') }}">Orders</a>
+                <a href="{{ secure_url('hub-order') }}">Orders</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -31,7 +31,7 @@
     <div class="row">
 
         <div class="col-md-12">
-            {!! Form::open(array('url' => '/return-pickup/', 'method' => 'post')) !!}
+            {!! Form::open(array('url' => secure_url('') . '/return-pickup/', 'method' => 'post')) !!}
 
                 <div class="form-group col-md-10">
 
@@ -90,7 +90,7 @@
                                 </td>
                                 <td>{{ $p->reason }}</td>
                                 <td>
-                                    {!! Form::open(array('url' => '/return-pickup/'.$p->id, 'method' => 'put')) !!}
+                                    {!! Form::open(array('url' => secure_url('') . '/return-pickup/'.$p->id, 'method' => 'put')) !!}
 
                                         {!! Form::hidden('task_id', $p->task_id, ['class' => 'form-control', 'required' => 'required']) !!}
 
@@ -126,13 +126,13 @@
                                         </button>
 
                                     {!! Form::close() !!}
-                                    <a href="{{ URL::to('return-pickup').'/'.$p->task_id }}" class="btn green-sharp btn-md col-md-12 col-lg-12 col-xs-12" data-toggle="confirmation" data-original-title="Are you sure ?" title="">
+                                    <a href="{{ secure_url('return-pickup').'/'.$p->task_id }}" class="btn green-sharp btn-md col-md-12 col-lg-12 col-xs-12" data-toggle="confirmation" data-original-title="Are you sure ?" title="">
                                         <i class="fa fa-close"></i>
                                         Cancel
                                     </a>
 
                                     @if($p->task_status == 3)
-                                    <a href="{{ URL::to('return-pickup').'/'.$p->task_id }}/edit" class="btn green-sharp btn-md col-md-12 col-lg-12 col-xs-12" data-toggle="confirmation" data-original-title="Are you sure ?" title="">
+                                    <a href="{{ secure_url('return-pickup').'/'.$p->task_id }}/edit" class="btn green-sharp btn-md col-md-12 col-lg-12 col-xs-12" data-toggle="confirmation" data-original-title="Are you sure ?" title="">
                                         <i class="fa fa-pencil"></i>
                                         Update
                                     </a>
@@ -155,11 +155,11 @@
 
     </div>
 
-    <script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
-    <script src="{{ URL::asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
-    <script src="{{ URL::asset('assets/pages/scripts/components-date-time-pickers.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/pages/scripts/components-date-time-pickers.min.js') }}" type="text/javascript"></script>
 
-    <script src="{{ URL::asset('custom/js/date-time.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('custom/js/date-time.js') }}" type="text/javascript"></script>
 
     <script type="text/javascript">
         $(document ).ready(function() {

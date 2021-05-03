@@ -6,7 +6,7 @@
 
 @section('select2JS')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
-    <script src="{!! asset('js/locations.dropdown.js') !!}"></script>
+    <script src="{!! secure_asset('js/locations.dropdown.js') !!}"></script>
 @endsection
 
 @section('content')
@@ -14,7 +14,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -58,7 +58,7 @@
                                         {!! ($vehicleType->status) ? '<span class="label label-success">Active</span>' : '<span class="label label-default">Inactive</span>' !!}
                                     </td>
                                     <td>
-                                        <a href="{!! route('vehicle-type.edit', $vehicleType->id) !!}" class="btn btn-sm btn-info">
+                                        <a href="{!! secure_url('') . "/vehicle-type/$vehicleType->id/edit" !!}" class="btn btn-sm btn-info">
                                             <i class="fa fa-pencil"></i> Edit
                                         </a>
                                     </td>
@@ -76,7 +76,7 @@
                     <i class="fa fa-plus"></i> Add New Vehicle Type
                 </div>
                 <div class="panel-body">
-                    {!! Form::open(['url' => '/vehicle-type', 'class' => 'form-horizontal']) !!}
+                    {!! Form::open(['url' => secure_url('') . '/vehicle-type', 'class' => 'form-horizontal']) !!}
 
                     <div class="form-group">
                         {!! Form::label('title', 'Title', ['class' => 'col-sm-3']) !!}

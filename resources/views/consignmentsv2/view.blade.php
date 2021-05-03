@@ -1,7 +1,7 @@
 @extends('layouts.appinside')
 
 @section('content')
-    <link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}"
+    <link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}"
           rel="stylesheet" type="text/css"/>
 
     <style type="text/css">
@@ -14,7 +14,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -107,12 +107,12 @@
                         <tr>
                             <td>Amount</td>
                             <td>:</td>
-                            <td>{{ $amount_to_collect }}</td>
+                            <td>{{ number_format($amount_to_collect) }}</td>
                         </tr>
                         <tr>
                             <td>Collected Amount</td>
                             <td>:</td>
-                            <td>{{ $amount_collected }}</td>
+                            <td>{{ number_format($amount_collected) }}</td>
                         </tr>
                     </table>
                 </div>
@@ -158,8 +158,8 @@
                                                 <thead>
                                                 <th>Time</th>
                                                 <th>Map</th>
-                                                <th>Signature</th>
-                                                <th>Photo</th>
+{{--                                                <th>Signature</th>--}}
+{{--                                                <th>Photo</th>--}}
                                                 </thead>
                                                 <tr>
 
@@ -168,42 +168,42 @@
 
                                                     <td>
                                                         <a target="_blank" class="btn default"
-                                                           href="{{url('maps/'.$task->start_lat.'/'.$task->start_long)}}">Start</a>
+                                                           href="{{secure_url('maps/'.$task->start_lat.'/'.$task->start_long)}}">Start</a>
                                                         <a target="_blank" class="btn default"
-                                                           href="{{url('maps/'.$task->end_lat.'/'.$task->end_long)}}">End</a>
+                                                           href="{{secure_url('maps/'.$task->end_lat.'/'.$task->end_long)}}">End</a>
                                                     </td>
 
-                                                    <td>
-                                                        <a href="javascript:void(0)" data-toggle="modal"
-                                                           task_id="{{ $task->id }}"
-                                                           data-target="#sign_{{ $task->id }}"
-                                                           class="btn green sign">Click Here</a>
-                                                        <div class="modal fade" id="sign_{{ $task->id }}"
-                                                             tabindex="-1" role="basic" aria-hidden="true">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content" style="padding: 15px;">
-                                                                    <img style="width: 100%;"
-                                                                         src="{{ $task->signature or "" }}">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
+{{--                                                    <td>--}}
+{{--                                                        <a href="javascript:void(0)" data-toggle="modal"--}}
+{{--                                                           task_id="{{ $task->id }}"--}}
+{{--                                                           data-target="#sign_{{ $task->id }}"--}}
+{{--                                                           class="btn green sign">Click Here</a>--}}
+{{--                                                        <div class="modal fade" id="sign_{{ $task->id }}"--}}
+{{--                                                             tabindex="-1" role="basic" aria-hidden="true">--}}
+{{--                                                            <div class="modal-dialog">--}}
+{{--                                                                <div class="modal-content" style="padding: 15px;">--}}
+{{--                                                                    <img style="width: 100%;"--}}
+{{--                                                                         src="{{ $task->signature or "" }}">--}}
+{{--                                                                </div>--}}
+{{--                                                            </div>--}}
+{{--                                                        </div>--}}
+{{--                                                    </td>--}}
 
-                                                    <td>
-                                                        <a href="javascript:void(0)" data-toggle="modal"
-                                                           task_id="{{ $task->id }}"
-                                                           data-target="#proof_{{ $task->id }}"
-                                                           class="btn green proof">Click Here</a>
-                                                        <div class="modal fade" id="proof_{{ $task->id }}"
-                                                             tabindex="-1" role="basic" aria-hidden="true">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content" style="padding: 15px;">
-                                                                    <img style="width: 100%;"
-                                                                         src="{{ $task->image }}">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
+{{--                                                    <td>--}}
+{{--                                                        <a href="javascript:void(0)" data-toggle="modal"--}}
+{{--                                                           task_id="{{ $task->id }}"--}}
+{{--                                                           data-target="#proof_{{ $task->id }}"--}}
+{{--                                                           class="btn green proof">Click Here</a>--}}
+{{--                                                        <div class="modal fade" id="proof_{{ $task->id }}"--}}
+{{--                                                             tabindex="-1" role="basic" aria-hidden="true">--}}
+{{--                                                            <div class="modal-dialog">--}}
+{{--                                                                <div class="modal-content" style="padding: 15px;">--}}
+{{--                                                                    <img style="width: 100%;"--}}
+{{--                                                                         src="{{ $task->image }}">--}}
+{{--                                                                </div>--}}
+{{--                                                            </div>--}}
+{{--                                                        </div>--}}
+{{--                                                    </td>--}}
 
                                                 </tr>
                                             </table>

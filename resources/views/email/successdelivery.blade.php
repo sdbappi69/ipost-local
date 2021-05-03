@@ -2,7 +2,7 @@
 
     $html = '<div style="width: 100%; text-align: center; margin: 0; padding: 0;">
                     <div class="logo" style="margin-top: 10px; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 5px solid #FCD404;">
-                        <img src="http://biddyut.com/img/x1487095966.png.pagespeed.ic.ts3RNsRdoS.png" alt="Biddyut Limited">
+                        <img src="https://biddyut.com/img/x1487095966.png.pagespeed.ic.ts3RNsRdoS.png" alt="Biddyut Limited">
                     </div>
                     <div style="color: #666666; width: 80%; margin: 10px auto; font-family: arial; font-size: 12px; text-align: justify;" class="content">
                         <p class="date" style="font-weight: bold; display: inline-block;">'.date('Y-m-d').'</p>

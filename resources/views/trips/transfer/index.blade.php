@@ -2,12 +2,12 @@
 
 @section('content')
 
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
   <ul class="page-breadcrumb">
     <li>
-      <a href="{{ URL::to('home') }}">Home</a>
+      <a href="{{ secure_url('home') }}">Home</a>
       <i class="fa fa-circle"></i>
     </li>
     <li>
@@ -34,12 +34,12 @@
 
     <div class="portlet-body util-btn-margin-bottom-5">
 
-      {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+      {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
         <?php if(!isset($_GET['sub_order_id'])){$_GET['sub_order_id'] = null;} ?>
         <div class="col-md-6" style="margin-bottom:5px;">
             <!-- <div class="row"> -->
-             <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control" name="sub_order_id" id="sub_order_id" placeholder="Sub-Order ID">
+             <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control" name="sub_order_id" id="sub_order_id" placeholder="AWB">
             <!-- </div> -->
         </div>
 
@@ -147,7 +147,7 @@
 
         <table class="table table-bordered table-hover" style="width: 100%;">
           <thead class="flip-content">
-            <th>Unique ID</th>
+            <th>AWB</th>
             <th>Address</th>
             <th>Edit</th>
           </thead>
@@ -168,7 +168,7 @@
                   <div class="modal-dialog">
                       <div class="modal-content" style="padding: 15px; overflow: hidden;">
 
-                        {!! Form::model(null, array('url' => '/transfer/'.$sub_order->suborder_id, 'method' => 'put')) !!}
+                        {!! Form::model(null, array('url' => secure_url('') . '/transfer/'.$sub_order->suborder_id, 'method' => 'put')) !!}
 
                           <div class="form-group">
                               <label class="control-label">Customer Name</label>
@@ -240,8 +240,8 @@
 
 </div>
 
- <script src="{{ URL::asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
- <script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+ <script src="{{ secure_asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
+ <script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
  <script type="text/javascript">
   $(document ).ready(function() {
     // Navigation Highlight

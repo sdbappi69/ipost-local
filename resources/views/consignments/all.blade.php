@@ -2,12 +2,12 @@
 
 @section('content')
 
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
   <ul class="page-breadcrumb">
     <li>
-      <a href="{{ URL::to('home') }}">Home</a>
+      <a href="{{ secure_url('home') }}">Home</a>
       <i class="fa fa-circle"></i>
     </li>
     <li>
@@ -22,7 +22,7 @@
 </h1>
 <div class="col-md-12">
   <div class="table-filtter">
-   {!! Form::open(array('method' => 'get')) !!}
+   {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
    <?php if(!isset($_GET['c_unique_id'])){$_GET['c_unique_id'] = null;} ?>
    <div class="col-md-2">
     <div class="row">
@@ -107,7 +107,7 @@
           @if(count($consignments) > 0)
           @foreach($consignments as $c)
           <tr>
-            <!-- <td><a title="Click to view details"  href="{{url('consignments-details/'.$c->id.'/'.$c->type.'/details')}}">{{$c->consignment_unique_id}}</a></td> -->
+            <!-- <td><a title="Click to view details"  href="{{secure_url('consignments-details/'.$c->id.'/'.$c->type.'/details')}}">{{$c->consignment_unique_id}}</a></td> -->
             <td>{{$c->consignment_unique_id}}</td>
             <td>{{$c->type}}</td>
             <td>{{$c->rider->name or 'N/A'}}</td>
@@ -132,17 +132,17 @@
             </td>
             
             <td>
-            <a class="btn btn-primary btn-xs" target="_blank" href="{{url('consignments/'.$c->id.'/'.$c->type)}}">View</a>
-            <a class="btn btn-info btn-xs" target="_blank" href="{{url('consignments-all-invoice/'.$c->id.'/'.$c->type)}}">All Invoice</a>
-            <a class="btn btn-warning btn-xs" target="_blank" href="{{url('consignments-followup/'.$c->id)}}">Follow Up</a>
+            <a class="btn btn-primary btn-xs" target="_blank" href="{{secure_url('consignments/'.$c->id.'/'.$c->type)}}">View</a>
+            <a class="btn btn-info btn-xs" target="_blank" href="{{secure_url('consignments-all-invoice/'.$c->id.'/'.$c->type)}}">All Invoice</a>
+            <a class="btn btn-warning btn-xs" target="_blank" href="{{secure_url('consignments-followup/'.$c->id)}}">Follow Up</a>
             @if ($c->status < 2)
-            {{-- <a class="btn btn-default btn-xs"  href="{{url('consignments-edit/'.$c->id)}}">Edit</a> --}}
-            <a class="btn btn-success btn-xs"  href="{{url('consignments-start/'.$c->id)}}">Start</a>
-            <a class="btn btn-danger btn-xs"  href="{{url('consignments-cancel/'.$c->id.'/'.$c->type)}}">Cancel</a>
+            {{-- <a class="btn btn-default btn-xs"  href="{{secure_url('consignments-edit/'.$c->id)}}">Edit</a> --}}
+            <a class="btn btn-success btn-xs"  href="{{secure_url('consignments-start/'.$c->id)}}">Start</a>
+            <a class="btn btn-danger btn-xs"  href="{{secure_url('consignments-cancel/'.$c->id.'/'.$c->type)}}">Cancel</a>
             @endif
             @if ($c->status == 3)
                       
-            <a class="btn btn-danger btn-xs"  href="{{url('reconciliation/'.$c->id.'/'.$c->type)}}">Reconciliation</a>
+            <a class="btn btn-danger btn-xs"  href="{{secure_url('reconciliation/'.$c->id.'/'.$c->type)}}">Reconciliation</a>
             @endif
             </td>
 
@@ -162,8 +162,8 @@
 </div>
 </div>
 
-<script src="{{ URL::asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
   $(document ).ready(function() {
             // Navigation Highlight

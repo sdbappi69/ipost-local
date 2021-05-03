@@ -30,7 +30,7 @@
     <table width="100%">
         <tr>
             <td>
-            <!-- <img width="180px;" src="{{URL::asset('assets/pages/img/login/login-invert.jpg')}}"> -->
+            <!-- <img width="180px;" src="{{secure_asset('assets/pages/img/login/login-invert.jpg')}}"> -->
                 <img width="180px;" src="./assets/pages/img/login/login-invert.png">
             </td>
             <td>

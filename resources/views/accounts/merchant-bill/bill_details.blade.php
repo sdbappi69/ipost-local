@@ -2,12 +2,12 @@
 
 @section('content')
 
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
   <ul class="page-breadcrumb">
     <li>
-      <a href="{{ URL::to('home') }}">Home</a>
+      <a href="{{ secure_url('home') }}">Home</a>
       <i class="fa fa-circle"></i>
   </li>
   <li>
@@ -43,7 +43,7 @@
             </div>
 
             <div class="col-md-3">
-                <label class="control-label">Sub-Order ID</label>
+                <label class="control-label">AWB</label>
                 {!! Form::text('sub_order_id', null, ['class' => 'form-control','id' => 'sub_order_id']) !!}
             </div>
 
@@ -73,7 +73,7 @@
                     <thead>
                         <tr>
                             <th scope="col">Invoice No.</th>
-                            <th scope="col">Sub-Order ID</th>
+                            <th scope="col">AWB</th>
                             <th scope="col">Order ID</th>
                             <th scope="col">Merchant Order ID</th>
                             <th scope="col">Store</th>

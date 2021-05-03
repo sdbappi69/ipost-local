@@ -6,7 +6,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -24,7 +24,7 @@
 
    <div class="col-md-12">
       <div class="table-filtter">
-         {!! Form::open(array('method' => 'get')) !!}
+         {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
          <div class="col-md-2">
             <div class="row">
                {!! Form::select('hub_id', array(''=>'Select Hub') + $hubs, null, ['class' => 'form-control', 'id' => 'hub_id']) !!}
@@ -86,7 +86,7 @@
                             @foreach($shelfs as $shelf)
                                 <tr>
                                     <td>{{ $shelf->get_hub->title }}</td>
-                                    <td><a data-toggle="modal" data-target="#large" href="{{ route('shelf_products', ['id' => $shelf->id]) }}">{{ $shelf->shelf_title }}</a></td>
+                                    <td><a data-toggle="modal" data-target="#large" href="{{ secure_url('') . "/shelf_products/$shelf->id" }}">{{ $shelf->shelf_title }}</a></td>
                                     <td>{{ $shelf->assigndhub['title'] }}</td>
                                     <td>{{ $shelf->width }}</td>
                                     <td>{{ $shelf->height }}</td>

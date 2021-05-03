@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('charge') }}">Charges</a>
+                <a href="{{ secure_url('charge') }}">Charges</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -32,7 +32,7 @@
     <!-- END PAGE TITLE-->
     <!-- END PAGE HEADER-->
 
-    {!! Form::model($charge, array('url' => '/charge/'.$charge->id, 'method' => 'put')) !!}
+    {!! Form::model($charge, array('url' => secure_url('') . '/charge/'.$charge->id, 'method' => 'put')) !!}
 
         <div class="row">
 

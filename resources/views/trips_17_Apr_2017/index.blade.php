@@ -6,7 +6,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -53,17 +53,17 @@
                                     <td>{{ $trip->source_hub->title }}</td>
                                     <td>{{ $trip->destination_hub->title }}</td>
                                     <td>
-                                        <!-- <a target="_blank" href="{{ URL::to('user') }}/{{ $trip->responsible_user->id }}"> -->
+                                        <!-- <a target="_blank" href="{{ secure_url('user') }}/{{ $trip->responsible_user->id }}"> -->
                                             {{ $trip->responsible_user->name }}
                                         <!-- </a> -->
                                     </td>
                                     <td>
                                         @if($trip->trip_status == 1)
-                                            <a href="{{ URL::to('trip') }}/{{ $trip->id }}">Load</a>
+                                            <a href="{{ secure_url('trip') }}/{{ $trip->id }}">Load</a>
                                         @elseIf($trip->trip_status == 2)
-                                            <a href="{{ URL::to('trip') }}/{{ $trip->id }}">In Transit</a>
+                                            <a href="{{ secure_url('trip') }}/{{ $trip->id }}">In Transit</a>
                                         @elseIf($trip->trip_status == 3)
-                                            <a href="{{ URL::to('trip') }}/{{ $trip->id }}">Reched</a>
+                                            <a href="{{ secure_url('trip') }}/{{ $trip->id }}">Reched</a>
                                         @endIf
                                     </td>
                                 </tr>
@@ -72,7 +72,7 @@
                     </table>
 
                     <div class="pagination pull-right">
-                        {{ $trips->render() }}
+                        {{ $trips->appends($_REQUEST)->render() }}
                     </div>
                 </div>
             </div>

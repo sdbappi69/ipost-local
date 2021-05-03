@@ -2,12 +2,12 @@
 
 @section('content')
 
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
   <ul class="page-breadcrumb">
     <li>
-      <a href="{{ URL::to('home') }}">Home</a>
+      <a href="{{ secure_url('home') }}">Home</a>
       <i class="fa fa-circle"></i>
     </li>
     <li>
@@ -23,7 +23,7 @@
 <div class="col-md-12">
   <div class="table-filtter">
 
-    {!! Form::open(array('url' => 'consignments-delivery-submit', 'method' => 'post')) !!}
+    {!! Form::open(array('url' => secure_url('') . '/consignments-delivery-submit', 'method' => 'post')) !!}
     
 
     <div class="col-md-2">
@@ -53,7 +53,7 @@
       <table class="table table-bordered table-hover" id="example0">
         <thead class="flip-content">
           <th>{!!Form::checkbox('name', 'value', false,array('id'=>'select_all_chk')) !!}</th>
-          <th>Unique ID</th>
+          <th>AWB</th>
 
           <th>Address</th>
           <th>Products</th>
@@ -122,7 +122,7 @@
         <div style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
       font-size: 12px; padding: 15px;width: 2.5in; margin: 0 auto;" id="{{ $sub_order->unique_suborder_id }}">
           <div style='text-align: center;'>
-            <img src="{{URL::asset('assets/pages/img/login/login-invert.png')}}">
+            <img src="{{secure_asset('assets/pages/img/login/login-invert.png')}}">
             <br>300/5/A Hatirpool, Dhaka
             <br>Website: www.biddyut.com
             <br><br>
@@ -283,8 +283,8 @@
 
                      @endforeach
                      @endif
-                     <script src="{{ URL::asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
-                     <script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+                     <script src="{{ secure_asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
+                     <script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
                      <script type="text/javascript">
                       $(document ).ready(function() {
             // Navigation Highlight

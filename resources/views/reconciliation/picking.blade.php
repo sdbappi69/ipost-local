@@ -1,12 +1,12 @@
 @extends('layouts.appinside')
 
 @section('content')
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
   <ul class="page-breadcrumb">
     <li>
-      <a href="{{ URL::to('home') }}">Home</a>
+      <a href="{{ secure_url('home') }}">Home</a>
       <i class="fa fa-circle"></i>
     </li>
     <li>
@@ -45,7 +45,7 @@
         <td>{{  $consignments->quantity_available }}</td>
         <td>
           @if(is_null($details))
-          <a class="btn btn-primary" href="{{url('reconciliation-picking-done/'.$consignments->id)}}">Reconciliation Done</a>
+          <a class="btn btn-primary" href="{{secure_url('reconciliation-picking-done/'.$consignments->id)}}">Reconciliation Done</a>
           @endif
         </td>
       </tr>
@@ -70,7 +70,7 @@
             Task type: <strong>Return</strong>
           @endIf
           <br>
-          Sub-Order Id: <strong>{{ $p->unique_suborder_id }}</strong>
+          AWB: <strong>{{ $p->unique_suborder_id }}</strong>
           <br>
           Title: <strong>{{ $p->product_title }}</strong>
           <br>
@@ -86,7 +86,7 @@
         </td>
         <td> 
           @if($consignments->status != '4')
-          <form method="post" action="{{url('reconciliation-update-picking')}}">
+          <form method="post" action="{{secure_url('reconciliation-update-picking')}}">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="consignments_id" value="{{$consignments->id}}">
             <input type="hidden" name="product_unique_id" value="{{$p->product_unique_id}}">
@@ -180,11 +180,11 @@
 
 @endIf
 
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/pages/scripts/components-date-time-pickers.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/pages/scripts/components-date-time-pickers.min.js') }}" type="text/javascript"></script>
 
-<script src="{{ URL::asset('custom/js/date-time.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('custom/js/date-time.js') }}" type="text/javascript"></script>
 
 <!-- END PAGE TITLE-->
 <!-- END PAGE HEADER-->

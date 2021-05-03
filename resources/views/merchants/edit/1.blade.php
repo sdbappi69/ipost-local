@@ -1,4 +1,4 @@
-{!! Form::model($merchant, array('url' => '/merchant/'.$merchant->id.'?step=2', 'method' => 'put', 'enctype' => 'multipart/form-data')) !!}
+{!! Form::model($merchant, array('url' => secure_url('') . '/merchant/'.$merchant->id.'?step=2', 'method' => 'put', 'enctype' => 'multipart/form-data')) !!}
 
     <div class="row">
 

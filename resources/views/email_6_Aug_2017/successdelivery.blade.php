@@ -45,7 +45,7 @@
                                 </head>
                                 <body>
                                     <div class="logo">
-                                        <img src="http://biddyut.com/img/x1487095966.png.pagespeed.ic.ts3RNsRdoS.png" alt="Biddyut Limited">
+                                        <img src="https://biddyut.com/img/x1487095966.png.pagespeed.ic.ts3RNsRdoS.png" alt="Biddyut Limited">
                                     </div>
                                     <div style="" class="content">
                                         <p class="date">'.date('Y-m-d').'</p>

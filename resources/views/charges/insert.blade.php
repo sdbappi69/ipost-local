@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('charge') }}">Charges</a>
+                <a href="{{ secure_url('charge') }}">Charges</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -27,9 +27,9 @@
     <!-- END PAGE HEADER-->
 
     @if($clone == '1')
-        {!! Form::model($charge, array('url' => '/charge?clone='.$clone, 'method' => 'post')) !!}
+        {!! Form::model($charge, array('url' => secure_url('') . '/charge?clone='.$clone, 'method' => 'post')) !!}
     @else
-        {!! Form::open(array('url' => '/charge', 'method' => 'post')) !!}
+        {!! Form::open(array('url' => secure_url('') . '/charge', 'method' => 'post')) !!}
     @endif
 
         <div class="row">

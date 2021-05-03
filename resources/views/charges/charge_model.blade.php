@@ -6,7 +6,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -48,7 +48,7 @@
                     </table>
 
                     <div class="pagination pull-right">
-                        {{ $charge_models->render() }}
+                        {{ $charge_models->appends($_REQUEST)->render() }}
                     </div>
                 </div>
             </div>

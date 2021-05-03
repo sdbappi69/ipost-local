@@ -1,4 +1,4 @@
-{!! Form::model($store, array('url' => '/store/'.$store->id.'?step=2', 'method' => 'put')) !!}
+{!! Form::model($store, array('url' => secure_url('') . '/store/'.$store->id.'?step=2', 'method' => 'put')) !!}
 
     <div class="row">
 
@@ -43,12 +43,12 @@
         </div>
 
     </div>
-
+<!--
     <div class="row">
 
         <div class="col-md-12">
 
-            <!-- BEGIN BUTTONS PORTLET-->
+             BEGIN BUTTONS PORTLET
             <div class="portlet light tasks-widget bordered animated flipInX">
 
                 <div class="portlet-title">
@@ -114,7 +114,7 @@
             </div>
         </div>
 
-    </div>
+    </div>-->
 
     &nbsp;
     <div class="row padding-top-10">

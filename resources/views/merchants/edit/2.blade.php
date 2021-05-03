@@ -14,7 +14,7 @@
             <div id="accordion3_new" class="panel-collapse collapse">
                 <div class="panel-body">
 
-                    {!! Form::open(array('url' => '/merchant/create-user', 'method' => 'post','enctype' => 'multipart/form-data' )) !!}
+                    {!! Form::open(array('url' => secure_url('') . '/merchant/create-user', 'method' => 'post','enctype' => 'multipart/form-data' )) !!}
                     <input type="hidden" name="reference_id" value="{{$merchant->id}}">
                     <input type="hidden" name="step" value="2">
                     <div class="row">
@@ -102,7 +102,7 @@
                             <div class="form-group">
                                 <div class="fileinput fileinput-new" data-provides="fileinput">
                                     <div class="fileinput-new thumbnail" style="width: 200px; height: auto;">
-                                        <img src="{{url('/uploads/merchants/no_image.jpg')}}" alt=""  id="img-thumb" />
+                                        <img src="{{secure_url('/uploads/merchants/no_image.jpg')}}" alt=""  id="img-thumb" />
                                     </div>
                                     <div>
                                         <span class="btn default btn-file">
@@ -170,7 +170,7 @@
                 <div id="accordion3_{{ $u->id }}" class="panel-collapse collapse">
                     <div class="panel-body">
 
-                        {!! Form::model($u, array('url' => '/merchant/edit-user', 'method' => 'put')) !!}
+                        {!! Form::model($u, array('url' => secure_url('') . '/merchant/edit-user', 'method' => 'put')) !!}
 
                         <input type="hidden" name="reference_id" value="{{$merchant->id}}">
                         <input type="hidden" name="id" value="{{$u->id}}">
@@ -314,8 +314,8 @@
 
             </div>
 
-            <a href="{{ URL::to('merchant') }}/{{ $merchant->id }}/edit" class="btn default"> Back </a>
-            <a href="{{ URL::to('merchant') }}/{{ $id }}/edit?step=3" class="btn green pull-right">Next</a>
+            <a href="{{ secure_url('merchant') }}/{{ $merchant->id }}/edit" class="btn default"> Back </a>
+            <a href="{{ secure_url('merchant') }}/{{ $id }}/edit?step=3" class="btn green pull-right">Next</a>
 
         </div>
 

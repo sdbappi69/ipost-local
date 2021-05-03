@@ -6,7 +6,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -31,7 +31,7 @@
         </div>
     </div>
     <div class="portlet-body util-btn-margin-bottom-5">
-        {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+        {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
         @if(Auth::user()->hasRole('superadministrator')||Auth::user()->hasRole('systemadministrator')||Auth::user()->hasRole('systemmoderator')||Auth::user()->hasRole('kam'))
         <div class="col-md-4" style="margin-bottom:5px;">

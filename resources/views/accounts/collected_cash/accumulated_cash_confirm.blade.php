@@ -1,12 +1,12 @@
 @extends('layouts.appinside')
 @section('content')
-    <link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}"
+    <link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}"
           rel="stylesheet" type="text/css"/>
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="portlet-body util-btn-margin-bottom-5">
-                {!! Form::open(array('method' => 'get')) !!}
+                {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
                 <?php if (!isset($_GET['batch_id'])) {
                     $_GET['batch_id'] = null;
                 } ?>
@@ -78,7 +78,7 @@
                 </div>
                 <div class="col-md-2">
                     <label class="control-label">&nbsp;</label>
-                    <button type="submit" class="btn btn-primary form-control">Filter</button>
+                    <button type="button" class="btn btn-primary filter-btn form-control">Filter</button>
                 </div>
                 <div class="clearfix"></div>
                 {!! Form::close() !!}
@@ -94,6 +94,9 @@
                     <i class="icon-edit font-dark"></i>
                     <span class="caption-subject font-dark bold uppercase">Receive Hub Payment Lists</span>
                 </div>
+                <div class="tools">
+                    <button type="button" class="btn btn-primary export-btn"><i class="fa fa-file-excel-o"></i></button>
+                </div>
             </div>
             <div class="portlet-body util-btn-margin-bottom-5">
                 <table class="table table-bordered table-hover" id="example0">
@@ -102,7 +105,7 @@
                     <th>Date</th>
                     <th>Total Qty</th>
                     <th>Collected</th>
-                    <th>Delivery Amount</th>
+{{--                    <th>Delivery Amount</th>--}}
                     <th>Status</th>
                     <th>Transaction ID</th>
                     <th>Remarks</th>
@@ -116,8 +119,8 @@
                                 <td>{{$c->batch_id}}</td>
                                 <td>{{$c->date}}</td>
                                 <td>{{$c->total_quantity}}</td>
-                                <td>{{$c->total_collected_amount}}</td>
-                                <td>{{$c->total_delivery_charge}}</td>
+                                <td>{{ number_format($c->total_collected_amount) }}</td>
+{{--                                <td>{{$c->total_delivery_charge}}</td>--}}
                                 <td> @if($c->status == 1)
                                         <span class="badge badge-info">Pending</span>
                                     @elseif($c->status == 2)
@@ -135,7 +138,7 @@
                                         <i class="fa fa-check-circle"></i>Confirm
                                     </button>
                                     @endif
-                                    <a class="btn btn-info" target="_blank"  href="{{ url('collection-cash-details',$c->id) }}" ><i class="fa fa-eye"></i> &nbsp; View</a>
+                                    <a class="btn btn-info" target="_blank"  href="{{ secure_url('collection-cash-details',$c->id) }}" ><i class="fa fa-eye"></i> &nbsp; View</a>
                                 </td>
                             </tr>
 
@@ -163,7 +166,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    {!! Form::open(array('url' => 'accumulated-collected-cash-confirm', 'method' => 'post')) !!}
+                    {!! Form::open(array('url' => secure_url('') . '/accumulated-collected-cash-confirm', 'method' => 'post')) !!}
                     <input type="hidden" name="accumulated_id" id="accumulated_id" value="">
 {{--                    <div class="form-group">--}}
 {{--                        <label class="control-label">Transaction ID <span style="color: red;">(*)</span></label>--}}
@@ -183,8 +186,8 @@
             </div>
         </div>
     </div>
-    <script src="{{ URL::asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
-    <script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"
+    <script src="{{ secure_asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"
             type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -195,6 +198,16 @@
         $(document).on("click", ".confirm-accumulated", function () {
             var accumulatedId = $(this).data('id');
             $(".modal-body #accumulated_id").val(accumulatedId);
+        });
+        $(".filter-btn").click(function(e){
+            e.preventDefault();
+            $('#filter-form').attr('action', "{{ secure_url('accumulated-collected-cash-confirm') }}").submit();
+        });
+
+        $(".export-btn").click(function(e){
+            // alert(1);
+            e.preventDefault();
+            $('#filter-form').attr('action', "{{ secure_url('accumulated-collected-cash-confirm-export/xls') }}").submit();
         });
     </script>
 @endsection

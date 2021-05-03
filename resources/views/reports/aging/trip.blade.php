@@ -6,7 +6,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -35,13 +35,13 @@
 
         <div class="portlet-body util-btn-margin-bottom-5">
 
-            {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+            {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
             <?php if(!isset($_GET['sub_order_id'])){$_GET['sub_order_id'] = null;} ?>
             <div class="col-md-4" style="margin-bottom:5px;">
-                <label class="control-label">Sub-Order ID</label>
+                <label class="control-label">AWB</label>
                 <!-- <div class="row"> -->
-                   <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control focus_it" name="sub_order_id" id="sub_order_id" placeholder="Sub-Order ID">
+                   <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control focus_it" name="sub_order_id" id="sub_order_id" placeholder="AWB">
                    <!-- </div> -->
                </div>
 
@@ -177,7 +177,7 @@
                         <table class="table table-striped table-bordered table-hover dt-responsive my_datatable" id="example0">
                             <thead>
                                 <th>Order Id</th>
-                                <th>Sub-Order Id</th>
+                                <th>AWB</th>
                                 <th>Merchant Order Id</th>
                                 <th>Merchant</th>
                                 <th>Store</th>
@@ -197,7 +197,7 @@
                                 @foreach($order_logs as $order_log)
                                 <tr>
                                     <td>
-                                        <a class="label label-success" href="{{ URL::to('order').'/'.$order_log->orderId }}">
+                                        <a class="label label-success" href="{{ secure_url('order').'/'.$order_log->orderId }}">
                                             {{ $order_log->order_id }}
                                         </a>
                                     </td>
@@ -227,7 +227,7 @@
 
             @endIf
 
-            <script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+            <script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
             <script type="text/javascript">
                 $(document ).ready(function() {
         // Navigation Highlight
@@ -267,12 +267,12 @@
 
     $(".filter-btn").click(function(e){
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('aging/trip') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('aging/trip') }}").submit();
     });
 
     $(".export-btn").click(function(e){
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('aging/tripexport/xls') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('aging/tripexport/xls') }}").submit();
     });
 
 </script>

@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('rider-profile-update-request') }}">Rider Request</a>
+                <a href="{{ secure_url('rider-profile-update-request') }}">Rider Request</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -28,7 +28,7 @@
 
     <div class="mt-element-step">
 
-        {!! Form::model($update, array('url' => '/rider/'.$user->id, 'method' => 'put')) !!}
+        {!! Form::model($update, array('url' => secure_url('') . '/rider/'.$user->id, 'method' => 'put')) !!}
 
         <div class="row">
 
@@ -119,7 +119,7 @@
                 <div class="form-group">
                     <div class="fileinput fileinput-new" data-provides="fileinput">
                         <div class="fileinput-new thumbnail" style="width: 200px; height: auto;">
-                            <img src="{{ url('/').'/'.$update->photo }}" alt=""  id="image" />
+                            <img src="{{ secure_url('/').'/'.$update->photo }}" alt=""  id="image" />
                         </div>
                         <div>
                         <span class="btn default btn-file">

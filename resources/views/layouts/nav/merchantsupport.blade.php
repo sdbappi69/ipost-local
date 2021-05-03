@@ -20,7 +20,7 @@
             </li>
 
             <li class="nav-item start dashboard">
-                <a href="{{ URL::to('home') }}">
+                <a href="{{ secure_url('home') }}">
                     <i class="icon-home"></i>
                     <span class="title">Dashboard</span>
                     <!-- <span class="selected"></span> -->
@@ -40,22 +40,22 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item merchant-order-add">
-                        <a href="{{ URL::to('merchant-orderv2/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('merchant-orderv2/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
                     <li class="nav-item merchant-order-bulk">
-                        <a href="{{ URL::to('merchant-order-bulk') }}" class="nav-link ">
+                        <a href="{{ secure_url('merchant-order-bulk') }}" class="nav-link ">
                             <span class="title">Bulk Upload</span>
                         </a>
                     </li>
                     <li class="nav-item merchant-order-manage">
-                        <a href="{{ URL::to('merchant-order') }}" class="nav-link ">
+                        <a href="{{ secure_url('merchant-order') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
                     <li class="nav-item merchant-order-draft">
-                        <a href="{{ URL::to('merchant-order-draftv2') }}" class="nav-link ">
+                        <a href="{{ secure_url('merchant-order-draftv2') }}" class="nav-link ">
                             <span class="title">Draft</span>
                         </a>
                     </li>
@@ -74,7 +74,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item store-manage">
-                        <a href="{{ URL::to('store') }}" class="nav-link ">
+                        <a href="{{ secure_url('store') }}" class="nav-link ">
                             <span class="title">Store</span>
                         </a>
                     </li>
@@ -89,12 +89,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item warehouse-add">
-                        <a href="{{ URL::to('warehouse/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('warehouse/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
                     <li class="nav-item warehouse-manage">
-                        <a href="{{ URL::to('warehouse') }}" class="nav-link ">
+                        <a href="{{ secure_url('warehouse') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>

@@ -2,13 +2,13 @@
 
 @section('content')
 
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -33,7 +33,7 @@
                     <table class="table table-bordered table-hover" id="example0">
                         <thead class="flip-content">
                             <th>Order ID</th>
-                            <th>Sub-Order ID</th>
+                            <th>AWB</th>
                             <th>Shipping</th>
                             <th>Reason</th>
                             <th>Action</th>
@@ -61,7 +61,7 @@
                                           @if($sub_order->status == 4)
                                             @if($sub_order->unique_suborder_id[0] != 'R')
 
-                                                {!! Form::open(array('url' => '/return-delivery/'.$sub_order->task_id, 'method' => 'put')) !!}
+                                                {!! Form::open(array('url' => secure_url('') . '/return-delivery/'.$sub_order->task_id, 'method' => 'put')) !!}
                                                     {!! Form::hidden('sub_order_id', $sub_order->id, ['class' => 'form-control', 'required' => 'required']) !!}
                                                     <button type="submit" class="btn green-sharp btn-md col-md-12 col-lg-12 col-xs-12" data-toggle="confirmation" data-original-title="Are you sure ?" title="">
                                                         <i class="fa fa-check"></i>
@@ -69,13 +69,13 @@
                                                     </button>
                                                 {!! Form::close() !!}
 
-                                                <a href="{{ URL::to('return-delivery').'/'.$sub_order->task_id }}?type=full" class="btn green-sharp btn-md col-md-12 col-lg-12 col-xs-12" data-toggle="confirmation" data-original-title="Are you sure ?" title="">
+                                                <a href="{{ secure_url('return-delivery').'/'.$sub_order->task_id }}?type=full" class="btn green-sharp btn-md col-md-12 col-lg-12 col-xs-12" data-toggle="confirmation" data-original-title="Are you sure ?" title="">
                                                     <i class="fa fa-close"></i>
                                                     Return
                                                 </a>
                                             @endIf
                                           @elseif($sub_order->status == 3)
-                                            <a href="{{ URL::to('return-delivery').'/'.$sub_order->task_id }}?type=pertial" class="btn green-sharp btn-md col-md-12 col-lg-12 col-xs-12" data-toggle="confirmation" data-original-title="Are you sure ?" title="">
+                                            <a href="{{ secure_url('return-delivery').'/'.$sub_order->task_id }}?type=pertial" class="btn green-sharp btn-md col-md-12 col-lg-12 col-xs-12" data-toggle="confirmation" data-original-title="Are you sure ?" title="">
                                                 <i class="fa fa-close"></i>
                                                 Return rest
                                             </a>
@@ -93,11 +93,11 @@
         </div>
     </div>
 
-    <script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
-    <script src="{{ URL::asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
-    <script src="{{ URL::asset('assets/pages/scripts/components-date-time-pickers.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/pages/scripts/components-date-time-pickers.min.js') }}" type="text/javascript"></script>
 
-    <script src="{{ URL::asset('custom/js/date-time.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('custom/js/date-time.js') }}" type="text/javascript"></script>
 
     <script type="text/javascript">
         $(document ).ready(function() {

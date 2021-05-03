@@ -2,7 +2,7 @@
 <div id="submit_order_complain_{{$sub_order->suborder_id}}" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
-    {{Form::open(['url' => 'complain', 'method' => 'post'])}}
+    {{Form::open(['url' => secure_url('') . '/complain', 'method' => 'post'])}}
     <input type="hidden" name="sub_order_id" value="{{$sub_order->suborder_id}}">
     <div class="modal-content">
       <div class="modal-header">

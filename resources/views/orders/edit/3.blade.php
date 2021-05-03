@@ -12,7 +12,7 @@
             <div class="portlet-body util-btn-margin-bottom-5">
                 <div class="table-responsive">
 
-                    {!! Form::model($order, array('url' => '/order/'.$order->id.'?step=complete', 'method' => 'put')) !!}
+                    {!! Form::model($order, array('url' => secure_url('') . '/order/'.$order->id.'?step=complete', 'method' => 'put')) !!}
 
                         <table class="table">
                             <thead class="flip-content">
@@ -77,7 +77,7 @@
 
                         &nbsp;
                         <div class="row padding-top-10">
-                            <a href="{{ URL::to('merchant-order/'.$id.'/edit?step=2') }}" class="btn default"> Back </a>
+                            <a href="{{ secure_url('merchant-order/'.$id.'/edit?step=2') }}" class="btn default"> Back </a>
                             {!! Form::submit('Confirm', ['class' => 'btn green pull-right']) !!}
                         </div>
 

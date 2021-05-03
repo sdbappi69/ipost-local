@@ -2,7 +2,7 @@
 <div id="update_query_{{$query->id}}" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
-    {{Form::model($query,['url' => 'query/'.$query->id, 'method' => 'put'])}}
+    {{Form::model($query,['url' => secure_url('') . '/query/'.$query->id, 'method' => 'put'])}}
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>

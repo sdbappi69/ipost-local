@@ -21,7 +21,7 @@
 
 
             <li class="nav-item start dashboard">
-                <a href="{{ URL::to('home') }}">
+                <a href="{{ secure_url('home') }}">
                     <i class="icon-home"></i>
                     <span class="title">Dashboard</span>
                     <!-- <span class="selected"></span> -->
@@ -33,7 +33,7 @@
             </li>
 
             <li class="nav-item start orders">
-                <a href="{{ URL::to('order') }}">
+                <a href="{{ secure_url('order') }}">
                     <i class="fa fa-cube"></i>
                     <span class="title">Orders</span>
                 </a>
@@ -51,12 +51,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item all-bank">
-                        <a href="{{ URL::to('/bank') }}" class="nav-link ">
+                        <a href="{{ secure_url('/bank') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
                     <li class="nav-item add-bank">
-                        <a href="{{ URL::to('/bank/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('/bank/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
@@ -71,12 +71,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item all-bank-accounts">
-                        <a href="{{ URL::to('/bank-accounts') }}" class="nav-link ">
+                        <a href="{{ secure_url('/bank-accounts') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
                     <li class="nav-item add-bank-accounts">
-                        <a href="{{ URL::to('/bank-accounts/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('/bank-accounts/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
@@ -91,12 +91,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item all-hub-bank-accounts">
-                        <a href="{{ URL::to('/hub-bank-accounts') }}" class="nav-link ">
+                        <a href="{{ secure_url('/hub-bank-accounts') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
                     <li class="nav-item add-hub-bank-accounts">
-                        <a href="{{ URL::to('/hub-bank-accounts/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('/hub-bank-accounts/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
@@ -111,12 +111,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item all-merchant-bank-accounts">
-                        <a href="{{ URL::to('/merchant-bank-accounts') }}" class="nav-link ">
+                        <a href="{{ secure_url('/merchant-bank-accounts') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
                     <li class="nav-item add-hub-bank-accounts">
-                        <a href="{{ URL::to('/merchant-bank-accounts/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('/merchant-bank-accounts/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
@@ -131,12 +131,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item all-vault">
-                        <a href="{{ URL::to('/vault') }}" class="nav-link ">
+                        <a href="{{ secure_url('/vault') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
                     <li class="nav-item add-vault">
-                        <a href="{{ URL::to('/vault/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('/vault/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
@@ -160,59 +160,59 @@
 
                 <ul class="sub-menu">
                     <li class="nav-item receive_hub_payment">
-                        <a href="{{ URL::to('accumulated-collected-cash-confirm') }}" class="nav-link ">
+                        <a href="{{ secure_url('accumulated-collected-cash-confirm') }}" class="nav-link ">
                             <span class="title">Receive Hub Payment</span>
                             <span class="badge badge-success trip_nav" id="receive_hub_payment">0</span>
                         </a>
                     </li>
                     <li class="nav-item merchant_checkout">
-                        <a href="{{ URL::to('collected-cash-merchant') }}" class="nav-link ">
+                        <a href="{{ secure_url('collected-cash-merchant') }}" class="nav-link ">
                             <span class="title">Merchant Checkout</span>
                             <span class="badge badge-success trip_nav" id="merchant_checkout">0</span>
                         </a>
                     </li>
                     <li class="nav-item confirm_checkout">
-                        <a href="{{ URL::to('collected-cash-merchant-confirm') }}" class="nav-link ">
+                        <a href="{{ secure_url('collected-cash-merchant-confirm') }}" class="nav-link ">
                             <span class="title">Manage Checkout</span>
                             <span class="badge badge-success trip_nav" id="manage_checkout">0</span>
                         </a>
                     </li>
                   {{--  saif develop--}}
                {{--     <li class="nav-item checkout_history">
-                        <a href="{{ URL::to('collected-cash-merchant-final') }}" class="nav-link ">
+                        <a href="{{ secure_url('collected-cash-merchant-final') }}" class="nav-link ">
                             <span class="title">Checkout History</span>
                         </a>
                     </li>--}}
 
 
                     {{--<li class="nav-item manage_vault">
-                        <a href="{{ URL::to('manage-vault-accounts') }}" class="nav-link ">
+                        <a href="{{ secure_url('manage-vault-accounts') }}" class="nav-link ">
                             <span class="title">Manage Vault</span>
                         </a>
                     </li>
 
                     <li class="nav-item manage_checkout">
-                        <a href="{{ URL::to('manage-checkout-accounts') }}" class="nav-link ">
+                        <a href="{{ secure_url('manage-checkout-accounts') }}" class="nav-link ">
                             <span class="title">Manage Hub Checkout</span>
                         </a>
                     </li>
                     <li class="nav-item create_merchant_checkout">
-                        <a href="{{ URL::to('create-merchant-checkout') }}" class="nav-link ">
+                        <a href="{{ secure_url('create-merchant-checkout') }}" class="nav-link ">
                             <span class="title">Create Merchant Checkout</span>
                         </a>
                     </li>
                     <li class="nav-item manage_merchant_checkout">
-                        <a href="{{ URL::to('manage-merchant-checkout') }}" class="nav-link ">
+                        <a href="{{ secure_url('manage-merchant-checkout') }}" class="nav-link ">
                             <span class="title">Manage Merchant Checkout</span>
                         </a>
                     </li>
                     <li class="nav-item create_merchant_bill">
-                        <a href="{{ URL::to('create-merchant-bill') }}" class="nav-link ">
+                        <a href="{{ secure_url('create-merchant-bill') }}" class="nav-link ">
                             <span class="title">Create Merchant Bill</span>
                         </a>
                     </li>
                     <li class="nav-item manage_merchant_bill">
-                        <a href="{{ URL::to('manage-merchant-bill') }}" class="nav-link ">
+                        <a href="{{ secure_url('manage-merchant-bill') }}" class="nav-link ">
                             <span class="title">Manage Merchant Bill</span>
                         </a>
                     </li>--}}
@@ -238,7 +238,7 @@
 
         function hubManagerNav() {
             $.ajax({
-                url: "{{url('head-account-nav')}}",
+                url: "{{secure_url('head-account-nav')}}",
                 type: "get",
                 data: {},
                 success: function (data) {

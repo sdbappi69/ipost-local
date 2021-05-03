@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('hub') }}">Hubs</a>
+                <a href="{{ secure_url('hub') }}">Hubs</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -26,7 +26,7 @@
     <!-- END PAGE TITLE-->
     <!-- END PAGE HEADER-->
 
-        {!! Form::model($hub, array('url' => '/hub/'.$hub->id, 'method' => 'put')) !!}
+        {!! Form::model($hub, array('url' => secure_url('') . '/hub/'.$hub->id, 'method' => 'put')) !!}
 
             <div class="row">
 
@@ -193,10 +193,10 @@
 */
     </script>
 
-    <script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
+    <script src="https://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
     <script>
         $(function () {
-          var image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
+          var image = 'https://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
               bounds = new google.maps.LatLngBounds();
               mapOptions = {
                 mapTypeId: google.maps.MapTypeId.ROADMAP,

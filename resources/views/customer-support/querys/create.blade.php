@@ -2,7 +2,7 @@
 <div id="create_query" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
-    {{Form::open(['url' => 'query', 'method' => 'post'])}}
+    {{Form::open(['url' => secure_url('') . '/query', 'method' => 'post'])}}
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>

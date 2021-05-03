@@ -6,7 +6,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -71,7 +71,7 @@
 
 @endIf
 
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
     $(document ).ready(function() {
         // Navigation Highlight
@@ -116,13 +116,13 @@
 
     $(".filter-btn").click(function(e){
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('order') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('order') }}").submit();
     });
 
     $(".export-btn").click(function(e){
         // alert(1);
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('orderexport/xls') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('orderexport/xls') }}").submit();
     });
 
 </script>

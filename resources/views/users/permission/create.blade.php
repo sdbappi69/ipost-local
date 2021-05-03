@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('permission') }}">Permission</a>
+                <a href="{{ secure_url('permission') }}">Permission</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -31,7 +31,7 @@
       <div class="panel panel-default">
 
             <div class="panel-body">
-              {{ Form::open(['route' => 'permission.store']) }}
+              {{ Form::open(['url' => secure_url('') . '/permission', 'method' => 'post']) }}
                 <div class="form-group">                  
                   {{Form::label('selectRoleName', 'Role', ['class' => 'form-label'])}}                  
                   {{ Form::select('role_id[]', ['' => 'SELECT ROLE']+$roles, null, ['class' => 'form-control', 'id' => 'selectRoleName', 'required' => 'required', 'multiple' => 'true']) }}

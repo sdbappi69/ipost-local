@@ -22,7 +22,7 @@ table, th{
     <table width="100%" style="border: none;">
         <tr>
             <td style="border: none;">
-                <img src="{{url('assets/pages/img/login/login-invert.png')}}" width="150px">
+                <img src="{{secure_url('assets/pages/img/login/login-invert.png')}}" width="150px">
                 <p>300/5/A Hatirpool, Dhaka</p>
             </td>
             <td style="border: none;">

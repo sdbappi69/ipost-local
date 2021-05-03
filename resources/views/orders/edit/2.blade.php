@@ -1,4 +1,4 @@
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 
 <div class="row">
     <br>
@@ -15,7 +15,7 @@
             <div id="accordion3_new" class="panel-collapse collapse">
                 <div class="panel-body">
                     
-                {!! Form::open(array('url' => '/product', 'method' => 'post')) !!}
+                {!! Form::open(array('url' => secure_url('') . '/product', 'method' => 'post')) !!}
 
                     <div class="row">
 
@@ -32,7 +32,7 @@
 
                             <div class="form-group">
                                 <label class="control-label">Product URL</label>
-                                {!! Form::text('url', null, ['class' => 'form-control', 'placeholder' => 'http://your-product-link']) !!}
+                                {!! Form::text('url', null, ['class' => 'form-control', 'placeholder' => 'https://your-product-link']) !!}
                             </div>
 
                             <div class="form-group">
@@ -129,7 +129,7 @@
                         </a>
 
                         <!-- Delete -->
-                        {!! Form::open(array('url' => '/product/'.$row->id, 'method' => 'post')) !!}
+                        {!! Form::open(array('url' => secure_url('') . '/product/'.$row->id, 'method' => 'post')) !!}
                             {{ method_field('DELETE') }}
                             <button type="submit" id="delete-task-{{ $row->id }}" class="btn btn-danger btn-xs pull-right" style="margin-top:-20px;">
                                 <i class="fa fa-btn fa-trash"></i> Remove
@@ -141,7 +141,7 @@
                 <div id="accordion3_{{ $row->id }}" class="panel-collapse collapse">
                     <div class="panel-body">
                         
-                    {!! Form::model($row, array('url' => '/product/'.$row->id, 'method' => 'put')) !!}
+                    {!! Form::model($row, array('url' => secure_url('') . '/product/'.$row->id, 'method' => 'put')) !!}
 
                         <div class="row">
 
@@ -156,7 +156,7 @@
 
                                 <div class="form-group">
                                     <label class="control-label">Product URL</label>
-                                    {!! Form::text('url', null, ['class' => 'form-control', 'placeholder' => 'http://your-product-link']) !!}
+                                    {!! Form::text('url', null, ['class' => 'form-control', 'placeholder' => 'https://your-product-link']) !!}
                                 </div>
 
                                 <div class="form-group">
@@ -244,20 +244,20 @@
 
     </div>
 
-    <a href="{{ URL::to('order') }}/{{ $id }}/edit?step=1" class="btn default"> Back </a>
-    <a href="{{ URL::to('order') }}/{{ $id }}/edit?step=3" class="btn green pull-right">Next</a>
+    <a href="{{ secure_url('order') }}/{{ $id }}/edit?step=1" class="btn default"> Back </a>
+    <a href="{{ secure_url('order') }}/{{ $id }}/edit?step=3" class="btn green pull-right">Next</a>
 
 </div>
 
-<script src="{{ URL::asset('assets/global/plugins/fuelux/js/spinner.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/pages/scripts/components-bootstrap-touchspin.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/fuelux/js/spinner.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/pages/scripts/components-bootstrap-touchspin.min.js') }}" type="text/javascript"></script>
 
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/pages/scripts/components-date-time-pickers.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/pages/scripts/components-date-time-pickers.min.js') }}" type="text/javascript"></script>
 
-<script src="{{ URL::asset('custom/js/date-time.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('custom/js/date-time.js') }}" type="text/javascript"></script>
 
 <script type="text/javascript">
     // $("#quantity").TouchSpin();

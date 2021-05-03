@@ -2,12 +2,12 @@
 
 @section('content')
 
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
   <ul class="page-breadcrumb">
     <li>
-      <a href="{{ URL::to('home') }}">Home</a>
+      <a href="{{ secure_url('home') }}">Home</a>
       <i class="fa fa-circle"></i>
     </li>
     <li>
@@ -34,12 +34,12 @@
 
     <div class="portlet-body util-btn-margin-bottom-5">
 
-      {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+      {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
         <?php if(!isset($_GET['sub_order_id'])){$_GET['sub_order_id'] = null;} ?>
         <div class="col-md-6" style="margin-bottom:5px;">
             <!-- <div class="row"> -->
-             <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control" name="sub_order_id" id="sub_order_id" placeholder="Sub-Order ID">
+             <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control" name="sub_order_id" id="sub_order_id" placeholder="AWB">
             <!-- </div> -->
         </div>
 
@@ -92,6 +92,34 @@
             <!-- </div> -->
         </div>
 
+        <?php if(!isset($_GET['pickup_city_id'])){$_GET['pickup_city_id'] = null;} ?>
+        <div class="col-md-6" style="margin-bottom:5px;">
+            <!-- <div class="row"> -->
+        {!! Form::select('pickup_city_id', array(''=>'All Pickup Cities')+$cities,$_GET['pickup_city_id'], ['class' => 'form-control js-example-basic-single','id' => 'pickup_city_id']) !!}
+        <!-- </div> -->
+        </div>
+
+        <?php if(!isset($_GET['delivery_city_id'])){$_GET['delivery_city_id'] = null;} ?>
+        <div class="col-md-6" style="margin-bottom:5px;">
+            <!-- <div class="row"> -->
+        {!! Form::select('delivery_city_id', array(''=>'All Delivery Cities')+$cities,$_GET['delivery_city_id'], ['class' => 'form-control js-example-basic-single','id' => 'delivery_city_id']) !!}
+        <!-- </div> -->
+        </div>
+
+        <?php if(!isset($_GET['sort_by'])){$_GET['sort_by'] = null;} ?>
+        <div class="col-md-6" style="margin-bottom:5px;">
+            <!-- <div class="row"> -->
+        {!! Form::select('sort_by', array(''=>'Sort By', 'address' => 'Address', 'zone' => 'Zone', 'city' => 'City'),$_GET['sort_by'], ['class' => 'form-control js-example-basic-single','id' => 'sort_by']) !!}
+        <!-- </div> -->
+        </div>
+
+        <?php if(!isset($_GET['order_by'])){$_GET['order_by'] = null;} ?>
+        <div class="col-md-6" style="margin-bottom:5px;">
+            <!-- <div class="row"> -->
+        {!! Form::select('order_by', array(''=>'Order By', 'asc' => 'Ascending', 'desc' => 'Descending'),$_GET['order_by'], ['class' => 'form-control js-example-basic-single','id' => 'order_by']) !!}
+        <!-- </div> -->
+        </div>
+
         <?php if(!isset($_GET['start_date'])){$_GET['start_date'] = null;} ?>
         <div class="col-md-6" style="margin-bottom:5px;">
             <!-- <div class="row"> -->
@@ -128,7 +156,7 @@
       {!! Form::close() !!}
 
 
-      {!! Form::open(array('url' => '/add-bulk-pickup-cart', 'method' => 'post')) !!}
+      {!! Form::open(array('url' => secure_url('') . '/add-bulk-pickup-cart', 'method' => 'post')) !!}
 
         <div class="col-md-12">
             <button type="submit" class="btn btn-primary add-to-cart pull-right"><i class="fa fa-shopping-cart"></i> Add to cart</button>
@@ -137,8 +165,9 @@
         <table class="table table-bordered table-hover" id="example0">
           <thead class="flip-content">
             <th>{!!Form::checkbox('name', 'value', false,array('id'=>'select_all_chk')) !!}</th>
-            <th>Unique ID</th>
+            <th>AWB</th>
             <th>Address</th>
+            <th>City</th>
             <th>Documents</th>
           </thead>
           <tbody>
@@ -171,9 +200,10 @@
                 @endif
 
               </td>
+              <td>{{ $sub_order->pickup_city }}</td>
               <td>
-                <a class="btn btn-info btn-xs" target="_blank" href="{{url('common-awb-single/'.$sub_order->suborder_id)}}">AWB</a>
-                <a class="btn btn-success btn-xs" target="_blank" href="{{url('common-invoice-single/'.$sub_order->suborder_id)}}">Invoice</a>
+                <a class="btn btn-info btn-xs" target="_blank" href="{{secure_url('common-awb-single/'.$sub_order->suborder_id)}}">AWB</a>
+                <a class="btn btn-success btn-xs" target="_blank" href="{{secure_url('common-invoice-single/'.$sub_order->suborder_id)}}">Invoice</a>
               </td>
 
               <!-- <td><button type="button" value="{{ $sub_order->unique_suborder_id }}" class="print_modal"><i class="fa fa-folder-open-o" aria-hidden="true"></i></button></td> -->
@@ -205,10 +235,10 @@
 
     <div class="portlet-body util-btn-margin-bottom-5">
 
-      {!! Form::open(array('url' => 'add-pickup-cart', 'method' => 'post')) !!}
+      {!! Form::open(array('url' => secure_url('') . '/add-pickup-cart', 'method' => 'post')) !!}
 
         <div class="col-md-8" style="margin-bottom:5px;">
-            <input type="text" value="" class="form-control focus_it" name="unique_suborder_id" placeholder="Sub-Order ID" required="required">
+            <input type="text" value="" class="form-control focus_it" name="unique_suborder_id" placeholder="AWB" required="required">
         </div>
 
         <div class="col-md-4" style="margin-bottom:5px;">
@@ -243,7 +273,7 @@
 
       @endIf
 
-      {!! Form::open(array('url' => 'consignments-pick-up-submit', 'method' => 'post')) !!}
+      {!! Form::open(array('url' => secure_url('') . '/consignments-pick-up-submit', 'method' => 'post')) !!}
 
         <div class="col-md-8" style="margin-bottom:5px;">
              {!! Form::select('picker_id',['' => 'Select Pickup Man']+$pickupman,old('picker_id'), ['class' => 'form-control js-example-basic-single', 'id' => 'picker_id', 'required' => 'required']) !!}
@@ -261,8 +291,8 @@
 
 </div>
 
-<script src="{{ URL::asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
 $(document ).ready(function() {
   // Navigation Highlight

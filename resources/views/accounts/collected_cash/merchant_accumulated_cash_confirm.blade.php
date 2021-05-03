@@ -2,13 +2,13 @@
 
 @section('content')
 
-    <link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}"
+    <link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}"
           rel="stylesheet" type="text/css"/>
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="portlet-body util-btn-margin-bottom-5">
-                {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+                {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
                 <?php if (!isset($_GET['merchant_batch_id'])) {
                     $_GET['merchant_batch_id'] = null;
                 } ?>
@@ -53,7 +53,7 @@
                 </div>
                 <?php if(!isset($_GET['start_date'])){$_GET['start_date'] = null;} ?>
                 <div class="col-md-4" style="margin-bottom:5px;">
-                    <label class="control-label">Order from</label>
+                    <label class="control-label">From</label>
                     <div class="input-group input-medium date date-picker input-full" data-date-format="yyyy-mm-dd" >
                     <span class="input-group-btn">
                         <button class="btn default" type="button">
@@ -66,7 +66,7 @@
 
                 <?php if(!isset($_GET['end_date'])){$_GET['end_date'] = null;} ?>
                 <div class="col-md-4" style="margin-bottom:5px;">
-                    <label class="control-label">Order to</label>
+                    <label class="control-label">To</label>
                     <div class="input-group input-medium date date-picker input-full" data-date-format="yyyy-mm-dd" >
                     <span class="input-group-btn">
                         <button class="btn default" type="button">
@@ -107,7 +107,7 @@
                     <th>Date</th>
                     <th>Total Qty</th>
                     <th>Collected</th>
-                    <th>Delivery Amount</th>
+                    <!-- <th>Delivery Amount</th> -->
                     <th>Status</th>
                     <th>Transaction ID</th>
                     <th>Remarks</th>
@@ -120,8 +120,8 @@
                                 <td>{{$c->merchant_batch_id}}</td>
                                 <td>{{$c->date}}</td>
                                 <td>{{$c->total_quantity}}</td>
-                                <td>{{$c->total_collected_amount}}</td>
-                                <td>{{$c->total_delivery_charge}}</td>
+                                <td>{{ number_format($c->total_collected_amount) }}</td>
+                                <!-- <td>{{$c->total_delivery_charge}}</td> -->
                                 <td>
                                     @if($c->status == 1)
                                         <span class="badge badge-info" >Pending</span>
@@ -137,7 +137,7 @@
                                     @if($c->status == 1)
                                    <button type="button" class="btn btn-primary confirm-accumulated" data-id="{{$c->id}}" data-toggle="modal" data-target="#confirm"><i class="fa fa-check-circle"></i>&nbsp;Confirm</button>
                                     @endif
-                                   <a target="_blank"  class="btn btn-info" href="{{ url('collection-cash-details',$c->id) }}" ><i class="fa fa-eye"></i> &nbsp; View</a>
+                                   <a target="_blank"  class="btn btn-info" href="{{ secure_url('collection-cash-details',$c->id) }}" ><i class="fa fa-eye"></i> &nbsp; View</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -163,7 +163,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    {!! Form::open(array('url' => 'collected-cash-merchant-confirm', 'method' => 'post')) !!}
+                    {!! Form::open(array('url' => secure_url('') . '/collected-cash-merchant-confirm', 'method' => 'post')) !!}
                     <input type="hidden" name="merchant_accumulated_id" id="merchant_accumulated_id" value="">
                     <div class="form-group">
                         <label class="control-label">Transaction ID </label>
@@ -183,8 +183,8 @@
             </div>
         </div>
     </div>
-    <script src="{{ URL::asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
-    <script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"
+    <script src="{{ secure_asset('custom/js/jQuery.print.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"
             type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -197,13 +197,13 @@
         });
         $(".filter-btn").click(function(e){
             e.preventDefault();
-            $('#filter-form').attr('action', "{{ URL::to('collected-cash-merchant-confirm') }}").submit();
+            $('#filter-form').attr('action', "{{ secure_url('collected-cash-merchant-confirm') }}").submit();
         });
 
         $(".export-btn").click(function(e){
             // alert(1);
             e.preventDefault();
-            $('#filter-form').attr('action', "{{ URL::to('collected-cash-merchant-confirm-export/xls') }}").submit();
+            $('#filter-form').attr('action', "{{ secure_url('collected-cash-merchant-confirm-export/xls') }}").submit();
         });
     </script>
 @endsection

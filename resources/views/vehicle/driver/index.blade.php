@@ -6,7 +6,7 @@
 
 @section('select2JS')
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script> -->
-    <script src="{!! asset('js/locations.dropdown.js') !!}"></script>
+    <script src="{!! secure_asset('js/locations.dropdown.js') !!}"></script>
 @endsection
 
 @section('content')
@@ -15,7 +15,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -34,7 +34,7 @@
     <div class="col-md-12">
       <div class="row">
          <div class="table-filtter">
-            {!! Form::open(array('method' => 'get')) !!}
+            {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
             <div class="col-md-2">
                <div class="row">
                   <input type="text" class="form-control" name="name" id="name" placeholder="Name">
@@ -101,12 +101,12 @@
                                         {!! ($driver->status) ? '<span class="label label-success">Active</span>' : '<span class="label label-default">Inactive</span>' !!}
                                     </td>
                                     <td>
-                                        <a href="{!! route('driver.edit', $driver->id) !!}" class="btn btn-sm btn-warning">
+                                        <a href="{!! secure_url('') . "/driver/$driver->id/edit" !!}" class="btn btn-sm btn-warning">
                                             <i class="fa fa-pencil"></i> Edit
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="{!! route('driver.show', $driver->id) !!}" class="btn btn-sm btn-primary">
+                                        <a href="{!! secure_url('') . "/driver/$driver->id" !!}" class="btn btn-sm btn-primary">
                                             <i class="fa fa-search"></i> View
                                         </a>
                                     </td>
@@ -127,7 +127,7 @@
                     <i class="fa fa-plus"></i> Add New Driver
                 </div>
                 <div class="panel-body">
-                    {!! Form::open(['url' => '/driver', 'class' => 'form-horizontal', 'files' => true]) !!}
+                    {!! Form::open(['url' => secure_url('') . '/driver', 'class' => 'form-horizontal', 'files' => true]) !!}
 
                     <div class="form-group">
                         {!! Form::label('job_type', 'Job Type', ['class' => 'col-sm-3']) !!}

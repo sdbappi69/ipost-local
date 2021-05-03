@@ -6,7 +6,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -28,7 +28,7 @@
                 <div class="panel-heading">
                     <i class="fa fa-info-circle"></i> {!! $title !!}
 
-                    <a href="{!! url('settings/1/edit') !!}" class="pull-right text-danger">
+                    <a href="{!! secure_url('settings/1/edit') !!}" class="pull-right text-danger">
                         <i class="fa fa-edit"></i> Update Inforamtion
                     </a>
                 </div>

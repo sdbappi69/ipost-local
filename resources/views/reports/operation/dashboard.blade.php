@@ -33,7 +33,7 @@
 
             <div class="portlet-body util-btn-margin-bottom-5">
 
-                {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+                {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
                 <div class="col-md-4" style="margin-bottom:5px;">
                     <label class="control-label">Merchants</label>
@@ -171,13 +171,13 @@
 </div>
 
 
-<script src="{{URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}" type="text/javascript"></script>
 
-<script src="{{ URL::asset('assets/global/plugins/typeahead/handlebars.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/typeahead/typeahead.bundle.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/typeahead/handlebars.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/typeahead/typeahead.bundle.min.js') }}" type="text/javascript"></script>
 
-<script src="{{URL::asset('assets/global/plugins/counterup/jquery.waypoints.min.js')}}" type="text/javascript"></script>
-<script src="{{URL::asset('assets/global/plugins/counterup/jquery.counterup.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/counterup/jquery.waypoints.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/counterup/jquery.counterup.min.js')}}" type="text/javascript"></script>
 
 <script type="text/javascript">
     $(document ).ready(function() {
@@ -196,13 +196,13 @@
     function exportData(type){
         // alert(type);
         // e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('operation/quantitativeexport/') }}"+"/"+type+"").submit();
+        $('#filter-form').attr('action', "{{ secure_url('operation/quantitativeexport/') }}"+"/"+type+"").submit();
     }
 
     $(".filter-btn").click(function(e){
         // alert(1);
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('operation/quantitative') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('operation/quantitative') }}").submit();
     });
 
 

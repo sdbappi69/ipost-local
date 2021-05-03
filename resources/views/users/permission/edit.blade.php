@@ -6,7 +6,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -27,7 +27,7 @@
         <div class="panel panel-default">
 
               <div class="panel-body">
-                {{ Form::model($permission, ['route' => ['permission.update', $permission->id], 'method' => 'put']) }}    
+                {{ Form::model($permission, ['url' => secure_url('') . "/permission/$permission->id", 'method' => 'put']) }}
                   <div class="form-group">                  
                     {{Form::label('inputPermissionName', 'Name', ['class' => 'form-label'])}}                  
                     {{ Form::text('name', null, ['class' => 'form-control', 'id' => 'inputPermissionName', 'required' => 'required']) }}

@@ -41,7 +41,7 @@
             <!-- </li> -->
 
             <li class="nav-item start dashboard">
-                <a href="{{ URL::to('home') }}">
+                <a href="{{ secure_url('home') }}">
                     <i class="icon-home"></i>
                     <span class="title">Dashboard</span>
                     <!-- <span class="selected"></span> -->
@@ -61,7 +61,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item verify-orders">
-                        <a href="{{ URL::to('verify-order') }}" class="nav-link ">
+                        <a href="{{ secure_url('verify-order') }}" class="nav-link ">
                             <span class="title">Verify Orders</span>
                         </a>
                     </li>
@@ -76,7 +76,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item manage-orders">
-                        <a href="{{ URL::to('order') }}" class="nav-link ">
+                        <a href="{{ secure_url('order') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
@@ -95,7 +95,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item merchant-manage">
-                        <a href="{{ URL::to('merchant') }}" class="nav-link ">
+                        <a href="{{ secure_url('merchant') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
@@ -115,12 +115,12 @@
                 
                 <ul class="sub-menu">
                     <li class="nav-item hub-add">
-                        <a href="{{ URL::to('hub/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('hub/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
                     <li class="nav-item hub-manage">
-                        <a href="{{ URL::to('hub') }}" class="nav-link ">
+                        <a href="{{ secure_url('hub') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
@@ -139,12 +139,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item user-add">
-                        <a href="{{ URL::to('user/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('user/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
                     <li class="nav-item user-manage">
-                        <a href="{{ URL::to('user') }}" class="nav-link ">
+                        <a href="{{ secure_url('user') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
@@ -163,22 +163,22 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item country">
-                        <a href="{{ URL::to('country') }}" class="nav-link ">
+                        <a href="{{ secure_url('country') }}" class="nav-link ">
                             <span class="title">Countries</span>
                         </a>
                     </li>
                     <li class="nav-item state">
-                        <a href="{{ URL::to('state') }}" class="nav-link ">
+                        <a href="{{ secure_url('state') }}" class="nav-link ">
                             <span class="title">States</span>
                         </a>
                     </li>
                     <li class="nav-item city">
-                        <a href="{{ URL::to('city') }}" class="nav-link ">
+                        <a href="{{ secure_url('city') }}" class="nav-link ">
                             <span class="title">Cities</span>
                         </a>
                     </li>
                     <li class="nav-item zone">
-                        <a href="{{ URL::to('zone') }}" class="nav-link ">
+                        <a href="{{ secure_url('zone') }}" class="nav-link ">
                             <span class="title">Zones</span>
                         </a>
                     </li>
@@ -190,7 +190,7 @@
             </li>
             
             <li class="nav-item charge-model">
-                <a href="{{ URL::to('charge-model') }}">
+                <a href="{{ secure_url('charge-model') }}">
                     <i class="fa fa-balance-scale"></i>
                     <span class="title">Charge Models</span>
                 </a>

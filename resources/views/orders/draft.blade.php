@@ -1,12 +1,12 @@
 @extends('layouts.appinside')
 
 @section('content')
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -34,7 +34,7 @@
 
             <div class="portlet-body util-btn-margin-bottom-5">
 
-                {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+                {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
                     <?php if(!isset($_GET['order_id'])){$_GET['order_id'] = null;} ?>
                     <div class="col-md-4" style="margin-bottom:5px;">
@@ -110,7 +110,7 @@
                         <span class="counter" style="font-weight: bold;">0</span> order selected
                     </div>
 
-                    {!! Form::open(array('url' => '', 'method' => 'post', 'id' => 'selected_orders')) !!}
+                    {!! Form::open(array('url' => secure_url('') . '/', 'method' => 'post', 'id' => 'selected_orders')) !!}
                         <table class="table table-bordered table-hover">
                             <thead class="flip-content">
                                 <th>{!!Form::checkbox('mother_checkbox', 'value', false,array('id'=>'select_all_chk')) !!}</th>
@@ -126,9 +126,9 @@
                                 @foreach($orders as $order)
                                     <tr>
                                         @if($order->order_status == ''||$order->order_status < 2)
-                                            {{-- */ $url = URL::to('merchant-orderv2').'/'.$order->id.'/edit?step=3'; /* --}}
+                                            {{-- */ $url = secure_url('merchant-orderv2').'/'.$order->id.'/edit?step=3'; /* --}}
                                         @else
-                                            {{-- */ $url = URL::to('merchant-orderv2').'/'.$order->id; /* --}}
+                                            {{-- */ $url = secure_url('merchant-orderv2').'/'.$order->id; /* --}}
                                         @endIf
                                         <td>
                                             {!!Form::checkbox('order_id[]',$order->id, false) !!}
@@ -172,7 +172,7 @@
             </div>
         </div>
     @endIf
-    <script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
         $(document ).ready(function() {
             // Navigation Highlight
@@ -196,12 +196,12 @@
 
         $("#btn-approve").click(function(e){
             e.preventDefault();
-            $('#selected_orders').attr('action', "{{ URL::to('merchant-order-draft-submit') }}").submit();
+            $('#selected_orders').attr('action', "{{ secure_url('merchant-order-draft-submit') }}").submit();
         });
 
         $("#btn-remove").click(function(e){
             e.preventDefault();
-            $('#selected_orders').attr('action', "{{ URL::to('merchant-order-draft-remove') }}").submit();
+            $('#selected_orders').attr('action', "{{ secure_url('merchant-order-draft-remove') }}").submit();
         });
 
         function countCheckbox(){

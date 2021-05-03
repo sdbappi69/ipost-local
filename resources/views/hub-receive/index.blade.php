@@ -6,7 +6,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -58,7 +58,7 @@
                         </div>
                         <br>
                         <div class="col-md-12">
-                            {!! Form::open(array('url' => '/hub-receive/'.$sub_order->id, 'method' => 'put')) !!}
+                            {!! Form::open(array('url' => secure_url('') . '/hub-receive/'.$sub_order->id, 'method' => 'put')) !!}
                                 {!! Form::hidden('order_id', $sub_order->order->id, ['class' => 'form-control', 'required' => 'required']) !!}
                                 <div class="form-group">
                                     <label class="control-label">Delivery man</label>
@@ -94,7 +94,7 @@
     </div>
 
     <div class="pagination pull-right">
-        {{ $sub_orders->render() }}
+        {{ $sub_orders->appends($_REQUEST)->render() }}
     </div>
 
     <script type="text/javascript">

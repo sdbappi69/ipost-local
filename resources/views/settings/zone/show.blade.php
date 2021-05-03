@@ -6,7 +6,7 @@
 
 @section('select2JS')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
-    <script src="{!! asset('js/locations.dropdown.js') !!}"></script>
+    <script src="{!! secure_asset('js/locations.dropdown.js') !!}"></script>
 @endsection
 
 @section('content')
@@ -15,7 +15,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -36,7 +36,7 @@
             <div class="panel panel-danger">
                 <div class="panel-heading">
                     <i class="fa fa-plus"></i> {!! $zone->name or '' !!}
-                    <a href="{!! route('zone.edit', $zone->id) !!}" class="btn btn-sm btn-info pull-right">
+                    <a href="{!! secure_url('') . "/zone/$zone->id/edit" !!}" class="btn btn-sm btn-info pull-right">
                         <i class="fa fa-pencil"></i> Edit
                     </a>
                 </div>
@@ -109,7 +109,7 @@
                             position: google.maps.ControlPosition.TOP_left
                         }
                     },
-                    image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
+                    image = 'https://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
                     map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
                 if(coords !== ""){
@@ -135,6 +135,6 @@
             });
     </script>
 
-    <script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
+    <script src="https://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
 
 @endsection

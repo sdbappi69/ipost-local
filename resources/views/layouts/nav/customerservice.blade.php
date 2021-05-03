@@ -41,7 +41,7 @@
                 <!-- </li> -->
 
                 <li class="nav-item start dashboard">
-                    <a href="{{ URL::to('home') }}">
+                    <a href="{{ secure_url('home') }}">
                         <i class="icon-home"></i>
                         <span class="title">Dashboard</span>
                         <!-- <span class="selected"></span> -->
@@ -54,7 +54,7 @@
                 </li>
 
                 <li class="nav-item start orders">
-                    <a href="{{ URL::to('order') }}">
+                    <a href="{{ secure_url('order') }}">
                         <i class="fa fa-cube"></i>
                         <span class="title">Orders</span>
                     </a>

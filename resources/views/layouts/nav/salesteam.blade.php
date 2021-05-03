@@ -41,7 +41,7 @@
             <!-- </li> -->
 
             <li class="nav-item start dashboard">
-                <a href="{{ URL::to('home') }}">
+                <a href="{{ secure_url('home') }}">
                     <i class="icon-home"></i>
                     <span class="title">Dashboard</span>
                     <!-- <span class="selected"></span> -->
@@ -62,12 +62,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item manage-orders">
-                        <a href="{{ URL::to('order') }}" class="nav-link ">
+                        <a href="{{ secure_url('order') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
                     <li class="nav-item order-draft">
-                        <a href="{{ URL::to('order-draftv2') }}" class="nav-link ">
+                        <a href="{{ secure_url('order-draftv2') }}" class="nav-link ">
                             <span class="title">Draft</span>
                         </a>
                     </li>
@@ -86,12 +86,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item merchant-add">
-                        <a href="{{ URL::to('merchant/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('merchant/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
                     <li class="nav-item merchant-manage">
-                        <a href="{{ URL::to('merchant') }}" class="nav-link ">
+                        <a href="{{ secure_url('merchant') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
@@ -106,12 +106,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item store-add">
-                        <a href="{{ URL::to('store/create') }}" class="nav-link ">
+                        <a href="{{ secure_url('store/create') }}" class="nav-link ">
                             <span class="title">Add</span>
                         </a>
                     </li>
                     <li class="nav-item store-manage">
-                        <a href="{{ URL::to('store') }}" class="nav-link ">
+                        <a href="{{ secure_url('store') }}" class="nav-link ">
                             <span class="title">Store</span>
                         </a>
                     </li>
@@ -130,7 +130,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item product-category-manage">
-                        <a href="{{ URL::to('product-category') }}" class="nav-link ">
+                        <a href="{{ secure_url('product-category') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
@@ -149,7 +149,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item user-manage">
-                        <a href="{{ URL::to('user') }}" class="nav-link ">
+                        <a href="{{ secure_url('user') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>

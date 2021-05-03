@@ -1,6 +1,6 @@
 @extends('layouts.appinside')
 
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 
 @section('content')
 
@@ -8,11 +8,11 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="{{ URL::to('order') }}">Products</a>
+            <a href="{{ secure_url('order') }}">Products</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -30,7 +30,7 @@
 
 <div class="mt-element-step">
 
-    {!! Form::model($product, array('url' => '/receive-picked/'.$product->id, 'method' => 'put','id' => 'form_data')) !!}
+    {!! Form::model($product, array('url' => secure_url('') . '/receive-picked/'.$product->id, 'method' => 'put','id' => 'form_data')) !!}
 
     <div class="row">
 
@@ -165,15 +165,15 @@
 
 </div>
 
-<script src="{{ URL::asset('assets/global/plugins/fuelux/js/spinner.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/pages/scripts/components-bootstrap-touchspin.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/fuelux/js/spinner.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/pages/scripts/components-bootstrap-touchspin.min.js') }}" type="text/javascript"></script>
 
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/pages/scripts/components-date-time-pickers.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/pages/scripts/components-date-time-pickers.min.js') }}" type="text/javascript"></script>
 
-<script src="{{ URL::asset('custom/js/date-time.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('custom/js/date-time.js') }}" type="text/javascript"></script>
 
 <script type="text/javascript">
 var modalConfirm = function (callback) {

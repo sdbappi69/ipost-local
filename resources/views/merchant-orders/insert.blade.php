@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('merchant-order') }}">Orders</a>
+                <a href="{{ secure_url('merchant-order') }}">Orders</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -45,7 +45,7 @@
             </div>
         </div>
 
-        {!! Form::open(array('url' => '/merchant-order', 'method' => 'post')) !!}
+        {!! Form::open(array('url' => secure_url('') . '/merchant-order', 'method' => 'post')) !!}
 
                 <div class="row">
 
@@ -169,8 +169,8 @@
 
     <script src="
 https://maps.google.com/maps/api/js?key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM&callback=initMap&sensor=false" type="text/javascript"></script>
-    <script src="{{ URL::asset('assets/global/plugins/gmaps/gmaps.min.js') }}" type="text/javascript"></script>
-    <script src="{{ URL::asset('custom/js/maps-google-geo.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/plugins/gmaps/gmaps.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('custom/js/maps-google-geo.js') }}" type="text/javascript"></script>
 
     <script type="text/javascript">
 

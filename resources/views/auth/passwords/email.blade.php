@@ -3,7 +3,7 @@
 <!-- Main Content -->
 @section('content')
     <div class="col-md-6 login-container bs-reset">
-        <img class="login-logo login-6" src="{{asset('assets/pages/img/login/login-invert.png') }}" />
+        <img class="login-logo login-6" src="{{secure_asset('assets/pages/img/login/login-invert.png') }}" />
         <div class="login-content">
             <h1>Forgot Password ?</h1>
             {{--<p> Lorem ipsum dolor sit amet, coectetuer adipiscing elit sed diam nonummy et nibh euismod aliquam erat volutpat. Lorem ipsum dolor sit amet, coectetuer adipiscing. </p>--}}
@@ -19,7 +19,7 @@
                                         </span>
                     @endif
                 <div class="form-actions">
-                    <a href="{{ URL::to('/') }}" id="back-btn" class="btn blue btn-outline">Back</a>
+                    <a href="{{ secure_url('/') }}" id="back-btn" class="btn blue btn-outline">Back</a>
                     <button type="submit" class="btn blue uppercase pull-right">Submit</button>
                 </div>
             </form>

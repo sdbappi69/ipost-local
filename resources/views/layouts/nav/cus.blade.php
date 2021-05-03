@@ -19,7 +19,7 @@
                 </div>
             </li>
             <li class="nav-item start dashboard">
-                <a href="{{ URL::to('home') }}">
+                <a href="{{ secure_url('home') }}">
                     <i class="icon-home"></i>
                     <span class="title">Dashboard</span>
                 </a>
@@ -29,7 +29,7 @@
             </li>
             @permission('manage_customer_support_order')
             <li class="nav-item start order_cs">
-                <a href="{{ URL::to('order-cs') }}">
+                <a href="{{ secure_url('order-cs') }}">
                     <i class="icon-list"></i>
                     <span class="title">Order List</span>
                 </a>
@@ -45,14 +45,14 @@
                 <ul class="sub-menu">
                     @permission('manage_complain')
                     <li class="nav-item complain">
-                        <a href="{{ URL::to('complain') }}" class="nav-link ">
+                        <a href="{{ secure_url('complain') }}" class="nav-link ">
                             <span class="title">Complain</span>
                         </a>
                     </li>
                     @endpermission
                     @permission('manage_inquiry')
                     <li class="nav-item inquiry">
-                        <a href="{{ URL::to('inquiry') }}" class="nav-link ">
+                        <a href="{{ secure_url('inquiry') }}" class="nav-link ">
                             <span class="title">Inquiry</span>
                         </a>
                     </li>
@@ -69,12 +69,12 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item get_feedback">
-                        <a href="{{ URL::to('feedback') }}" class="nav-link ">
+                        <a href="{{ secure_url('feedback') }}" class="nav-link ">
                             <span class="title">Get Feedback</span>
                         </a>
                     </li>
                     <li class="nav-item collected_feedback">
-                        <a href="{{ URL::to('feedback?status_s=1') }}" class="nav-link ">
+                        <a href="{{ secure_url('feedback?status_s=1') }}" class="nav-link ">
                             <span class="title">Collected Feedback</span>
                         </a>
                     </li>
@@ -91,42 +91,42 @@
                 <ul class="sub-menu">
                     @permission('manage_inquiry_status')
                     <li class="nav-item inquiry_status">
-                        <a href="{{ URL::to('inquiry-status') }}" class="nav-link ">
+                        <a href="{{ secure_url('inquiry-status') }}" class="nav-link ">
                             <span class="title">Inquiry Status</span>
                         </a>
                     </li>
                     @endpermission
                     @permission('manage_mail_groups')
                     <li class="nav-item mail_group">
-                        <a href="{{ URL::to('mail-groups') }}" class="nav-link ">
+                        <a href="{{ secure_url('mail-groups') }}" class="nav-link ">
                             <span class="title">Mail Groups</span>
                         </a>
                     </li>
                     @endpermission
                     @permission('manage_query')
                     <li class="nav-item query">
-                        <a href="{{ URL::to('query') }}" class="nav-link ">
+                        <a href="{{ secure_url('query') }}" class="nav-link ">
                             <span class="title">Queries</span>
                         </a>
                     </li>
                     @endpermission
                     @permission('manage_source_of_information')
                     <li class="nav-item src_of_info">
-                        <a href="{{ URL::to('source-of-info') }}" class="nav-link ">
+                        <a href="{{ secure_url('source-of-info') }}" class="nav-link ">
                             <span class="title">Source Of Information</span>
                         </a>
                     </li>
                     @endpermission
                     @permission('manage_unique_head')
                     <li class="nav-item unique_head">
-                        <a href="{{ URL::to('unique-head') }}" class="nav-link ">
+                        <a href="{{ secure_url('unique-head') }}" class="nav-link ">
                             <span class="title">Unique Head</span>
                         </a>
                     </li>
                     @endpermission
                     @permission('manage_reaction')
                     <li class="nav-item reaction">
-                        <a href="{{ URL::to('reaction') }}" class="nav-link ">
+                        <a href="{{ secure_url('reaction') }}" class="nav-link ">
                             <span class="title">Reaction</span>
                         </a>
                     </li>

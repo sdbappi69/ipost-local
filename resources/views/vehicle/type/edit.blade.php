@@ -6,7 +6,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -23,7 +23,7 @@
     <!-- END PAGE HEADER-->
 
     <div class="row">
-        {!! Form::model($vehicleType, ['route' => ['vehicle-type.update', $vehicleType->id], 'class' => 'form-horizontal', 'method' => 'PUT']) !!}
+        {!! Form::model($vehicleType, ['url' => secure_url('') . "/vehicle-type/$vehicleType->id", 'class' => 'form-horizontal', 'method' => 'PUT']) !!}
         <div class="col-md-8">
             @include('flash::message')
 
@@ -31,7 +31,7 @@
                 <div class="panel-heading">
                     <i class="fa fa-flag"></i> {!! $title !!}
 
-                    <a href="{!! url('vehicle-type') !!}" class="pull-right text-danger">
+                    <a href="{!! secure_url('vehicle-type') !!}" class="pull-right text-danger">
                         <i class="fa fa-backward"></i> Back
                     </a>
                 </div>

@@ -1,12 +1,12 @@
 @extends('layouts.appinside')
 
 @section('content')
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -45,7 +45,7 @@
                 <td>{{  $consignments->quantity_available }}</td>
                 <td>
                     @if(is_null($details))
-                    <a class="btn btn-primary" href="{{url('reconciliation-delivery-done/'.$consignments->id)}}">Reconciliation Done</a>
+                    <a class="btn btn-primary" href="{{secure_url('reconciliation-delivery-done/'.$consignments->id)}}">Reconciliation Done</a>
                     @endif
                 </td>
             </tr>
@@ -70,7 +70,7 @@
 
 
         <td> 
-            Unique Id: <strong>{{ $sub_order->unique_suborder_id }}</strong>
+            AWB: <strong>{{ $sub_order->unique_suborder_id }}</strong>
             <br>
             Merchant: {{ $sub_order->order->store->merchant->name or 'N/A' }}
             <br>
@@ -91,7 +91,7 @@
                 <?php $total_delivery_paid_amount += $product->delivery_paid_amount; ?>
                 <?php $total_delivered_qty += $product->delivered_quantity; ?>
 
-                <form method="post" action="{{url('reconciliation-update-delivery')}}">
+                <form method="post" action="{{secure_url('reconciliation-update-delivery')}}">
 
                     <input type="hidden" name="sub_orders_id_for_consingment" value="{{rtrim($sub_str,',')}}">
 

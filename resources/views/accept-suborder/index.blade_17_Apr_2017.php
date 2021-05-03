@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('hub-order') }}">Orders</a>
+                <a href="{{ secure_url('hub-order') }}">Orders</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -29,7 +29,7 @@
     <div class="row">
         
         <div class="col-md-12">
-            {!! Form::open(array('url' => '/accept-suborder/', 'method' => 'post')) !!}
+            {!! Form::open(array('url' => secure_url('') . '/accept-suborder/', 'method' => 'post')) !!}
 
                 <div class="form-group col-md-10">
 
@@ -56,7 +56,7 @@
                     <table class="table table-bordered table-hover" id="example0">
                         <thead class="flip-content">
                             <!-- <th>Order ID</th> -->
-                            <th>Unique ID</th>
+                            <th>AWB</th>
                             <th>Came from</th>
                             <th>Product</th>
                         </thead>

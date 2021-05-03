@@ -6,11 +6,11 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="{{ URL::to('product-category') }}">Category</a>
+            <a href="{{ secure_url('product-category') }}">Category</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -41,7 +41,7 @@
                 </div>
             </div>
 
-            {{Form::open(array('url'=>'category-charge-approve-all/v2/','method'=>'post','id'=>'checkedForm'))}}
+            {{Form::open(array('url'=> secure_url('') . '/category-charge-approve-all/v2/','method'=>'post','id'=>'checkedForm'))}}
             {{Form::hidden('charge_ids',null,['id'=>'charge_ids'])}}
             {{Form::close()}}
             <div class="portlet-body util-btn-margin-bottom-5">
@@ -82,7 +82,7 @@
                             <td>{{$charge->hub_transfer_charge}}</td>
                             <td>{{$charge->return_charge}}</td>
                             <td>
-                                <a href="{{url("category-charge-approved/v2").'/'.$charge->id}}" class="btn green">Approve</a>
+                                <a href="{{secure_url("category-charge-approved/v2").'/'.$charge->id}}" class="btn green">Approve</a>
                             </td>
                         </tr>
                         @endforeach

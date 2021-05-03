@@ -2,7 +2,7 @@
 <div id="edit_inquiry_{{$inquiry->id}}" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
-    {{Form::model($inquiry,['url' => 'inquiry/'.$inquiry->id, 'method' => 'PUT'])}}
+    {{Form::model($inquiry,['url' => secure_url('') . '/inquiry/'.$inquiry->id, 'method' => 'PUT'])}}
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>

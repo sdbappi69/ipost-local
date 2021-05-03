@@ -2,7 +2,7 @@
 <div id="update_unique_head_{{$unique_head->id}}" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
-    {{Form::model($unique_head,['url' => 'unique-head/'.$unique_head->id, 'method' => 'put'])}}
+    {{Form::model($unique_head,['url' => secure_url('') . '/unique-head/'.$unique_head->id, 'method' => 'put'])}}
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>

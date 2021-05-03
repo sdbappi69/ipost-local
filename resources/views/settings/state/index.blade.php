@@ -5,7 +5,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -29,7 +29,7 @@
                 </div>
                 <div class="panel-body">
 
-                    {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+                    {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
                         <?php if(!isset($_GET['filter_name'])){$_GET['filter_name'] = null;} ?>
                         <div class="col-md-6" style="margin-bottom:5px;">
@@ -69,7 +69,7 @@
                                         {!! ($state->status) ? '<span class="label label-success">Active</span>' : '<span class="label label-default">Inactive</span>' !!}
                                     </td>
                                     <td>
-                                        <a href="{!! route('state.edit', $state->id) !!}" class="btn btn-sm btn-info">
+                                        <a href="{!! secure_url('') . "/state/$state->id/edit" !!}" class="btn btn-sm btn-info">
                                             <i class="fa fa-pencil"></i> Edit
                                         </a>
                                     </td>
@@ -79,7 +79,7 @@
                         </tbody>
                     </table>
                     <div class="pagination">
-                        {!! $states->render() !!}
+                        {!! $states->appends($_REQUEST)->render() !!}
                     </div>
                 </div>
             </div>
@@ -90,7 +90,7 @@
                     <i class="fa fa-plus"></i> Add New State
                 </div>
                 <div class="panel-body">
-                    {!! Form::open(['url' => '/state', 'class' => 'form-horizontal']) !!}
+                    {!! Form::open(['url' => secure_url('') . '/state', 'class' => 'form-horizontal']) !!}
 
                     <div class="form-group">
                         {!! Form::label('name', 'Name', ['class' => 'col-sm-3']) !!}

@@ -65,7 +65,7 @@
 
                         </div>
 
-                        {!! Form::open(array('url' => '/product-category-charge-update/v2', 'method' => 'post','id'=>'weightBasedForm')) !!}
+                        {!! Form::open(array('url' => secure_url('') . '/product-category-charge-update/v2', 'method' => 'post','id'=>'weightBasedForm')) !!}
 
                         <input type="hidden" name="product_category_id" value="{{ $product_category->id }}">
                         <input type="hidden" name="charge_type" class="chargeType">
@@ -120,7 +120,7 @@
                                             <label class="control-label">Return Charge</label>
                                             <input type="number" name="return_charge[]" step="0.01" value="{{$charge->return_charge}}" class="form-control input-group-lg number" required>
                                         </div>
-                                        <a href="{{ URL::to('charge-remove/v2/'.$charge->id) }}" class="btn red" style="float: left; margin-left: 2%" data-toggle="confirmation" data-original-title="Are you sure ?" title="">Remove</a>
+                                        <a href="{{ secure_url('charge-remove/v2/'.$charge->id) }}" class="btn red" style="float: left; margin-left: 2%" data-toggle="confirmation" data-original-title="Are you sure ?" title="">Remove</a>
                                     </div>
                                 </div>
 

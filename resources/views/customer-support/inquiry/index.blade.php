@@ -6,7 +6,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -36,7 +36,7 @@
         </div>
 
         <div class="portlet-body util-btn-margin-bottom-5">
-            {!! Form::open(array('method' => 'get', 'id' => 'filter-form','url' => 'inquiry')) !!}
+            {!! Form::open(array('method' => 'get', 'id' => 'filter-form','url' => secure_url('') . '/inquiry')) !!}
             <div class="col-md-12" style="margin-bottom:5px;">
                 <label class="control-label">Search By Data</label>
                 {{Form::text('search_by_data',null,['class' => 'form-control focus_it','placeholder' => 'Customer (Name, Mobile, E-mail, Address, Calling Number) & Company'])}}
@@ -173,7 +173,7 @@
                                 <i class="fa fa-envelope"></i> Send E-mail
                             </button>
                             @if($inquiry->status == 'In process')
-                            <a class="btn btn-success" href="{{url('inquiry/mark-as-solved/'.$inquiry->id)}}">
+                            <a class="btn btn-success" href="{{secure_url('inquiry/mark-as-solved/'.$inquiry->id)}}">
                                 <i class="fa fa-check"></i> Solved
                             </a>
                             @endif
@@ -195,7 +195,7 @@
 
 @endIf
 @include('customer-support.inquiry.submit_inquiry')
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         highlight_nav('inquiry','inbound');
@@ -208,15 +208,15 @@
 
     $(".filter-btn").click(function(e){
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('inquiry') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('inquiry') }}").submit();
     });
 
     $(".export-btn").click(function(e){
         // alert(1);
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('inquiry/export-xls') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('inquiry/export-xls') }}").submit();
     });
 
 </script>
-<script type="text/javascript" src="{{asset('custom/js/inquiry_caller_load_data_customer_support.js')}}"></script>
+<script type="text/javascript" src="{{secure_asset('custom/js/inquiry_caller_load_data_customer_support.js')}}"></script>
 @endsection

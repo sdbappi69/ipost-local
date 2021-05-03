@@ -6,7 +6,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -24,7 +24,7 @@
 
     <div class="col-md-12">
        <div class="table-filtter">
-          {!! Form::open(array('url' => '/rack', 'method' => 'get')) !!}
+          {!! Form::open(array('url' => secure_url('') . '/rack', 'method' => 'get')) !!}
           <div class="col-md-2">
              <div class="row">
                 {!! Form::select('hub_id', array(''=>'Select Hub') + $hubs, null, ['class' => 'form-control', 'id' => 'hub_id']) !!}
@@ -88,7 +88,7 @@
                                 <tr>
                                     <td>{{ $rack->get_hub->title }}</td>
                                     <td>{{ $rack->get_zone['name'] }}</td>
-                                    <td><a data-toggle="modal" data-target="#large" href="{{ route('rack_products', ['id' => $rack->id]) }}">{{ $rack->rack_title }}</a></td>
+                                    <td><a data-toggle="modal" data-target="#large" href="{{ secure_url('') . "/rack_products/$rack->id" }}">{{ $rack->rack_title }}</a></td>
                                     <td>{{ $rack->width }}</td>
                                     <td>{{ $rack->height }}</td>
                                     <td>{{ $rack->length }}</td>

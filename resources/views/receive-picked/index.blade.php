@@ -2,17 +2,17 @@
 
 @section('content')
 
-    <link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('hub-order') }}">Orders</a>
+                <a href="{{ secure_url('hub-order') }}">Orders</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -42,12 +42,12 @@
 
             <div class="portlet-body util-btn-margin-bottom-5">
 
-                {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+                {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
                     <?php if(!isset($_GET['sub_order_id'])){$_GET['sub_order_id'] = null;} ?>
                     <div class="col-md-4" style="margin-bottom:5px;">
                         <!-- <div class="row"> -->
-                         <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control focus_it" name="sub_order_id" id="sub_order_id" placeholder="Sub-Order ID">
+                         <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control focus_it" name="sub_order_id" id="sub_order_id" placeholder="AWB">
                         <!-- </div> -->
                     </div>
 
@@ -156,13 +156,13 @@
     <div class="col-md-12">
         <!-- BEGIN BUTTONS PORTLET-->
         <div class="portlet light tasks-widget bordered">
-            {!! Form::open(array('url' => 'receive-picked-bulk', 'method' => 'post', 'id' => 'selected_orders')) !!}
+            {!! Form::open(array('url' => secure_url('') . '/receive-picked-bulk', 'method' => 'post', 'id' => 'selected_orders')) !!}
                 <div class="portlet-body util-btn-margin-bottom-5" style="overflow: hidden;">
                     <table class="table table-bordered table-hover" id="example0">
                         <thead class="flip-content">
                             <!-- <th>Order ID</th> -->
                             <th>{!!Form::checkbox('name', 'value', false,array('id'=>'select_all_chk')) !!}</th>
-                            <th>Unique ID</th>
+                            <th>AWB</th>
                             <th>Picking Time</th>
                             <th>Picking Address</th>
                             <th>Product</th>
@@ -196,7 +196,7 @@
                                         Quantity: {{ $p->quantity }}
                                     </td>
                                     <td>
-                                        <a href="{{ URL::to('receive-picked').'/'.$p->id.'/edit' }}" class="btn green-sharp btn-md col-md-12 col-lg-12 col-xs-12">
+                                        <a href="{{ secure_url('receive-picked').'/'.$p->id.'/edit' }}" class="btn green-sharp btn-md col-md-12 col-lg-12 col-xs-12">
                                             <i class="fa fa-check"></i> Verify
                                         </a>
                                     </td>
@@ -217,10 +217,10 @@
     </div>
 
     <div class="pagination pull-right">
-        {{ $products->render() }}
+        {{ $products->appends($_REQUEST)->render() }}
     </div>
 
-    <script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 
     <script type="text/javascript">
 

@@ -2,7 +2,7 @@
 <div id="create_inquiry_status" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
-    {{Form::open(['url' => 'inquiry-status', 'method' => 'post'])}}
+    {{Form::open(['url' => secure_url('') . '/inquiry-status', 'method' => 'post'])}}
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>

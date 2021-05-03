@@ -1,12 +1,12 @@
 @extends('layouts.appinside')
 
 @section('content')
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -34,13 +34,13 @@
 
         <div class="portlet-body util-btn-margin-bottom-5">
 
-            {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+            {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
                 <?php if(!isset($_GET['sub_order_id'])){$_GET['sub_order_id'] = null;} ?>
                 <div class="col-md-4" style="margin-bottom:5px;">
-                    <label class="control-label">Sub-Order ID</label>
+                    <label class="control-label">AWB</label>
                     <!-- <div class="row"> -->
-                     <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control focus_it" name="sub_order_id" id="sub_order_id" placeholder="Sub-Order ID">
+                     <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control focus_it" name="sub_order_id" id="sub_order_id" placeholder="AWB">
                     <!-- </div> -->
                 </div>
 
@@ -161,11 +161,11 @@
             <table class="table table-striped table-bordered table-hover dt-responsive my_datatable" id="example0">
                 <thead>
                     <th>Order Id</th>
-                    <th>Sub-Order Id</th>
+                    <th>AWB</th>
                     <th>Type</th>
                     <th>Merchant Order Id</th>
                     <th>Current Status</th>
-                    <th>Store</th>
+{{--                    <th>Store</th>--}}
                     <th>Seller</th>
                     <th>Order created</th>
                     <th>Product</th>
@@ -184,7 +184,7 @@
                     <tr>
                         <td>
                             <!-- <b>Order:</b> -->
-                            <a class="label label-success" href="{{ URL::to('hub-order').'/'.$sub_order->order->id }}">
+                            <a class="label label-success" href="{{ secure_url('hub-order').'/'.$sub_order->order->id }}">
                                 {{ $sub_order->order->unique_order_id }}
                             </a>
                         </td>
@@ -204,8 +204,8 @@
                                 {{ hubGetStatus($sub_order->sub_order_last_status) }}
                             @endIf
                         </td>
-                        
-                        <td>{{ $sub_order->order->store->store_id or "" }}</td>
+
+{{--                        <td>{{ $sub_order->order->store->store_id or "" }}</td>--}}
                         <td>{{ $sub_order->product->pickup_location->title or '' }}</td>  
                         <td>{{ $sub_order->created_at }}</td>
                         <td>{{ $sub_order->product->product_title }}</td>                        
@@ -221,8 +221,14 @@
                         
                         
                         
-                        <td>{{ $sub_order->product->sub_total }}</td>
-                        <td>{{ $sub_order->product->delivery_paid_amount }}</td>
+
+                            @if($sub_order->post_delivery_return == 1 || $sub_order->return == 1 || $sub_order->order->payment_type_id == 2)
+                            <td>0</td>
+                            <td>0</td>
+                            @else
+                            <td>{{ number_format($sub_order->product->total_payable_amount) }}</td>
+                            <td>{{ number_format($sub_order->product->delivery_paid_amount) }}</td>
+                            @endif
                         
                     </tr>
                     @endforeach
@@ -238,7 +244,7 @@
 
 @endIf
 
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
 $(document).ready(function () {
     highlight_nav('orders', 'orders');
@@ -271,13 +277,13 @@ $(document).ready(function () {
 
     $(".filter-btn").click(function(e){
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('hub-order') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('hub-order') }}").submit();
     });
 
     $(".export-btn").click(function(e){
         // alert(1);
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('hub-orderexport/xls') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('hub-orderexport/xls') }}").submit();
     });
 </script>
 

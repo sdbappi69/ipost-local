@@ -6,7 +6,7 @@
 
 @section('select2JS')
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script> -->
-    <script src="{!! asset('js/locations.dropdown.js') !!}"></script>
+    <script src="{!! secure_asset('js/locations.dropdown.js') !!}"></script>
 @endsection
 
 @section('content')
@@ -15,7 +15,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -32,7 +32,7 @@
     <!-- END PAGE HEADER-->
 
     <div class="row">
-        {!! Form::model($driver, ['route' => ['driver.update', $driver->id], 'class' => 'form-horizontal', 'method' => 'PUT', 'files' => true]) !!}
+        {!! Form::model($driver, ['url' => secure_url('') . "/driver/$driver->id", 'class' => 'form-horizontal', 'method' => 'PUT', 'files' => true]) !!}
         <div class="col-md-8">
             @include('flash::message')
 
@@ -40,7 +40,7 @@
                 <div class="panel-heading">
                     <i class="fa fa-flag"></i> {!! $title !!}
 
-                    <a href="{!! url('driver') !!}" class="pull-right text-danger">
+                    <a href="{!! secure_url('driver') !!}" class="pull-right text-danger">
                         <i class="fa fa-backward"></i> Back
                     </a>
                 </div>

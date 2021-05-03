@@ -2,17 +2,17 @@
 
 @section('content')
 
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="{{ URL::to('hub-order') }}">Orders</a>
+            <a href="{{ secure_url('hub-order') }}">Orders</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -41,7 +41,7 @@
         </div>
 
         <div class="portlet-body util-btn-margin-bottom-5">
-            {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+            {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
             <?php
             if (!isset($_GET['sub_order_id'])) {
@@ -52,8 +52,8 @@
             }
             ?>
             <div class="col-md-4" style="margin-bottom:5px;">
-                <label class="control-label">Sub-Order ID</label>
-                <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control focus_it" name="sub_order_id" id="sub_order_id" placeholder="Sub-Order ID">
+                <label class="control-label">AWB</label>
+                <input type="text" value="{{$_GET['sub_order_id']}}" class="form-control focus_it" name="sub_order_id" id="sub_order_id" placeholder="AWB">
             </div>
 
             <div class="col-md-4" style="margin-bottom:5px;">
@@ -62,7 +62,7 @@
             </div>
 
             <div class="col-md-12">
-                <a href="{{ url('receive-prodcut') }}" class="btn btn-default"><i class="fa fa-times"></i> Clear</a>
+                <a href="{{ secure_url('receive-prodcut') }}" class="btn btn-default"><i class="fa fa-times"></i> Clear</a>
                 <button type="button" class="btn btn-primary filter-btn pull-right"><i class="fa fa-search"></i> Filter</button>
             </div>
             <div class="clearfix"></div>
@@ -75,10 +75,10 @@
 
 <div class="col-md-12">
 
-    {!! Form::open(array('url' => '/received-varified-suborder/', 'id'=> 'receiveVerifyForm', 'method' => 'post')) !!}
+    {!! Form::open(array('url' => secure_url('') . '/received-varified-suborder/', 'id'=> 'receiveVerifyForm', 'method' => 'post')) !!}
 
     <div class="col-md-12" style="margin-bottom:5px; margin-top:10px;">
-        {!! Form::text('unique_suborder_id', null, ['class' => 'form-control focus_it', 'id' => 'unique_suborder_id', 'placeholder' => 'Scan QR code or manually enter Sub-Order ID to accept']) !!}
+        {!! Form::text('unique_suborder_id', null, ['class' => 'form-control focus_it', 'id' => 'unique_suborder_id', 'placeholder' => 'Scan QR code or manually enter AWB to accept']) !!}
     </div>
 
     <div class="form-group col-md-12">
@@ -97,7 +97,7 @@
                 <thead class="flip-content">
                     <!-- <th>Order ID</th> -->
                 <!--<th>{!!Form::checkbox('mother_checkbox', 'value', false,array('id'=>'select_all_chk')) !!}</th>-->
-                <th>Unique SubOrder Id</th>
+                <th>AWB</th>
                 <th>Rider Name</th>
                 <th>Product Title</th>
                 <th>Quantity</th>
@@ -145,8 +145,8 @@
     </div>
 </div>
 
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
-<script type="text/javascript" src="{{ URL::asset('custom/js/jquery.qrcode.min.js')}}"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script type="text/javascript" src="{{ secure_asset('custom/js/jquery.qrcode.min.js')}}"></script>
 <script type="text/javascript">
 $(document).ready(function () {
 // Navigation Highlight
@@ -173,10 +173,10 @@ $(document).ready(function () {
     modalConfirm(function (confirm) {
         if (confirm) {
             // yes confirm
-            $('#receiveVerifyForm').attr('action', "{{ URL::to('received-varified-suborder') }}").submit();
+            $('#receiveVerifyForm').attr('action', "{{ secure_url('received-varified-suborder') }}").submit();
         } else {
             // no confirm
-            $('#receiveVerifyForm').attr('action', "{{ URL::to('receive-reject-suborder') }}").submit();
+            $('#receiveVerifyForm').attr('action', "{{ secure_url('receive-reject-suborder') }}").submit();
         }
     });
 
@@ -209,7 +209,7 @@ $(":checkbox").on("click", function () {
 });
 $(".filter-btn").click(function (e) {
     e.preventDefault();
-    $('#filter-form').attr('action', "{{ URL::to('receive-prodcut') }}").submit();
+    $('#filter-form').attr('action', "{{ secure_url('receive-prodcut') }}").submit();
 });
 
 function countCheckbox() {

@@ -55,11 +55,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('merchant-order') }}">Orders</a>
+                <a href="{{ secure_url('merchant-order') }}">Orders</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -77,7 +77,7 @@
 
     <div class="mt-element-step">
 
-        {!! Form::open(array('url' => '/merchant-order-bulk-submit', 'method' => 'post', 'files' => true)) !!}
+        {!! Form::open(array('url' => secure_url('') . '/merchant-order-bulk-submit', 'method' => 'post', 'files' => true)) !!}
 
                 <div class="row">
 
@@ -93,7 +93,7 @@
                             </div>
                         </div>
                         <div class="col-md-9">
-                            <p class="help-block">Click here to download <a href="{{ URL::to('sample.xls') }}">sample.xls</a></p>
+                            <p class="help-block">Click here to download <a href="{{ secure_url('sample.xls') }}">sample.xls</a></p>
                         </div>
 
                     </div>

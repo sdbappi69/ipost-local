@@ -6,7 +6,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -31,7 +31,7 @@
         </div>
     </div>
     <div class="portlet-body util-btn-margin-bottom-5">
-        {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+        {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
         <div class="col-md-4" style="margin-bottom:5px;">
             <label class="control-label">Name</label>
             <input type="text" class="form-control" name="name" id="name" placeholder="Name">
@@ -115,7 +115,7 @@
                             @foreach($merchant as $mcnt)
                                 <tr>
                                     <td>
-                                        <img class="table-thumb" class="img-circle" src="{{ $mcnt->merchant_photo }}" alt="thumb">
+                                        <img class="table-thumb" class="img-circle" src="{{ secure_url('') . $mcnt->merchant_photo }}" alt="thumb">
                                     </td>
                                     <td>{{ $mcnt->merchant_name }}</td>
                                     <td>{{ $mcnt->merchant_email }}</td>
@@ -166,12 +166,12 @@
 
     $(".filter-btn").click(function(e){
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('merchant') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('merchant') }}").submit();
     });
 
     $(".export-btn").click(function(e){
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('merchantexport/xls') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('merchantexport/xls') }}").submit();
     });
 
 </script>

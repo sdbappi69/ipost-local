@@ -2,17 +2,17 @@
 
 @section('content')
 
-    <link href="{{ URL::asset('assets/pages/css/profile.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/pages/css/profile.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('user') }}">Merchant</a>
+                <a href="{{ secure_url('user') }}">Merchant</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -65,7 +65,7 @@
                     <div class="profile-usermenu">
                         <ul class="nav">
                             <li>
-                                <a href="{{ URL::to('merchant/'.$merchant->id.'/edit') }}">
+                                <a href="{{ secure_url('merchant/'.$merchant->id.'/edit') }}">
                                 <i class="icon-pencil"></i> Update </a>
                             </li>
                         </ul>

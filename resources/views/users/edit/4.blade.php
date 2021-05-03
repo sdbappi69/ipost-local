@@ -1,4 +1,4 @@
-{!! Form::model($user, array('url' => '/user/'.$user->id.'?step=complete', 'method' => 'put')) !!}
+{!! Form::model($user, array('url' => secure_url('') . '/user/'.$user->id.'?step=complete', 'method' => 'put')) !!}
 
     <div class="row">
 
@@ -24,7 +24,7 @@
 
     &nbsp;
     <div class="row padding-top-10">
-        <a href="{{ URL::to('user/'.$id.'/edit?step=3') }}" class="btn default"> Back </a>
+        <a href="{{ secure_url('user/'.$id.'/edit?step=3') }}" class="btn default"> Back </a>
         {!! Form::submit('Finish', ['class' => 'btn green pull-right']) !!}
     </div>
 

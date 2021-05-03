@@ -2,7 +2,7 @@
 <div id="update_inquiry_status_{{$inquiry_status->id}}" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
-    {{Form::model($inquiry_status,['url' => 'inquiry-status/'.$inquiry_status->id, 'method' => 'put'])}}
+    {{Form::model($inquiry_status,['url' => secure_url('') . '/inquiry-status/'.$inquiry_status->id, 'method' => 'put'])}}
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>

@@ -9,7 +9,7 @@
             </li>
 
             <li class="nav-item start dashboard">
-                <a href="{{ URL::to('home') }}">
+                <a href="{{ secure_url('home') }}">
                     <i class="icon-home"></i>
                     <span class="title">Dashboard</span>
                 </a>
@@ -27,7 +27,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item manage-orders">
-                        <a href="{{ URL::to('order') }}" class="nav-link ">
+                        <a href="{{ secure_url('order') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
@@ -46,7 +46,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item merchant-manage">
-                        <a href="{{ URL::to('merchant') }}" class="nav-link ">
+                        <a href="{{ secure_url('merchant') }}" class="nav-link ">
                             <span class="title">Manage</span>
                         </a>
                     </li>
@@ -61,7 +61,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item store-manage">
-                        <a href="{{ URL::to('store') }}" class="nav-link ">
+                        <a href="{{ secure_url('store') }}" class="nav-link ">
                             <span class="title">Store</span>
                         </a>
                     </li>

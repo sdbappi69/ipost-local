@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('order') }}">Orders</a>
+                <a href="{{ secure_url('order') }}">Orders</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -28,21 +28,21 @@
 
     <div class="mt-element-step">
         <div class="row step-background-thin">
-            <a href="{{ URL::to('order/'.$order->id.'/edit?step=1') }}">
+            <a href="{{ secure_url('order/'.$order->id.'/edit?step=1') }}">
                 <div class="col-md-4 bg-grey-steel mt-step-col @if($step=='1') {{ 'active' }} @endif">
                     <div class="mt-step-number">1</div>
                     <div class="mt-step-title uppercase font-grey-cascade">Basic</div>
                     <div class="mt-step-content font-grey-cascade">shipping information</div>
                 </div>
             </a>
-            <a href="{{ URL::to('order/'.$order->id.'/edit?step=2') }}">
+            <a href="{{ secure_url('order/'.$order->id.'/edit?step=2') }}">
                 <div class="col-md-4 bg-grey-steel mt-step-col @if($step=='2') {{ 'active' }} @endif">
                     <div class="mt-step-number">2</div>
                     <div class="mt-step-title uppercase font-grey-cascade">Product</div>
                     <div class="mt-step-content font-grey-cascade">products information</div>
                 </div>
             </a>
-            <a href="{{ URL::to('order/'.$order->id.'/edit?step=3') }}">
+            <a href="{{ secure_url('order/'.$order->id.'/edit?step=3') }}">
                 <div class="col-md-4 bg-grey-steel mt-step-col @if($step=='3') {{ 'active' }} @endif">
                     <div class="mt-step-number">3</div>
                     <div class="mt-step-title uppercase font-grey-cascade">Confirm</div>

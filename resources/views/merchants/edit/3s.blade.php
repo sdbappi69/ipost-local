@@ -1,6 +1,6 @@
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.css') }}" rel="stylesheet" type="text/css" />
 
-{!! Form::model($merchant, array('url' => '/merchant/'.$merchant->id.'?step=complete', 'method' => 'put')) !!}
+{!! Form::model($merchant, array('url' => secure_url('') . '/merchant/'.$merchant->id.'?step=complete', 'method' => 'put')) !!}
 
     <div class="row">
 
@@ -26,15 +26,15 @@
 
     &nbsp;
     <div class="row padding-top-10">
-        <a href="{{ URL::to('merchant/'.$id.'/edit?step=2') }}" class="btn default"> Back </a>
+        <a href="{{ secure_url('merchant/'.$id.'/edit?step=2') }}" class="btn default"> Back </a>
         {!! Form::submit('Finish', ['class' => 'btn green pull-right']) !!}
     </div>
 
 {!! Form::close() !!}
 
-<script src="{{ URL::asset('assets/global/plugins/fuelux/js/spinner.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/pages/scripts/components-bootstrap-touchspin.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/fuelux/js/spinner.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/pages/scripts/components-bootstrap-touchspin.min.js') }}" type="text/javascript"></script>
 
 <script type="text/javascript">
     $("#billing_date").TouchSpin();

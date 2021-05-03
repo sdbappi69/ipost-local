@@ -6,7 +6,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -30,7 +30,7 @@
                 </div>
                 <div class="panel-body">
 
-                    {!! Form::open(array('method' => 'get', 'id' => 'filter-form')) !!}
+                    {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
 
                         <?php if(!isset($_GET['filter_name'])){$_GET['filter_name'] = null;} ?>
                         <div class="col-md-12" style="margin-bottom:5px;">
@@ -65,7 +65,7 @@
                                         {!! ($country->status) ? '<span class="label label-success">Active</span>' : '<span class="label label-default">Inactive</span>' !!}
                                     </td>
                                     <td>
-                                        <a href="{!! route('country.edit', $country->id) !!}" class="btn btn-sm btn-info">
+                                        <a href="{!! secure_url('') . "/country/$country->id/edit" !!}" class="btn btn-sm btn-info">
                                             <i class="fa fa-pencil"></i> Edit
                                         </a>
                                     </td>
@@ -75,7 +75,7 @@
                         </tbody>
                     </table>
                     <div class="pagination">
-                        {!! $countries->render() !!}
+                        {!! $countries->appends($_REQUEST)->render() !!}
                     </div>
                 </div>
             </div>

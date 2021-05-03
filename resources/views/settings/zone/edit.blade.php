@@ -6,7 +6,7 @@
 
 @section('select2JS')
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script> -->
-<script src="{!! asset('js/locations.dropdown.js') !!}"></script>
+<script src="{!! secure_asset('js/locations.dropdown.js') !!}"></script>
 @endsection
 
 @section('content')
@@ -15,7 +15,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -32,7 +32,7 @@
 <!-- END PAGE HEADER-->
 
 <div class="row">
-    {!! Form::model($zone, ['route' => ['zone.update', $zone->id], 'class' => 'form-horizontal', 'method' => 'PUT', 'files' => true]) !!}
+    {!! Form::model($zone, array('url' => secure_url('') . '/zone/'.$zone->id, 'method' => 'put', 'class' => 'form-horizontal')) !!}
     <div class="col-md-12">
         @include('flash::message')
 
@@ -40,7 +40,7 @@
             <div class="panel-heading">
                 <i class="fa fa-flag"></i> {!! $title !!}
 
-                <a href="{!! url('zone') !!}" class="pull-right text-danger">
+                <a href="{!! secure_url('zone') !!}" class="pull-right text-danger">
                     <i class="fa fa-backward"></i> Back
                 </a>
             </div>
@@ -109,6 +109,7 @@
                     </div>
                 </div>
 
+                <script src="https://maps.googleapis.com/maps/api/js"></script>
                 <div id="map_canvas" class="col-md-12" style="height: 450px; margin: 0.6em;"></div>
 
                 <hr>
@@ -133,7 +134,7 @@ $(document).ready(function () {
 });
 </script>
 
-@if($zone->map)
+@if($zone->map && $zone->map->coordinates)
 <script>
     $(function () {
         var coords = reWicket("{{ $zone->map->coordinates or '' }}");
@@ -148,6 +149,7 @@ $(document).ready(function () {
 
         var map;
         var bounds = new google.maps.LatLngBounds();
+
         var mapOptions = {
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             center: {lat: 36.1911401, lng: 44.0090357},
@@ -161,12 +163,12 @@ $(document).ready(function () {
                 position: google.maps.ControlPosition.TOP_left
             }
         },
-                image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
+                image = 'https://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png',
                 map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
 
         var position = new google.maps.LatLng(paths[0]["lat"], paths[0]["lng"]);
-        bounds.extend(position);
+        // bounds.extend(position);
 
         var polygon = new google.maps.Polygon({
             paths: paths,
@@ -177,7 +179,33 @@ $(document).ready(function () {
             fillOpacity: 0.35,
             editable: true
         });
+
         polygon.setMap(map);
+
+        // start multi polygon
+        @if(count($activeZones))
+            @foreach($activeZones as $index => $activeZone)
+            <?php
+                $coordinates = explode(",",$activeZone->map->coordinates);
+            ?>
+                var active_zone_{{$index}} = [
+                    @foreach($coordinates as $coid => $coordinate)
+                        new google.maps.LatLng({{str_replace(" ",", ",$coordinate)}}) <?php if($coid < (count($coordinates) - 1)){echo ',';} ?>
+                    @endforeach
+                ];
+            var zone_map_{{$index}} = new google.maps.Polygon({
+                path: active_zone_{{$index}},
+                geodesic: false,
+                strokeColor: '#2F4F4F',
+                strokeOpacity: 1.0,
+                strokeWeight: 1,
+                map: map
+            });
+            zone_map_{{$index}}.setMap(map);
+            @endforeach
+        @endif
+        // end multi polygon
+
         map.fitBounds(bounds);
 
         google.maps.event.addListener(polygon.getPath(), 'remove_at', function () {
@@ -191,7 +219,7 @@ $(document).ready(function () {
         });
 
         var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function (event) {
-            this.setZoom(14);
+            this.setZoom(8);
             google.maps.event.removeListener(boundsListener);
         });
 
@@ -231,9 +259,14 @@ $(document).ready(function () {
     });
 </script>
 @else
-<script>
-    function initMap() {
-        var map = new google.maps.Map(document.getElementById('map_canvas'), {
+<script>var bounds = new google.maps.LatLngBounds();
+
+    var geocoder;
+    var map;
+    var polygons = [];
+
+    function initialize() {
+        map = new google.maps.Map(document.getElementById('map_canvas'), {
             center: {lat: 36.1911401, lng: 44.0090357},
             zoom: 8,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -243,6 +276,7 @@ $(document).ready(function () {
             polygonOptions: {
                 fillOpacity: 0.2,
                 strokeWeight: 3,
+                strokeColor: '#FF0000',
                 editable: true,
                 draggable: true,
                 zIndex: 1
@@ -250,9 +284,7 @@ $(document).ready(function () {
             map: map,
             drawingControl: false,
         });
-
         drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
-
         google.maps.event.addListener(drawingManager, 'overlaycomplete', function (event) {
             // When draw mode is set to null you can edit the polygon you just drawed
             getCoordinates(event.overlay.getPath());
@@ -267,8 +299,38 @@ $(document).ready(function () {
                 getCoordinates(event.overlay.getPath());
             });
         });
-    }
 
+        // start multi polygon
+        @if(count($activeZones))
+        @foreach($activeZones as $index => $activeZone)
+            <?php
+            $coordinates = explode(",",$activeZone->map->coordinates);
+            ?>
+                var active_zone_{{$index}} = [
+                    @foreach($coordinates as $coid => $coordinate)
+                    new google.maps.LatLng({{str_replace(" ",", ",$coordinate)}}) <?php if($coid < (count($coordinates) - 1)){echo ',';} ?>
+                    @endforeach
+                ];
+            polygons.push(new google.maps.Polygon({
+                path: active_zone_{{$index}},
+                geodesic: false,
+                strokeColor: '#2F4F4F',
+                strokeOpacity: 1.0,
+                strokeWeight: 1,
+                map: map
+            }));
+        @endforeach
+        @endif
+        for (var j = 0; j < polygons.length; j++) {
+            for (var i = 0; i < polygons[j].getPath().getLength(); i++) {
+                bounds.extend(polygons[j].getPath().getAt(i));
+            }
+        }
+        // end multi polygon
+
+        map.fitBounds(bounds);
+    }
+    google.maps.event.addDomListener(window, "load", initialize);
     function getCoordinates(vertices) {
         // var vertices = drawingManager.overlay.getPath();
         var coordinates = "";
@@ -293,5 +355,5 @@ $(document).ready(function () {
 </script>
 @endif
 
-<script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&libraries=drawing&callback=initMap&language=en&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
+<script src="https://maps.google.com/maps/api/js?libraries=places&region=uk&libraries=drawing&callback=initMap&language=en&key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM"></script>
 @endsection

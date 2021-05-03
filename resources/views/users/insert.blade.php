@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('user') }}">User</a>
+                <a href="{{ secure_url('user') }}">User</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -50,7 +50,7 @@
             </div>
         </div>
 
-            {!! Form::open(array('url' => '/user', 'method' => 'post')) !!}
+            {!! Form::open(array('url' => secure_url('') . '/user', 'method' => 'post')) !!}
 
                 <div class="row">
 

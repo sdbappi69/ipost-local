@@ -1,4 +1,4 @@
-{!! Form::model($order, array('url' => '/merchant-order/'.$order->id.'?step=2', 'method' => 'put')) !!}
+{!! Form::model($order, array('url' => secure_url('') . '/merchant-order/'.$order->id.'?step=2', 'method' => 'put')) !!}
 
     <div class="row">
 
@@ -120,8 +120,8 @@
 
 <script src="
 https://maps.google.com/maps/api/js?key=AIzaSyA9cwN7Zh-5ovTgvnVEXZFQABABa-KTBUM&callback=initMap&sensor=false" type="text/javascript"></script>
-<script src="{{ URL::asset('assets/global/plugins/gmaps/gmaps.min.js') }}" type="text/javascript"></script>
-<script src="{{ URL::asset('custom/js/maps-google-geo.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/gmaps/gmaps.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('custom/js/maps-google-geo.js') }}" type="text/javascript"></script>
 
 <script type="text/javascript">
     $(document ).ready(function() {

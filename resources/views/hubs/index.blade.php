@@ -6,7 +6,7 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -24,7 +24,7 @@
 
     <div class="col-md-12">
       <div class="table-filtter">
-         {!! Form::open(array('method' => 'get')) !!}
+         {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
          <div class="col-md-2">
             <div class="row">
                {!! Form::select('id', array(''=>'Select Hub') + $hubs_lists, null, ['class' => 'form-control', 'id' => 'id']) !!}
@@ -87,7 +87,7 @@
                                         <i class="fa fa-pencil"></i> Update
                                       </a>
                                       &nbsp;
-                                      <a class="label label-success" href="{{ url('hub/'. $hub->id .'') }}">
+                                      <a class="label label-success" href="{{ secure_url('hub/'. $hub->id .'') }}">
                                         <i class="fa fa-eye"></i> View
                                       </a>
                                     </td>

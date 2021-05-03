@@ -33,7 +33,7 @@
                 <br><br>
                 @permission('manage_query')
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('query') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('query') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -55,7 +55,7 @@
                 <br><br>
                 @permission('manage_mail_groups')
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('mail-groups') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('mail-groups') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -77,7 +77,7 @@
                 <br><br>
                 @permission('manage_source_of_information')
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('source-of-info') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('source-of-info') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -99,7 +99,7 @@
                 <br><br>
                 @permission('manage_unique_head')
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('unique-head') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('unique-head') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -121,7 +121,7 @@
                 <br><br>
                 @permission('manage_reaction')
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('reaction') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('reaction') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -144,7 +144,7 @@
                 <br><br>
                 @permission('manage_complain')
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('complain?status_s=0') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('complain?status_s=0') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -166,7 +166,7 @@
                 <br><br>
                 @permission('manage_complain')
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('complain?status_s=1') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('complain?status_s=1') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -188,7 +188,7 @@
                 <br><br>
                 @permission('manage_complain')
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('complain?status_s=2') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('complain?status_s=2') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -210,7 +210,7 @@
                 <br><br>
                 @permission('manage_feedback')
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('feedback?status_s=0') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('feedback?status_s=0') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -232,7 +232,7 @@
                 <br><br>
                 @permission('manage_feedback')
                 <div class="col-md-12" style="padding-left: 0; padding-right: 0;">
-                    <a class="form-control btn btn-primary pull-right" href="{{ URL::to('feedback?status_s=1') }}" >
+                    <a class="form-control btn btn-primary pull-right" href="{{ secure_url('feedback?status_s=1') }}" >
                         Detail
                         <i class="fa fa-arrow-circle-o-right"></i>
                     </a>
@@ -251,18 +251,18 @@
     });
 </script>
 
-<script src="{{URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}" type="text/javascript"></script>
 
-<!-- <script src="{{URL::asset('assets/global/plugins/amcharts/amcharts/amcharts.js')}}" type="text/javascript"></script>
-<script src="{{URL::asset('assets/global/plugins/amcharts/amcharts/pie.js')}}" type="text/javascript"></script> -->
-<script src="{{URL::asset('assets/global/plugins/jquery-easypiechart/jquery.easypiechart.min.js')}}" type="text/javascript"></script>
+<!-- <script src="{{secure_asset('assets/global/plugins/amcharts/amcharts/amcharts.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/amcharts/amcharts/pie.js')}}" type="text/javascript"></script> -->
+<script src="{{secure_asset('assets/global/plugins/jquery-easypiechart/jquery.easypiechart.min.js')}}" type="text/javascript"></script>
 
-<script src="{{URL::asset('assets/global/plugins/counterup/jquery.waypoints.min.js')}}" type="text/javascript"></script>
-<script src="{{URL::asset('assets/global/plugins/counterup/jquery.counterup.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/counterup/jquery.waypoints.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_asset('assets/global/plugins/counterup/jquery.counterup.min.js')}}" type="text/javascript"></script>
 
 <!-- BEGIN PAGE LEVEL PLUGINS -->
-<script src="{{ URL::asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
-<!-- <script src="{{ URL::asset('assets/pages/scripts/dashboard.js') }}" type="text/javascript"></script> -->
+<script src="{{ secure_asset('assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
+<!-- <script src="{{ secure_asset('assets/pages/scripts/dashboard.js') }}" type="text/javascript"></script> -->
 <!-- END PAGE LEVEL SCRIPTS -->
 
 @endsection

@@ -2,18 +2,18 @@
 
 @section('content')
 
-    <link href="{{ URL::asset('assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ URL::asset('assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ secure_asset('assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('picking-time') }}">Picking Time</a>
+                <a href="{{ secure_url('picking-time') }}">Picking Time</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -29,7 +29,7 @@
     <!-- END PAGE TITLE-->
     <!-- END PAGE HEADER-->
 
-            {!! Form::model($picking_time, array('url' => '/picking-time/'.$picking_time->id, 'method' => 'put')) !!}
+            {!! Form::model($picking_time, array('url' => secure_url('') . '/picking-time/'.$picking_time->id, 'method' => 'put')) !!}
 
                 <div class="row">
 

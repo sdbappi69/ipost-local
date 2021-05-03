@@ -6,7 +6,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -33,13 +33,13 @@
         </div>
 
         <div class="portlet-body util-btn-margin-bottom-5">
-            {!! Form::open(array('method' => 'get', 'id' => 'filter-form','url' => 'complain')) !!}
+            {!! Form::open(array('method' => 'get', 'id' => 'filter-form','url' => secure_url('') . '/complain')) !!}
             <div class="col-md-8" style="margin-bottom:5px;">
                 <label class="control-label">Search By Data</label>
                 {{Form::text('search_by_data',null,['class' => 'form-control focus_it','placeholder' => 'Customer (Name, Mobile, E-mail, Address) & Company'])}}
             </div>
             <div class="col-md-4" style="margin-bottom:5px;">
-                <label class="control-label">Sub-Order ID</label>
+                <label class="control-label">AWB</label>
                 {{Form::text('sub_order_unique_id',null,['class' => 'form-control focus_it','placeholder' => 'Sub Order ID'])}}
             </div>
 
@@ -144,7 +144,7 @@
                     <tr>
                         <td></td>
                         <td>
-                            <a class="btn btn-default btn-xs" href="{{url('order-cs?sub_order_id='.$complain->sub_order->unique_suborder_id)}}">{{$complain->sub_order->unique_suborder_id or ''}}</a>
+                            <a class="btn btn-default btn-xs" href="{{secure_url('order-cs?sub_order_id='.$complain->sub_order->unique_suborder_id)}}">{{$complain->sub_order->unique_suborder_id or ''}}</a>
                         </td>
                         <td>
                             <b>Name : </b>{{$complain->customer_name}} <br>
@@ -174,7 +174,7 @@
                                 <i class="fa fa-envelope"></i> Send E-mail
                             </button>
                             @if($complain->status == 'In process')
-                            <a class="btn btn-success" href="{{url('complain/mark-as-solved/'.$complain->id)}}">
+                            <a class="btn btn-success" href="{{secure_url('complain/mark-as-solved/'.$complain->id)}}">
                                 <i class="fa fa-check"></i> Solved
                             </a>
                             @endif
@@ -196,7 +196,7 @@
 
 @endIf
 
-<script src="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         highlight_nav('complain','inbound');
@@ -209,13 +209,13 @@
 
     $(".filter-btn").click(function(e){
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('complain') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('complain') }}").submit();
     });
 
     $(".export-btn").click(function(e){
         // alert(1);
         e.preventDefault();
-        $('#filter-form').attr('action', "{{ URL::to('complain/export-xls') }}").submit();
+        $('#filter-form').attr('action', "{{ secure_url('complain/export-xls') }}").submit();
     });
 
 </script>

@@ -2,7 +2,7 @@
 <div id="update_reaction_{{$reaction->id}}" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
-    {{Form::model($reaction,['url' => 'reaction/'.$reaction->id, 'method' => 'put'])}}
+    {{Form::model($reaction,['url' => secure_url('') . '/reaction/'.$reaction->id, 'method' => 'put'])}}
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>

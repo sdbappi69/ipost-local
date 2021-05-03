@@ -15,7 +15,7 @@
                 <div id="charge_model_1" class="panel-collapse collapse in">
                     <div class="panel-body">
 
-                        {!! Form::open(array('url' => '/product-category-charge-submit/v2', 'method' => 'post')) !!}
+                        {!! Form::open(array('url' => secure_url('') . '/product-category-charge-submit/v2', 'method' => 'post')) !!}
                         <input type="hidden" name="product_category_id" value="{{ $product_category->id }}">
                         <input type="hidden" name="charge_type" class="chargeType">
 

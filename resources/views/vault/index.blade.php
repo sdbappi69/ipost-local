@@ -6,7 +6,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ URL::to('home') }}">Home</a>
+            <a href="{{ secure_url('home') }}">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -79,7 +79,7 @@
                 <td>{{ $vault->hub->title or "N/A"}}</td>
                 <td>{{ $vault->amount }}</td>
                 <td>
-                    <a href="{{url('/vault/'.$vault->id.'/edit')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
+                    <a href="{{secure_url('/vault/'.$vault->id.'/edit')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
                 </td>
 
             </tr>

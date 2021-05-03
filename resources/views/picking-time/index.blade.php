@@ -2,14 +2,14 @@
 
 @section('content')
 
-   <link href="{{ URL::asset('assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css') }}" rel="stylesheet" type="text/css" />
-   <link href="{{ URL::asset('assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet" type="text/css" />
+   <link href="{{ secure_asset('assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css') }}" rel="stylesheet" type="text/css" />
+   <link href="{{ secure_asset('assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- BEGIN PAGE BAR -->
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -27,7 +27,7 @@
 
     <div class="col-md-12">
        <div class="table-filtter">
-          {!! Form::open(array('method' => 'get')) !!}
+          {!! Form::open(array('url' => "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'method' => 'get', 'id' => 'filter-form')) !!}
           <div class="col-md-4">
              <div class="row">
                 {!! Form::select('day', array(' ' => 'Select Day', 'Sat' => 'Sat','Sun' => 'Sun','Mon' => 'Mon','Tue' => 'Tue','Wed' => 'Wed','Thu' => 'Thu','Fri' => 'Fri'), null, ['class' => 'form-control', 'id' => 'day']) !!}
@@ -69,7 +69,7 @@
                         <tbody>
                             @foreach($picking_times as $picking_time)
                                 <tr>
-                                    {{-- */ $update_url = URL::to('picking-time').'/'.$picking_time->id.'/edit?step=3'; /* --}}
+                                    {{-- */ $update_url = secure_url('picking-time').'/'.$picking_time->id.'/edit?step=3'; /* --}}
                                     <td>{{ $picking_time->day }}</td>
                                     <td>{{ $picking_time->start_time }} - {{ $picking_time->end_time }}</td>
                                     <td>{!! ($picking_time->status) ? 'Active' : 'Inactive' !!}</td>

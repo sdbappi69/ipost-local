@@ -1,4 +1,4 @@
-{!! Form::model($user, array('url' => '/user/'.$user->id.'?step=2', 'method' => 'put')) !!}
+{!! Form::model($user, array('url' => secure_url('') . '/user/'.$user->id.'?step=2', 'method' => 'put')) !!}
 
     <div class="row">
 

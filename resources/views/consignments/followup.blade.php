@@ -1,12 +1,12 @@
 @extends('layouts.appinside')
 
 @section('content')
-<link href="{{ URL::asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ secure_asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" type="text/css" />
 <!-- BEGIN PAGE BAR -->
 <div class="page-bar">
   <ul class="page-breadcrumb">
     <li>
-      <a href="{{ URL::to('home') }}">Home</a>
+      <a href="{{ secure_url('home') }}">Home</a>
       <i class="fa fa-circle"></i>
     </li>
     <li>
@@ -42,7 +42,7 @@
           <table class="table table-bordered table-hover" id="example0">
             <thead class="flip-content">
 
-              <th>Unique ID</th>
+              <th>AWB</th>
               <th>Available Quantity</th>
               <th>Status</th>
               <th>Reason</th>
@@ -67,10 +67,10 @@
                       <td>{{ $task->end_time }}</td>
                       <td>
                         @if($task->start_lat != null && $task->start_long != null)
-                          <a target="_blank" class="btn default" href="{{url('maps/'.$task->start_lat.'/'.$task->start_long)}}">Start</a>
+                          <a target="_blank" class="btn default" href="{{secure_url('maps/'.$task->start_lat.'/'.$task->start_long)}}">Start</a>
                         @endIf
                         @if($task->end_lat != null && $task->end_long != null)
-                          <a target="_blank" class="btn default" href="{{url('maps/'.$task->end_lat.'/'.$task->end_long)}}">End</a>
+                          <a target="_blank" class="btn default" href="{{secure_url('maps/'.$task->end_lat.'/'.$task->end_long)}}">End</a>
                         @endIf
                       </td>
                       <td>
@@ -106,10 +106,10 @@
                       <td>{{ $task->end_time }}</td>
                       <td>
                         @if($task->start_lat != null && $task->start_long != null)
-                          <a target="_blank" class="btn default" href="{{url('maps/'.$task->start_lat.'/'.$task->start_long)}}">Start</a>
+                          <a target="_blank" class="btn default" href="{{secure_url('maps/'.$task->start_lat.'/'.$task->start_long)}}">Start</a>
                         @endIf
                         @if($task->end_lat != null && $task->end_long != null)
-                          <a target="_blank" class="btn default" href="{{url('maps/'.$task->end_lat.'/'.$task->end_long)}}">End</a>
+                          <a target="_blank" class="btn default" href="{{secure_url('maps/'.$task->end_lat.'/'.$task->end_long)}}">End</a>
                         @endIf
                       </td>
                       <td>

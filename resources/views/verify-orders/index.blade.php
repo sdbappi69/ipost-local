@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('order') }}">Orders</a>
+                <a href="{{ secure_url('order') }}">Orders</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -36,8 +36,8 @@
 
                     <div class="mt-element-ribbon bg-grey-steel">
 
-                        {{-- */ $update_url = URL::to('order').'/'.$order->id.'/edit?step=3'; /* --}}
-                        {{-- */ $view_url = URL::to('order').'/'.$order->id; /* --}}
+                        {{-- */ $update_url = secure_url('order').'/'.$order->id.'/edit?step=3'; /* --}}
+                        {{-- */ $view_url = secure_url('order').'/'.$order->id; /* --}}
 
                         <a href="{{ $update_url }}" class="ribbon ribbon-right ribbon-vertical-right ribbon-shadow ribbon-border-dash-vert ribbon-color-primary uppercase">
                             <div class="ribbon-sub ribbon-bookmark"></div>
@@ -52,7 +52,7 @@
                             <div class="ribbon ribbon-shadow ribbon-color-warning uppercase">{{ $order->unique_order_id }}</div>
                             <div class="ribbon-content">
 
-                                <strong>Store: <a target="blank" href="{{ URL::to('store') }}/{{ $order->store->id }}">{{ $order->store->store_id }}</a></strong>
+                                <strong>Store: <a target="blank" href="{{ secure_url('store') }}/{{ $order->store->id }}">{{ $order->store->store_id }}</a></strong>
                                 <br>
                                 Phone: {{ $order->store->merchant->msisdn }}, {{ $order->store->merchant->alt_msisdn }}
                                 <br>
@@ -100,7 +100,7 @@
                                 </div>
                                 <br>
                                 <div class="row">
-                                    {!! Form::open(array('url' => '/verify-order/'.$order->id, 'method' => 'put')) !!}
+                                    {!! Form::open(array('url' => secure_url('') . '/verify-order/'.$order->id, 'method' => 'put')) !!}
                                         {!! Form::hidden('order_status', '2', ['class' => 'form-control', 'required' => 'required']) !!}
                                         <div class="form-group">
                                             <label class="control-label">Responsible Hub</label>
@@ -119,7 +119,7 @@
                                 <br>
                                 <div class="row">
                                     <!-- Delete -->
-                                    {!! Form::open(array('url' => '/verify-order/'.$order->id, 'method' => 'post')) !!}
+                                    {!! Form::open(array('url' => secure_url('') . '/verify-order/'.$order->id, 'method' => 'post')) !!}
                                         {{ method_field('DELETE') }}
                                         <button type="submit" data-toggle="confirmation" data-original-title="Are you sure ?" id="delete-task-{{ $order->id }}" class="btn btn-danger btn-md col-md-12 col-lg-12 col-xs-12">
                                             <i class="fa fa-btn fa-trash"></i> Clear

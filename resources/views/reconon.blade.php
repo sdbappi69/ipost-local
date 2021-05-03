@@ -1,4 +1,4 @@
-{!! Form::open(array('url' => '/recon-on', 'method' => 'post')) !!}
+{!! Form::open(array('url' => secure_url('') . '/recon-on', 'method' => 'post')) !!}
 
     <div class="form-group">
         <label class="control-label">Consignment Id</label>

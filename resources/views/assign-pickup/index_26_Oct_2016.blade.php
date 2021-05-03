@@ -6,11 +6,11 @@
     <div class="page-bar">
         <ul class="page-breadcrumb">
             <li>
-                <a href="{{ URL::to('home') }}">Home</a>
+                <a href="{{ secure_url('home') }}">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a href="{{ URL::to('hub-order') }}">Orders</a>
+                <a href="{{ secure_url('hub-order') }}">Orders</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -36,7 +36,7 @@
 
                     <div class="mt-element-ribbon bg-grey-steel">
 
-                        {{-- */ $view_url = URL::to('hub-order').'/'.$order->id; /* --}}
+                        {{-- */ $view_url = secure_url('hub-order').'/'.$order->id; /* --}}
                         <a href="{{ $view_url }}" class="ribbon ribbon-right ribbon-vertical-right ribbon-shadow ribbon-border-dash-vert ribbon-color-default uppercase">
                             <div class="ribbon-sub ribbon-bookmark"></div>
                             <i class="fa fa-cube"></i>
@@ -91,7 +91,7 @@
                                 </div>
                                 <br>
                                 <div class="row">
-                                    {!! Form::open(array('url' => '/assign-pickup/'.$order->id, 'method' => 'put')) !!}
+                                    {!! Form::open(array('url' => secure_url('') . '/assign-pickup/'.$order->id, 'method' => 'put')) !!}
                                         {!! Form::hidden('order_status', '3', ['class' => 'form-control', 'required' => 'required']) !!}
                                         <div class="form-group">
                                             <select name="picker_id" class="form-control js-example-basic-single js-country" required="required">

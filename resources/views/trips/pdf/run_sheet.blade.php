@@ -122,27 +122,22 @@
       </tr>
      
     </table>
-    <br>
+    <br><br><br>
+    <br><br><br>
+    <br><br><br>
+    <br><br><br>
     <table width="100%" style="margin-top: 20px;">
       <tr>
         <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">#</td>
         <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">ADDRESS</td>
         <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">PACKAGE</td>
         <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">QTY</td>
-        <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">ACT QTY</td>
         <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">CONTACT</td>
-       
-        {{-- <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">PAYMENT METHOD</td>
-        <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">AMOUNT EXPECTED</td>
-        <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">AMOUNT RECEIVED</td>
-        <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">AMOUNT FINANCE</td> --}}
         <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">UPDATE</td>
         <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">COMMENTS</td>
       </tr>
       <tbody>
         <?php $i = 1 ;?>
-        <?php $total_amount_to_collect = 0;?>
-        <?php $total_amount_paid = 0;?>
         @foreach($trip->suborders as $suborder)
 
         <tr>
@@ -152,47 +147,23 @@
             City  : {{$suborder->sub_order->order->delivery_zone->city->name}} <br> 
             State : {{$suborder->sub_order->order->delivery_zone->city->state->name}} <br> 
           </td>
-          <td style="border: 1px solid #000000; padding:2px; text-align: center"><?php
-//            echo '<img src="data:image/png;base64,' . DNS1D::getBarcodePNG($suborder->sub_order->unique_suborder_id, "C128B",1,33) . '" alt="barcode"   /><br>';
-            ?>
-            <br/><img src="http://chart.googleapis.com/chart?chs=100x100&cht=qr&chl={{$suborder->unique_suborder_id}}" style="padding-top:5px">
+          <td style="border: 1px solid #000000; padding:2px; text-align: center">
+            <br/><img src="https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl={{$suborder->unique_suborder_id}}" style="padding-top:5px">
             <br/>{{ $suborder->sub_order->unique_suborder_id }}</td>
-            <td style="border: 1px solid #000000; padding:2px;">
-            <?php $amount_to_collect = 0; ?>
-            <?php $amount_paid = 0; ?>
-            @foreach($suborder->sub_order->products as $product)
-             Title : {{ $product->product_title }}</b><br>
-             Qty : {{ $product->quantity }}</b>
-            
-             <?php $amount_to_collect += $product->total_payable_amount; ?>
-             <?php $amount_paid += $product->delivery_paid_amount; ?>
-            @endforeach
-            {{$suborder->sub_order->quantity}}
-            </td>
-            <td style="border: 1px solid #000000; padding:2px;"></td>
-            <td style="border: 1px solid #000000; padding:2px;"> 
+          <td style="border: 1px solid #000000; padding:2px;">
+             Title : {{ $suborder->sub_order->product->product_category->name }}</b><br>
+             Qty : {{ $suborder->sub_order->order->cart_products->sum('quantity') }}</b>
+          </td>
+          <td style="border: 1px solid #000000; padding:2px;">
             Name : {{ $suborder->sub_order->order->delivery_name  }}<br>
             
             Mobile: {{ $suborder->sub_order->order->delivery_msisdn  }}, {{ $suborder->sub_order->order->delivery_alt_msisdn  }}
-            </td>
-           
-            {{-- <td style="border: 1px solid #000000; padding:2px;"></td>
-            <td style="border: 1px solid #000000; padding:2px;">{{$amount_to_collect}}</td>
-            <td style="border: 1px solid #000000; padding:2px;">{{$amount_paid}}</td>
-            <td style="border: 1px solid #000000; padding:2px;"></td> --}}
+          </td>
             <td style="border: 1px solid #000000; padding:2px;"></td>
             <td style="border: 1px solid #000000; padding:2px;"></td>
 
           </tr>
-          <?php $total_amount_to_collect += $amount_to_collect;?>
-          <?php $total_amount_paid += $amount_paid;?>
-          @endforeach 
-          {{-- <tr>
-            <td style="border: 1px solid #000000; padding:2px; font-weight: bold;" colspan="7"> Total :</td>
-            <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">{{$total_amount_to_collect}}</td>
-            <td style="border: 1px solid #000000; padding:2px; font-weight: bold;">{{$total_amount_paid}}</td>
-            <td style="border: 1px solid #000000; padding:2px;" colspan="4"></td>
-          </tr> --}}
+          @endforeach
         </tbody>
       </table>
 
