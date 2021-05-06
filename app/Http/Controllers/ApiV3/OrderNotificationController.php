@@ -297,19 +297,19 @@ class OrderNotificationController extends Controller {
                         break;
                     case 3: // Pick & Delivery
                         $this->suborderStatus($consignment_task->sub_order_id, '4');
-                        $this->sendCustomMessage($consignment_task->suborder->order->delivery_msisdn, $sms, $consignment_task->suborder->id);
+                        $this->sendCustomMessage($consignment_task->suborder->order->delivery_msisdn, $sms, $consignment_task->suborder->id, $merchantName);
                         break;
                     case 2:
                     case 6: // post delivery order return to buyer
                         $this->suborderStatus($consignment_task->sub_order_id, '29');
 
                         // Send SMS
-                        $this->sendCustomMessage($consignment_task->suborder->order->delivery_msisdn, $sms, $consignment_task->suborder->id);
+                        $this->sendCustomMessage($consignment_task->suborder->order->delivery_msisdn, $sms, $consignment_task->suborder->id, $merchantName);
                         break;
                     case 4:
                         $this->suborderStatus($consignment_task->sub_order_id, '36');
                         // Send SMS
-                        $this->sendCustomMessage($consignment_task->suborder->product->pickup_location->msisdn, $sms2, $consignment_task->suborder->id);
+                        $this->sendCustomMessage($consignment_task->suborder->product->pickup_location->msisdn, $sms2, $consignment_task->suborder->id, $merchantName);
                         break;
                     case 5:
                         $this->suborderStatus($consignment_task->sub_order_id, '4');

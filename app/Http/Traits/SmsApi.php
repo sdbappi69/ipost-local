@@ -60,11 +60,10 @@ trait SmsApi {
     }
 
     // Global SMS
-    public function sendCustomMessage($msisdn, $text, $ref_id) {
-        $user = "un8ue4p6";
-        $pass = "2R5kdsjj";
+    public function sendCustomMessage($msisdn, $text, $ref_id, $from = "FastBazzar") {
+        $user = "6u09fvgk";
+        $pass = "RnZEkbu7";
         $sms = urlencode($text);
-        $from = "FastBazzar";
         $apiUrl = "https://api.smsglobal.com/http-api.php";
         $pageurl = "$apiUrl?action=sendsms&user=$user&password=$pass&from=$from&to=$msisdn&text=$sms&api=0";
         $ch = curl_init();
